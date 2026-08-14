@@ -108,10 +108,13 @@ input,select{font:inherit;color:inherit}
 .tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent);background:var(--surface-high)}
 .topbar-tools{display:flex;align-items:center;gap:6px;padding:0 12px;border-left:2px solid var(--line)}
 .tool-button{
-  width:44px;height:44px;border-radius:var(--r);
-  display:grid;place-items:center;font-size:19px;
+  min-width:64px;height:44px;padding:0 10px;border-radius:var(--r);
+  display:grid;place-items:center;
+  font-family:var(--font-display);font-size:13px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);
   border:1px solid var(--line);
 }
+.tool-button[aria-pressed="true"]{background:var(--surface-high);color:var(--text)}
 .tool-button:active{background:var(--surface-high)}
 
 .view{flex:1;min-height:0;display:none}
@@ -592,7 +595,8 @@ textarea.paste-field{
       <button role="tab" data-target="settings" aria-selected="false">Einstellungen</button>
     </nav>
     <div class="topbar-tools">
-      <button class="tool-button" id="theme-toggle" title="Tag- und Nachtansicht wechseln">◐</button>
+      <button class="tool-button" id="theme-toggle" title="Zwischen Tag- und Nachtansicht wechseln">Hell</button>
+      <button class="tool-button" id="fullscreen-toggle" title="Vollbild ein- und ausschalten">Vollbild</button>
     </div>
   </header>
 
@@ -2443,7 +2447,59 @@ $$(".tabs button").forEach(b => b.addEventListener("click", ()=>switchTab(b.data
 $("#theme-toggle").addEventListener("click", ()=>{
   data.theme = data.theme==="night" ? "day" : "night";
   document.documentElement.dataset.theme = data.theme;
+  renderThemeButton();
   saveState();
+});
+function renderThemeButton(){
+  // Die Taste nennt das Ziel, nicht den Zustand
+  $("#theme-toggle").textContent = data.theme === "night" ? "Hell" : "Dunkel";
+}
+
+/* ------------------------------------------------------------
+   Fullscreen and wake lock. Behind the bar the tablet must not
+   dim, and the browser chrome only steals room from the keys.
+   ------------------------------------------------------------ */
+let wakeLock = null;
+
+function fullscreenOn(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+
+function renderFullscreenButton(){
+  const btn = $("#fullscreen-toggle");
+  btn.textContent = fullscreenOn() ? "Fenster" : "Vollbild";
+  btn.setAttribute("aria-pressed", fullscreenOn() ? "true" : "false");
+}
+
+async function toggleFullscreen(){
+  try{
+    if(fullscreenOn()){
+      await (document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen());
+    }else{
+      const el = document.documentElement;
+      await (el.requestFullscreen ? el.requestFullscreen({navigationUI:"hide"})
+                                  : el.webkitRequestFullscreen());
+    }
+  }catch(e){
+    toastMsg("Vollbild wird hier nicht unterstützt");
+  }
+  renderFullscreenButton();
+}
+
+/* The lock dies whenever the page is hidden, so take it again on return. */
+async function keepScreenOn(){
+  if(!("wakeLock" in navigator)) return;
+  if(document.visibilityState !== "visible") return;
+  try{
+    if(wakeLock) return;
+    wakeLock = await navigator.wakeLock.request("screen");
+    wakeLock.addEventListener("release", ()=>{ wakeLock = null; });
+  }catch(e){ /* denied or unsupported: the tablet just dims as usual */ }
+}
+
+$("#fullscreen-toggle").addEventListener("click", toggleFullscreen);
+document.addEventListener("fullscreenchange", renderFullscreenButton);
+document.addEventListener("webkitfullscreenchange", renderFullscreenButton);
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState === "visible") keepScreenOn();
 });
 
 $("#clear-cart").addEventListener("click", async ()=>{
@@ -2559,6 +2615,9 @@ window.addEventListener("beforeunload", e=>{
 
 /* ---------- Startup ---------- */
 $("#version-line").textContent = "Fassung " + VERSION + ", läuft ohne Internet auf diesem Gerät";
+renderThemeButton();
+renderFullscreenButton();
+keepScreenOn();
 $("#in-date").value = dayOf(Date.now());
 renderAll();
 updateClock();
