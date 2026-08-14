@@ -105,7 +105,7 @@ function lauf(){
   pruefe("keine Auswahl entstanden", w.eval("arrangeSelected"), null);
 
   console.log("\n== Neuer Artikel bekommt die erste Lücke ==");
-  w.switchTab("artikel");
+  w.switchTab("products");
   $("#in-name").value = "Obstbrand";
   $("#in-price").value = "3,50";
   $("#in-category").value = "Schnaps";
@@ -153,7 +153,7 @@ function lauf(){
 
   console.log("\n== Artikelliste im festen Modus ==");
   stelleRaster(4,4);
-  w.switchTab("artikel");
+  w.switchTab("products");
   const zeile1 = d.querySelector("#product-list .list-row");
   pruefe("keine Pfeiltasten", zeile1.querySelectorAll("[data-act=up],[data-act=down]").length, 0);
   pruefe("Platz angezeigt", /Seite 1, Feld 1$/.test(zeile1.querySelector("small").textContent), true);

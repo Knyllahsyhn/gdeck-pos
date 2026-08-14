@@ -145,7 +145,7 @@ function lauf(){
   pruefe("vier Buchungen", zustand().sales.length, 4);
 
   console.log("\n== Tagesbericht ==");
-  w.switchTab("berichte");
+  w.switchTab("report");
   const kz = {};
   d.querySelectorAll("#stats .stat").forEach(k=>{
     kz[k.querySelector(".stat-label").textContent] = norm(k.querySelector(".stat-value").textContent);
@@ -223,7 +223,7 @@ function lauf(){
     pruefe("Teile ergeben das Original", zurueck === text, true);
 
     console.log("\n== Artikelverwaltung ==");
-    w.switchTab("artikel");
+    w.switchTab("products");
     $("#in-name").value = "Radler alkoholfrei";
     $("#in-price").value = "4,20";
     $("#in-category").value = "Bier";

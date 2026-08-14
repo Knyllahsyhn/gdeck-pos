@@ -597,7 +597,7 @@ textarea.paste-field{
     </div>
     <nav class="tabs" role="tablist">
       <button role="tab" data-target="register" aria-selected="true">Kasse</button>
-      <button role="tab" data-target="tile" aria-selected="false">Artikel</button>
+      <button role="tab" data-target="products" aria-selected="false">Artikel</button>
       <button role="tab" data-target="report" aria-selected="false">Bericht</button>
       <button role="tab" data-target="settings" aria-selected="false">Einstellungen</button>
     </nav>
@@ -1273,7 +1273,7 @@ function migrate(old){
     theme: old.modus === "tag" ? "day" : "night",
     openingFloat: old.wechselgeld || {},
     lastBackup: old.letzteSicherung || 0,
-    grid: old.raster ? {columns: old.raster.spalten|0, rows: old.raster.zeilen|4} : {columns:0, rows:4},
+    grid: old.raster ? {columns: old.raster.spalten|0, rows: old.raster.zeilen || 4} : {columns:0, rows:4},
     products: old.produkte.map(p=>({
       id:p.id, name:p.name, priceCents:p.preisCent, category:p.kategorie,
       color: colorMap[p.farbe] || p.farbe, sort:p.sort, slot:p.platz
@@ -2451,7 +2451,7 @@ function renderAll(){
 function switchTab(target){
   $$(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.target===target ? "true":"false"));
   $$(".view").forEach(s => { if(s.id==="view-"+target) s.dataset.active="yes"; else delete s.dataset.active; });
-  if(target==="berichte") renderReport();
+  if(target==="report") renderReport();
 }
 
 function updateClock(){

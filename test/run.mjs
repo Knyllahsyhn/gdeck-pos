@@ -7,6 +7,7 @@ import { dirname, join } from "node:path";
 const here = dirname(fileURLToPath(import.meta.url));
 
 const suites = [
+  ["Reiter",     "reitertest.cjs"],
   ["Funktion",   "apptest.cjs"],
   ["Tastenfeld", "layouttest.cjs"],
   ["Artikel", "produkttest.cjs"],
