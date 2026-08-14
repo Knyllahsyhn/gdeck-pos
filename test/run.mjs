@@ -9,6 +9,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const suites = [
   ["Funktion",   "apptest.cjs"],
   ["Tastenfeld", "layouttest.cjs"],
+  ["Artikel", "produkttest.cjs"],
   ["Speicherung", "speichertest.cjs"],
   ["Service Worker", "swtest.cjs"]
 ];

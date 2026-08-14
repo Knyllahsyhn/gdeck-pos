@@ -327,6 +327,13 @@ input,select{font:inherit;color:inherit}
   border:1px solid var(--line);font-size:14px;background:var(--surface-high);
 }
 
+/* While editing, the form must not look like the "new product" form,
+   or the next save quietly renames an existing article. */
+#product-form[data-editing="yes"]{
+  border-left:3px solid var(--brass);
+  padding-left:14px;margin-left:-17px;
+}
+
 /* ---- Tastenfeld anordnen ---- */
 .page-picker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .page-picker button{
@@ -630,8 +637,9 @@ textarea.paste-field{
   <!-- ============ PRODUCTS ============ -->
   <section class="view" id="view-products">
     <div class="page"><div class="page-inner">
-      <h2>Neuer Artikel</h2>
-      <p class="note">Der Artikel erscheint sofort als Taste auf der Kasse. Für Pfandrückgabe einen Artikel mit negativem Preis anlegen, zum Beispiel „Pfand zurück“ mit -2,00.</p>
+      <h2 id="form-heading">Neuer Artikel</h2>
+      <p class="note" id="form-note">Der Artikel erscheint sofort als Taste auf der Kasse. Für Pfandrückgabe einen Artikel mit negativem Preis anlegen, zum Beispiel „Pfand zurück“ mit -2,00.</p>
+      <div id="product-form">
       <div class="row">
         <div class="field" style="flex:2">
           <label for="in-name">Bezeichnung</label>
@@ -656,6 +664,7 @@ textarea.paste-field{
       <div class="row">
         <button class="button button-primary" id="save-product" style="flex:1">Artikel anlegen</button>
         <button class="button" id="cancel-edit" style="flex:none;display:none">Bearbeiten abbrechen</button>
+      </div>
       </div>
 
       <section id="arrange-section" hidden>
@@ -1877,11 +1886,15 @@ function editProduct(id){
   if(!p) return;
   editingId = id;
   newColor = p.color;
-  $("#in-name").value      = p.name;
-  $("#in-price").value     = (p.priceCents/100).toFixed(2);
+  $("#in-name").value     = p.name;
+  $("#in-price").value    = csvNum(p.priceCents);       // deutsche Schreibweise
   $("#in-category").value = p.category || "";
   $("#save-product").textContent = "Änderung speichern";
   $("#cancel-edit").style.display = "grid";
+  $("#form-heading").textContent = "Artikel ändern: " + p.name;
+  $("#form-note").textContent =
+    "Du bearbeitest einen vorhandenen Artikel. Zum Anlegen eines neuen zuerst „Bearbeiten abbrechen“ antippen.";
+  $("#product-form").dataset.editing = "yes";
   renderColorPicker();
   $("#in-name").focus();
   $("#in-name").scrollIntoView({block:"start", behavior:"smooth"});
@@ -1893,6 +1906,10 @@ function clearProductForm(){
   $("#in-price").value = "";
   $("#save-product").textContent = "Artikel anlegen";
   $("#cancel-edit").style.display = "none";
+  $("#form-heading").textContent = "Neuer Artikel";
+  $("#form-note").textContent =
+    "Der Artikel erscheint sofort als Taste auf der Kasse. Für Pfandrückgabe einen Artikel mit negativem Preis anlegen, zum Beispiel „Pfand zurück“ mit -2,00.";
+  delete $("#product-form").dataset.editing;
 }
 
 function saveProduct(){
