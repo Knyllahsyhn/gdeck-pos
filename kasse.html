@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" data-mode="nacht">
+<html lang="de" data-theme="night">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -14,54 +14,54 @@
    TOKENS
    ============================================================ */
 :root{
-  --emaille-bernstein:#b8761f;
-  --emaille-rot:#b2361f;
-  --emaille-kobalt:#2c5d86;
-  --emaille-gruen:#2e6b46;
-  --emaille-kupfer:#8a4a2b;
-  --emaille-pflaume:#6a3a63;
-  --emaille-schiefer:#4a5259;
-  --emaille-messing:#9a7b1e;
+  --enamel-amber:#b8761f;
+  --enamel-red:#b2361f;
+  --enamel-cobalt:#2c5d86;
+  --enamel-green:#2e6b46;
+  --enamel-copper:#8a4a2b;
+  --enamel-plum:#6a3a63;
+  --enamel-slate:#4a5259;
+  --enamel-brass:#9a7b1e;
 
-  --aktion:#e2531f;
-  --gut:#3d8f57;
-  --warn:#c0392b;
-  --messing:#c9a227;
+  --accent:#e2531f;
+  --confirm:#3d8f57;
+  --danger:#c0392b;
+  --brass:#c9a227;
 
   --font-display:"Avenir Next Condensed","Roboto Condensed","Arial Narrow",
                  "Segoe UI Semibold",system-ui,sans-serif;
   --font-ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --font-zahl:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
+  --font-num:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
 
   --r:6px;
   --tap:64px;
 }
 
-/* Nacht: warmes Holz-Anthrazit, für Abend und Zeltbeleuchtung */
-[data-mode="nacht"]{
-  --grund:#1b1714;
-  --flaeche:#26201b;
-  --flaeche-hoch:#322a23;
-  --linie:#453a30;
+/* Night: warm wood charcoal, for dusk and marquee lighting */
+[data-theme="night"]{
+  --bg:#1b1714;
+  --surface:#26201b;
+  --surface-high:#322a23;
+  --line:#453a30;
   --text:#f0e6da;
-  --text-leise:#a2917f;
-  --papier:#2a231d;
+  --text-muted:#a2917f;
+  --paper:#2a231d;
 }
-/* Tag: gedecktes Papier, für Sonne auf der Terrasse */
-[data-mode="tag"]{
-  --grund:#e8dfcf;
-  --flaeche:#f5efe3;
-  --flaeche-hoch:#fffaf0;
-  --linie:#c9bda6;
+/* Day: muted paper, for sunshine on the terrace */
+[data-theme="day"]{
+  --bg:#e8dfcf;
+  --surface:#f5efe3;
+  --surface-high:#fffaf0;
+  --line:#c9bda6;
   --text:#241d16;
-  --text-leise:#6d6153;
-  --papier:#fffaf0;
+  --text-muted:#6d6153;
+  --paper:#fffaf0;
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{
-  background:var(--grund);color:var(--text);
+  background:var(--bg);color:var(--text);
   font-family:var(--font-ui);font-size:16px;
   -webkit-user-select:none;user-select:none;
   touch-action:manipulation;
@@ -69,77 +69,77 @@ body{
 }
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;touch-action:manipulation}
 input,select{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--messing);outline-offset:2px}
-.mono{font-family:var(--font-zahl);font-variant-numeric:tabular-nums}
+:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.mono{font-family:var(--font-num);font-variant-numeric:tabular-nums}
 
 /* ============================================================
-   GERÜST
+   SHELL
    ============================================================ */
 #app{display:flex;flex-direction:column;height:100%}
 
-.kopf{
+.topbar{
   display:flex;align-items:stretch;gap:2px;
-  background:var(--flaeche);border-bottom:2px solid var(--linie);
+  background:var(--surface);border-bottom:2px solid var(--line);
   padding-top:env(safe-area-inset-top);
   flex:none;
 }
-.marke{
+.brand{
   display:flex;align-items:center;gap:11px;
   padding:8px 18px;min-width:150px;
-  border-right:2px solid var(--linie);
+  border-right:2px solid var(--line);
 }
-.marke-zeichen{width:30px;height:27px;flex:none;display:block}
-.marke-text{display:flex;flex-direction:column;justify-content:center;min-width:0}
-.marke b{
+.brand-mark{width:30px;height:27px;flex:none;display:block}
+.brand-text{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.brand b{
   font-family:var(--font-display);font-size:20px;font-weight:700;
   letter-spacing:.14em;text-transform:uppercase;line-height:1;
 }
-.marke small{
-  font-family:var(--font-zahl);font-size:11px;color:var(--text-leise);
+.brand small{
+  font-family:var(--font-num);font-size:11px;color:var(--text-muted);
   letter-spacing:.08em;margin-top:4px;
 }
-.reiter{display:flex;flex:1}
-.reiter button{
+.tabs{display:flex;flex:1}
+.tabs button{
   flex:1;padding:0 12px;min-height:56px;
   font-family:var(--font-display);font-size:15px;font-weight:600;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--text-leise);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);
   border-bottom:3px solid transparent;
 }
-.reiter button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--aktion);background:var(--flaeche-hoch)}
-.kopf-werkzeug{display:flex;align-items:center;gap:6px;padding:0 12px;border-left:2px solid var(--linie)}
-.werkzeug-knopf{
+.tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent);background:var(--surface-high)}
+.topbar-tools{display:flex;align-items:center;gap:6px;padding:0 12px;border-left:2px solid var(--line)}
+.tool-button{
   width:44px;height:44px;border-radius:var(--r);
   display:grid;place-items:center;font-size:19px;
-  border:1px solid var(--linie);
+  border:1px solid var(--line);
 }
-.werkzeug-knopf:active{background:var(--flaeche-hoch)}
+.tool-button:active{background:var(--surface-high)}
 
-.blatt{flex:1;min-height:0;display:none}
-.blatt[data-aktiv="ja"]{display:flex}
+.view{flex:1;min-height:0;display:none}
+.view[data-active="yes"]{display:flex}
 
 /* ============================================================
-   KASSE
+   REGISTER
    ============================================================ */
-#blatt-kasse{flex-direction:row}
+#view-register{flex-direction:row}
 
-.waren{flex:1;min-width:0;display:flex;flex-direction:column}
+.products-pane{flex:1;min-width:0;display:flex;flex-direction:column}
 
-.kategorien{
+.filter-bar{
   display:flex;gap:8px;padding:10px 12px;overflow-x:auto;flex:none;
-  border-bottom:1px solid var(--linie);scrollbar-width:none;
+  border-bottom:1px solid var(--line);scrollbar-width:none;
 }
-.kategorien::-webkit-scrollbar{display:none}
-.kategorien button{
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-bar button{
   flex:none;padding:10px 16px;min-height:44px;border-radius:100px;
   font-family:var(--font-display);font-size:14px;letter-spacing:.12em;
   text-transform:uppercase;white-space:nowrap;
-  border:1px solid var(--linie);color:var(--text-leise);
+  border:1px solid var(--line);color:var(--text-muted);
 }
-.kategorien button[aria-pressed="true"]{
-  background:var(--text);color:var(--grund);border-color:var(--text);
+.filter-bar button[aria-pressed="true"]{
+  background:var(--text);color:var(--bg);border-color:var(--text);
 }
 
-.raster{
+.grid{
   flex:1;min-height:0;overflow-y:auto;padding:12px;
   display:grid;gap:10px;
   grid-template-columns:repeat(auto-fill,minmax(148px,1fr));
@@ -147,238 +147,238 @@ input,select{font:inherit;color:inherit}
   align-content:start;
   -webkit-overflow-scrolling:touch;
 }
-/* Festes Tastenfeld: füllt die Fläche, nichts rutscht, nichts scrollt. */
-.raster[data-modus="fest"]{
+/* Fixed keypad: fills the pane, nothing shifts, nothing scrolls. */
+.grid[data-layout="fixed"]{
   overflow:hidden;
   grid-auto-rows:unset;
   align-content:stretch;
 }
-.artikel-leer{
+.tile-empty{
   border-radius:var(--r);
-  border:1px dashed var(--linie);
+  border:1px dashed var(--line);
   opacity:.4;
 }
-.kategorien[data-leer="ja"]{display:none}
-/* Emailleschild: Fläche + doppelte Innenkontur */
-.artikel{
+.filter-bar[data-empty="yes"]{display:none}
+/* Enamel sign: solid fill plus a double inner rule */
+.tile{
   position:relative;border-radius:var(--r);
-  background:var(--k,var(--emaille-schiefer));
+  background:var(--k,var(--enamel-slate));
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.28),
-             inset 0 0 0 4px var(--k,var(--emaille-schiefer)),
+             inset 0 0 0 4px var(--k,var(--enamel-slate)),
              inset 0 0 0 5px rgba(0,0,0,.25);
   color:#fff;text-align:left;
   padding:12px 12px 10px;
   display:flex;flex-direction:column;justify-content:space-between;
   transition:transform .06s ease;
 }
-.artikel:active{transform:scale(.96)}
-.artikel .name{
+.tile:active{transform:scale(.96)}
+.tile .tile-name{
   font-family:var(--font-display);font-size:17px;font-weight:600;
   line-height:1.15;letter-spacing:.03em;text-transform:uppercase;
   text-shadow:0 1px 2px rgba(0,0,0,.35);
   overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
 }
-.artikel .preis{
-  font-family:var(--font-zahl);font-size:15px;font-variant-numeric:tabular-nums;
+.tile .tile-price{
+  font-family:var(--font-num);font-size:15px;font-variant-numeric:tabular-nums;
   align-self:flex-end;background:rgba(0,0,0,.28);
   padding:3px 8px;border-radius:3px;
 }
-.artikel .zaehler{
+.tile .tile-count{
   position:absolute;top:-6px;right:-6px;min-width:28px;height:28px;
-  border-radius:100px;background:var(--aktion);color:#fff;
-  font-family:var(--font-zahl);font-size:14px;font-weight:700;
+  border-radius:100px;background:var(--accent);color:#fff;
+  font-family:var(--font-num);font-size:14px;font-weight:700;
   display:none;place-items:center;padding:0 7px;
   box-shadow:0 2px 6px rgba(0,0,0,.45);
 }
-.artikel[data-imbon="ja"] .zaehler{display:grid}
+.tile[data-incart="yes"] .tile-count{display:grid}
 
-.leer-hinweis{
-  grid-column:1/-1;padding:40px 20px;text-align:center;color:var(--text-leise);
+.grid-hint{
+  grid-column:1/-1;padding:40px 20px;text-align:center;color:var(--text-muted);
   font-size:15px;line-height:1.6;
 }
 
 /* ---- Bon: Kassenrolle ---- */
-.bon{
+.receipt{
   width:352px;flex:none;display:flex;flex-direction:column;
-  background:var(--papier);border-left:2px solid var(--linie);
+  background:var(--paper);border-left:2px solid var(--line);
   position:relative;
 }
-.bon-kopf{
-  padding:12px 16px 10px;border-bottom:1px dashed var(--linie);flex:none;
+.receipt-head{
+  padding:12px 16px 10px;border-bottom:1px dashed var(--line);flex:none;
   display:flex;justify-content:space-between;align-items:baseline;
 }
-.bon-kopf h2{
+.receipt-head h2{
   font-family:var(--font-display);font-size:15px;letter-spacing:.18em;
   text-transform:uppercase;font-weight:700;
 }
-.bon-kopf span{font-family:var(--font-zahl);font-size:12px;color:var(--text-leise)}
+.receipt-head span{font-family:var(--font-num);font-size:12px;color:var(--text-muted)}
 
-.posten{flex:1;min-height:0;overflow-y:auto;padding:4px 0;-webkit-overflow-scrolling:touch}
-.posten:empty::after{
+.receipt-lines{flex:1;min-height:0;overflow-y:auto;padding:4px 0;-webkit-overflow-scrolling:touch}
+.receipt-lines:empty::after{
   content:"Noch nichts gebucht.\A Artikel antippen, um zu starten.";
   white-space:pre-line;display:block;padding:36px 20px;text-align:center;
-  color:var(--text-leise);font-size:14px;line-height:1.7;
+  color:var(--text-muted);font-size:14px;line-height:1.7;
 }
-.posten-zeile{
+.receipt-line{
   display:grid;grid-template-columns:1fr auto;gap:2px 10px;
-  padding:9px 16px;border-bottom:1px dotted var(--linie);
+  padding:9px 16px;border-bottom:1px dotted var(--line);
 }
-.posten-zeile .pz-name{
+.receipt-line .line-name{
   font-family:var(--font-display);font-size:16px;letter-spacing:.04em;
   text-transform:uppercase;line-height:1.2;
 }
-.posten-zeile .pz-summe{
-  font-family:var(--font-zahl);font-size:16px;font-variant-numeric:tabular-nums;
+.receipt-line .line-total{
+  font-family:var(--font-num);font-size:16px;font-variant-numeric:tabular-nums;
   text-align:right;align-self:center;
 }
-.posten-zeile .pz-steuer{display:flex;align-items:center;gap:8px;margin-top:5px}
-.pz-knopf{
-  width:38px;height:38px;border-radius:var(--r);border:1px solid var(--linie);
+.receipt-line .line-controls{display:flex;align-items:center;gap:8px;margin-top:5px}
+.line-button{
+  width:38px;height:38px;border-radius:var(--r);border:1px solid var(--line);
   display:grid;place-items:center;font-size:21px;line-height:1;
-  background:var(--flaeche);
+  background:var(--surface);
 }
-.pz-knopf:active{background:var(--flaeche-hoch)}
-.pz-menge{
-  font-family:var(--font-zahl);font-size:16px;min-width:34px;text-align:center;
+.line-button:active{background:var(--surface-high)}
+.line-qty{
+  font-family:var(--font-num);font-size:16px;min-width:34px;text-align:center;
   font-variant-numeric:tabular-nums;
 }
-.pz-einzel{font-family:var(--font-zahl);font-size:12px;color:var(--text-leise)}
+.line-unit{font-family:var(--font-num);font-size:12px;color:var(--text-muted)}
 
-.bon-fuss{flex:none;border-top:1px dashed var(--linie);padding:12px 16px 0}
-.summe-zeile{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
-.summe-zeile .label{
+.receipt-foot{flex:none;border-top:1px dashed var(--line);padding:12px 16px 0}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.total-row .label{
   font-family:var(--font-display);font-size:15px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--text-leise);
+  text-transform:uppercase;color:var(--text-muted);
 }
-.summe-zeile .wert{
-  font-family:var(--font-zahl);font-size:38px;font-weight:700;
+.total-row .value{
+  font-family:var(--font-num);font-size:38px;font-weight:700;
   font-variant-numeric:tabular-nums;letter-spacing:-.02em;
 }
-.bon-knoepfe{display:grid;grid-template-columns:auto 1fr;gap:8px;padding-bottom:12px}
-.knopf{
+.receipt-buttons{display:grid;grid-template-columns:auto 1fr;gap:8px;padding-bottom:12px}
+.button{
   min-height:var(--tap);border-radius:var(--r);
   font-family:var(--font-display);font-size:17px;font-weight:700;
   letter-spacing:.12em;text-transform:uppercase;
   display:grid;place-items:center;padding:0 18px;
-  border:1px solid var(--linie);
+  border:1px solid var(--line);
 }
-.knopf:active{transform:scale(.98)}
-.knopf[disabled]{opacity:.35}
-.knopf-aktion{background:var(--aktion);color:#fff;border-color:transparent}
-.knopf-gut{background:var(--gut);color:#fff;border-color:transparent}
-.knopf-warn{background:var(--warn);color:#fff;border-color:transparent}
-/* Abrisskante der Kassenrolle */
-.abriss{
+.button:active{transform:scale(.98)}
+.button[disabled]{opacity:.35}
+.button-primary{background:var(--accent);color:#fff;border-color:transparent}
+.button-confirm{background:var(--confirm);color:#fff;border-color:transparent}
+.button-danger{background:var(--danger);color:#fff;border-color:transparent}
+/* Tear-off edge of the receipt roll */
+.tear-edge{
   flex:none;height:10px;
-  background:repeating-linear-gradient(-45deg,var(--linie) 0 1px,transparent 1px 8px);
+  background:repeating-linear-gradient(-45deg,var(--line) 0 1px,transparent 1px 8px);
   opacity:.55;
 }
 
 /* ============================================================
    ARTIKELVERWALTUNG / BERICHTE / EINSTELLUNGEN
    ============================================================ */
-.seite{flex:1;min-height:0;overflow-y:auto;padding:18px;-webkit-overflow-scrolling:touch;-webkit-user-select:text;user-select:text}
-.seite-innen{max-width:1000px;margin:0 auto;padding-bottom:60px}
-.seite h2{
+.page{flex:1;min-height:0;overflow-y:auto;padding:18px;-webkit-overflow-scrolling:touch;-webkit-user-select:text;user-select:text}
+.page-inner{max-width:1000px;margin:0 auto;padding-bottom:60px}
+.page h2{
   font-family:var(--font-display);font-size:15px;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--text-leise);
-  padding-bottom:8px;margin:26px 0 12px;border-bottom:1px solid var(--linie);
+  text-transform:uppercase;color:var(--text-muted);
+  padding-bottom:8px;margin:26px 0 12px;border-bottom:1px solid var(--line);
 }
-.seite h2:first-child{margin-top:0}
-.hinweis{color:var(--text-leise);font-size:14px;line-height:1.65;margin-bottom:14px}
+.page h2:first-child{margin-top:0}
+.note{color:var(--text-muted);font-size:14px;line-height:1.65;margin-bottom:14px}
 
-.feld{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-.feld label{
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.field label{
   font-family:var(--font-display);font-size:12px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text-leise);
+  text-transform:uppercase;color:var(--text-muted);
 }
-.feld input,.feld select{
+.field input,.field select{
   min-height:52px;padding:0 14px;border-radius:var(--r);
-  background:var(--flaeche);border:1px solid var(--linie);
+  background:var(--surface);border:1px solid var(--line);
   font-size:17px;-webkit-user-select:text;user-select:text;
 }
-.feld input[type=number]{font-family:var(--font-zahl)}
-.reihe{display:flex;gap:12px;flex-wrap:wrap}
-.reihe>.feld{flex:1;min-width:150px}
+.field input[type=number]{font-family:var(--font-num)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>.field{flex:1;min-width:150px}
 
-.farbwahl{display:flex;gap:8px;flex-wrap:wrap}
-.farbwahl button{
+.color-picker{display:flex;gap:8px;flex-wrap:wrap}
+.color-picker button{
   width:46px;height:46px;border-radius:var(--r);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);
 }
-.farbwahl button[aria-pressed="true"]{outline:3px solid var(--text);outline-offset:2px}
+.color-picker button[aria-pressed="true"]{outline:3px solid var(--text);outline-offset:2px}
 
-.liste{display:flex;flex-direction:column;gap:6px}
-.listen-zeile{
+.list{display:flex;flex-direction:column;gap:6px}
+.list-row{
   display:flex;align-items:center;gap:12px;
-  background:var(--flaeche);border:1px solid var(--linie);
+  background:var(--surface);border:1px solid var(--line);
   border-radius:var(--r);padding:10px 12px;
 }
-.farbtupfer{width:8px;align-self:stretch;border-radius:2px;flex:none}
-.lz-text{flex:1;min-width:0}
-.lz-text b{font-family:var(--font-display);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
-.lz-text small{display:block;color:var(--text-leise);font-size:12px;font-family:var(--font-zahl);margin-top:2px}
-.lz-preis{font-family:var(--font-zahl);font-size:17px;font-variant-numeric:tabular-nums}
-.mini-knopf{
+.color-chip{width:8px;align-self:stretch;border-radius:2px;flex:none}
+.row-text{flex:1;min-width:0}
+.row-text b{font-family:var(--font-display);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
+.row-text small{display:block;color:var(--text-muted);font-size:12px;font-family:var(--font-num);margin-top:2px}
+.row-price{font-family:var(--font-num);font-size:17px;font-variant-numeric:tabular-nums}
+.button-small{
   min-height:42px;padding:0 12px;border-radius:var(--r);
-  border:1px solid var(--linie);font-size:14px;background:var(--flaeche-hoch);
+  border:1px solid var(--line);font-size:14px;background:var(--surface-high);
 }
 
 /* ---- Tastenfeld anordnen ---- */
-.seiten-wahl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.seiten-wahl button{
+.page-picker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.page-picker button{
   min-height:44px;padding:0 16px;border-radius:100px;
-  border:1px solid var(--linie);color:var(--text-leise);
+  border:1px solid var(--line);color:var(--text-muted);
   font-family:var(--font-display);font-size:14px;letter-spacing:.12em;text-transform:uppercase;
 }
-.seiten-wahl button[aria-pressed="true"]{background:var(--text);color:var(--grund);border-color:var(--text)}
-.anordnen-raster{
+.page-picker button[aria-pressed="true"]{background:var(--text);color:var(--bg);border-color:var(--text)}
+.arrange-grid{
   display:grid;gap:8px;max-width:760px;margin-bottom:8px;
 }
-.anordnen-feld{
+.arrange-slot{
   min-height:70px;border-radius:var(--r);padding:8px;
   display:flex;flex-direction:column;justify-content:space-between;
   text-align:left;color:#fff;overflow:hidden;
   background:var(--k,transparent);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.22), inset 0 0 0 3px var(--k,transparent);
 }
-.anordnen-feld[data-frei="ja"]{
+.arrange-slot[data-free="yes"]{
   background:transparent;box-shadow:none;
-  border:1px dashed var(--linie);color:var(--text-leise);
+  border:1px dashed var(--line);color:var(--text-muted);
   align-items:center;justify-content:center;
-  font-family:var(--font-zahl);font-size:12px;
+  font-family:var(--font-num);font-size:12px;
 }
-.anordnen-feld[aria-pressed="true"]{outline:3px solid var(--messing);outline-offset:2px}
-.anordnen-feld .af-name{
+.arrange-slot[aria-pressed="true"]{outline:3px solid var(--brass);outline-offset:2px}
+.arrange-slot .slot-name{
   font-family:var(--font-display);font-size:13px;line-height:1.15;
   letter-spacing:.03em;text-transform:uppercase;
   overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
 }
-.anordnen-feld .af-preis{font-family:var(--font-zahl);font-size:11px;opacity:.85;align-self:flex-end}
+.arrange-slot .slot-price{font-family:var(--font-num);font-size:11px;opacity:.85;align-self:flex-end}
 
-.kennzahlen{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));margin-bottom:8px}
-.kennzahl{background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--r);padding:14px}
-.kennzahl .kz-label{
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));margin-bottom:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.stat .stat-label{
   font-family:var(--font-display);font-size:11px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text-leise);
+  text-transform:uppercase;color:var(--text-muted);
 }
-.kennzahl .kz-wert{
-  font-family:var(--font-zahl);font-size:27px;font-weight:700;
+.stat .stat-value{
+  font-family:var(--font-num);font-size:27px;font-weight:700;
   font-variant-numeric:tabular-nums;margin-top:6px;
 }
-.kennzahl[data-ton="aktion"]{border-color:var(--aktion)}
-.kennzahl[data-ton="aktion"] .kz-wert{color:var(--aktion)}
+.stat[data-tone="aktion"]{border-color:var(--accent)}
+.stat[data-tone="aktion"] .stat-value{color:var(--accent)}
 
 table{width:100%;border-collapse:collapse;font-size:15px}
 th{
   text-align:left;font-family:var(--font-display);font-size:11px;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--text-leise);
-  padding:8px 10px;border-bottom:1px solid var(--linie);font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);
+  padding:8px 10px;border-bottom:1px solid var(--line);font-weight:600;
 }
-td{padding:9px 10px;border-bottom:1px dotted var(--linie);vertical-align:top}
-td.zahl,th.zahl{text-align:right;font-family:var(--font-zahl);font-variant-numeric:tabular-nums}
-tr[data-storno="ja"] td{text-decoration:line-through;opacity:.45}
-.tabellen-rahmen{overflow-x:auto;-webkit-overflow-scrolling:touch}
+td{padding:9px 10px;border-bottom:1px dotted var(--line);vertical-align:top}
+td.num,th.num{text-align:right;font-family:var(--font-num);font-variant-numeric:tabular-nums}
+tr[data-void="yes"] td{text-decoration:line-through;opacity:.45}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
 /* ============================================================
    OVERLAY / KASSIEREN
@@ -387,180 +387,179 @@ tr[data-storno="ja"] td{text-decoration:line-through;opacity:.45}
   position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.72);
   display:none;align-items:center;justify-content:center;padding:16px;
 }
-.overlay[data-offen="ja"]{display:flex}
+.overlay[data-open="yes"]{display:flex}
 .dialog{
-  background:var(--grund);border:2px solid var(--linie);border-radius:10px;
+  background:var(--bg);border:2px solid var(--line);border-radius:10px;
   width:100%;max-width:660px;max-height:100%;
   display:flex;flex-direction:column;overflow:hidden;
   box-shadow:0 24px 60px rgba(0,0,0,.6);
 }
-.dialog-kopf{
-  padding:14px 18px;border-bottom:1px solid var(--linie);flex:none;
+.dialog-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);flex:none;
   display:flex;justify-content:space-between;align-items:center;gap:12px;
 }
-.dialog-kopf h3{
+.dialog-head h3{
   font-family:var(--font-display);font-size:16px;letter-spacing:.18em;
   text-transform:uppercase;
 }
-.dialog-koerper{padding:16px 18px;overflow-y:auto;flex:1;min-height:0}
-.dialog-fuss{padding:12px 18px;border-top:1px solid var(--linie);flex:none;display:flex;gap:10px}
-.dialog-fuss>*{flex:1}
+.dialog-body{padding:16px 18px;overflow-y:auto;flex:1;min-height:0}
+.dialog-foot{padding:12px 18px;border-top:1px solid var(--line);flex:none;display:flex;gap:10px}
+.dialog-foot>*{flex:1}
 
-.kassieren-oben{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.betrag-block{background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--r);padding:12px 14px}
-.betrag-block .bb-label{
+.checkout-amounts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.amount-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.amount-box .amount-label{
   font-family:var(--font-display);font-size:11px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text-leise);
+  text-transform:uppercase;color:var(--text-muted);
 }
-.betrag-block .bb-wert{
-  font-family:var(--font-zahl);font-size:30px;font-weight:700;
+.amount-box .amount-value{
+  font-family:var(--font-num);font-size:30px;font-weight:700;
   font-variant-numeric:tabular-nums;margin-top:4px;
 }
-.betrag-block[data-rolle="gegeben"]{border-color:var(--messing)}
+.amount-box[data-role="tendered"]{border-color:var(--brass)}
 
-/* Signature: das Rückgeld dominiert den Bildschirm */
-.rueckgeld{
-  background:var(--gut);color:#fff;border-radius:var(--r);
+/* Signature element: the change due dominates the screen */
+.change-box{
+  background:var(--confirm);color:#fff;border-radius:var(--r);
   padding:14px 18px;margin-bottom:14px;
 }
-.rueckgeld[data-fehlt="ja"]{background:var(--flaeche-hoch);color:var(--text-leise)}
-.rueckgeld .rg-label{
+.change-box[data-short="yes"]{background:var(--surface-high);color:var(--text-muted)}
+.change-box .change-label{
   font-family:var(--font-display);font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.85;
 }
-.rueckgeld .rg-wert{
-  font-family:var(--font-zahl);font-size:60px;font-weight:700;line-height:1;
+.change-box .change-value{
+  font-family:var(--font-num);font-size:60px;font-weight:700;line-height:1;
   font-variant-numeric:tabular-nums;letter-spacing:-.03em;margin:6px 0 2px;
 }
-.stueckelung{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.stueckelung span{
-  font-family:var(--font-zahl);font-size:14px;font-weight:600;
+.breakdown{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.breakdown span{
+  font-family:var(--font-num);font-size:14px;font-weight:600;
   background:rgba(0,0,0,.22);border-radius:3px;padding:4px 9px;
 }
-.stueckelung:empty{display:none}
+.breakdown:empty{display:none}
 
-.schnellwahl{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-bottom:12px}
-.schnellwahl button{
-  min-height:56px;border-radius:var(--r);border:1px solid var(--messing);
-  font-family:var(--font-zahl);font-size:17px;font-weight:600;
-  background:var(--flaeche);
+.quick-amounts{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-bottom:12px}
+.quick-amounts button{
+  min-height:56px;border-radius:var(--r);border:1px solid var(--brass);
+  font-family:var(--font-num);font-size:17px;font-weight:600;
+  background:var(--surface);
 }
-.schnellwahl button:active{background:var(--flaeche-hoch)}
-.schnellwahl button[data-passend="ja"]{background:var(--messing);color:#1b1714;border-color:transparent}
+.quick-amounts button:active{background:var(--surface-high)}
+.quick-amounts button[data-exact="yes"]{background:var(--brass);color:#1b1714;border-color:transparent}
 
-.block{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.block button{
-  min-height:60px;border-radius:var(--r);border:1px solid var(--linie);
-  font-family:var(--font-zahl);font-size:23px;font-weight:600;background:var(--flaeche);
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.keypad button{
+  min-height:60px;border-radius:var(--r);border:1px solid var(--line);
+  font-family:var(--font-num);font-size:23px;font-weight:600;background:var(--surface);
 }
-.block button:active{background:var(--flaeche-hoch)}
+.keypad button:active{background:var(--surface-high)}
 
 /* ---- Trinkgeld ---- */
-.rueckgeld[data-trinkgeld="ja"]{background:var(--messing);color:#1b1714}
-.trinkgeld-schalter{
+.change-box[data-tip="yes"]{background:var(--brass);color:#1b1714}
+.tip-toggle{
   width:100%;min-height:52px;border-radius:var(--r);margin-bottom:14px;
-  border:1px solid var(--messing);background:var(--flaeche);
+  border:1px solid var(--brass);background:var(--surface);
   font-family:var(--font-display);font-size:15px;letter-spacing:.12em;text-transform:uppercase;
   display:none;place-items:center;
 }
-.trinkgeld-schalter[data-zeigen="ja"]{display:grid}
-.trinkgeld-schalter[aria-pressed="true"]{background:var(--messing);color:#1b1714;border-color:transparent}
+.tip-toggle[data-show="yes"]{display:grid}
+.tip-toggle[aria-pressed="true"]{background:var(--brass);color:#1b1714;border-color:transparent}
 
-/* ---- QR-Übernahme ---- */
-.qr-buehne{
+/* ---- QR transfer ---- */
+.qr-stage{
   background:#fff;border-radius:var(--r);padding:14px;
   display:grid;place-items:center;margin-bottom:12px;
 }
-.qr-buehne canvas{width:100%;max-width:340px;height:auto;image-rendering:pixelated;display:block}
-.qr-schritt{
+.qr-stage canvas{width:100%;max-width:340px;height:auto;image-rendering:pixelated;display:block}
+.qr-step{
   display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;
 }
-.qr-schritt .zaehlstand{
+.qr-step .step-count{
   font-family:var(--font-display);font-size:15px;letter-spacing:.14em;text-transform:uppercase;
 }
-.scan-buehne{
+.scan-stage{
   position:relative;background:#000;border-radius:var(--r);overflow:hidden;
   aspect-ratio:4/3;margin-bottom:12px;display:grid;place-items:center;
 }
-.scan-buehne video{width:100%;height:100%;object-fit:cover;display:block}
+.scan-stage video{width:100%;height:100%;object-fit:cover;display:block}
 .scan-status{
   position:absolute;left:0;right:0;bottom:0;padding:8px 12px;
   background:rgba(0,0,0,.62);color:#fff;
-  font-family:var(--font-zahl);font-size:13px;text-align:center;
+  font-family:var(--font-num);font-size:13px;text-align:center;
 }
-.teil-punkte{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.teil-punkte span{
+.part-dots{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.part-dots span{
   min-width:38px;height:32px;border-radius:var(--r);display:grid;place-items:center;
-  border:1px solid var(--linie);font-family:var(--font-zahl);font-size:13px;color:var(--text-leise);
+  border:1px solid var(--line);font-family:var(--font-num);font-size:13px;color:var(--text-muted);
 }
-.teil-punkte span[data-da="ja"]{background:var(--gut);color:#fff;border-color:transparent}
-textarea.code-feld{
+.part-dots span[data-have="yes"]{background:var(--confirm);color:#fff;border-color:transparent}
+textarea.paste-field{
   width:100%;min-height:120px;padding:12px;border-radius:var(--r);
-  background:var(--flaeche);border:1px solid var(--linie);color:var(--text);
-  font-family:var(--font-zahl);font-size:13px;line-height:1.5;resize:vertical;
+  background:var(--surface);border:1px solid var(--line);color:var(--text);
+  font-family:var(--font-num);font-size:13px;line-height:1.5;resize:vertical;
   -webkit-user-select:text;user-select:text;
 }
-.herkunft{
+.credit{
   display:flex;align-items:center;gap:12px;
-  margin-top:34px;padding-top:18px;border-top:1px solid var(--linie);
-  color:var(--text-leise);font-size:14px;
+  margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+  color:var(--text-muted);font-size:14px;
 }
-.herkunft-zeichen{width:34px;height:31px;flex:none;display:block;opacity:.9}
-.herkunft b{
+.credit-mark{width:34px;height:31px;flex:none;display:block;opacity:.9}
+.credit b{
   font-family:var(--font-display);letter-spacing:.22em;
   font-weight:600;color:var(--text);
 }
-.herkunft small{display:block;font-family:var(--font-zahl);font-size:12px;margin-top:3px}
+.credit small{display:block;font-family:var(--font-num);font-size:12px;margin-top:3px}
 
-.speicher-status{
-  display:flex;flex-direction:column;gap:6px;background:var(--flaeche);
-  border:1px solid var(--linie);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;
-  font-family:var(--font-zahl);font-size:13px;line-height:1.6;
+.storage-status{
+  display:flex;flex-direction:column;gap:6px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;
+  font-family:var(--font-num);font-size:13px;line-height:1.6;
 }
-.speicher-status b{font-family:var(--font-ui)}
-.speicher-status[data-warnung="ja"]{border-color:var(--warn)}
+.storage-status b{font-family:var(--font-ui)}
+.storage-status[data-warn="yes"]{border-color:var(--danger)}
 
-.meldung{
+.toast{
   position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);
-  background:var(--text);color:var(--grund);
+  background:var(--text);color:var(--bg);
   padding:13px 22px;border-radius:100px;z-index:80;
   font-family:var(--font-display);font-size:15px;letter-spacing:.1em;text-transform:uppercase;
   opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;
   box-shadow:0 8px 24px rgba(0,0,0,.4);max-width:88vw;text-align:center;
 }
-.meldung[data-sichtbar="ja"]{opacity:1;transform:translate(-50%,0)}
+.toast[data-visible="yes"]{opacity:1;transform:translate(-50%,0)}
 
 /* ============================================================
    QUERFORMAT SCHMAL / HOCHFORMAT
    ============================================================ */
-/* Querformat: Beträge links, Tastenfeld rechts — dann muss beim
-   Kassieren nie gescrollt werden. */
+/* Landscape: amounts left, keypad right, so checkout never scrolls. */
 @media (min-width:901px){
-  #overlay-kassieren .dialog{max-width:900px}
-  .kassieren-raster{display:grid;grid-template-columns:1fr 336px;gap:20px;align-items:start}
+  #dlg-checkout .dialog{max-width:900px}
+  .checkout-layout{display:grid;grid-template-columns:1fr 336px;gap:20px;align-items:start}
 }
 
 @media (max-width:900px){
-  #blatt-kasse{flex-direction:column}
-  .bon{width:auto;border-left:none;border-top:2px solid var(--linie);max-height:47%}
-  .raster{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));grid-auto-rows:92px}
-  .kassieren-oben{grid-template-columns:1fr}
-  .rueckgeld .rg-wert{font-size:46px}
-  .marke{display:none}
+  #view-register{flex-direction:column}
+  .receipt{width:auto;border-left:none;border-top:2px solid var(--line);max-height:47%}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));grid-auto-rows:92px}
+  .checkout-amounts{grid-template-columns:1fr}
+  .change-box .change-value{font-size:46px}
+  .brand{display:none}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
-  .artikel:active,.knopf:active{transform:none}
+  .tile:active,.button:active{transform:none}
 }
 </style>
 </head>
 <body>
 
-<!-- Bildmarke einmal definiert, überall per <use> eingesetzt.
-     Nur der Pfad mit Verlauf — die Wortmarke der Vorlage liegt als
-     <text> in DejaVu Sans vor und wäre auf einem Tablet nicht vorhanden. -->
+<!-- Logo mark defined once, reused everywhere via <use>.
+     Only the gradient path: the source wordmark is a <text> element
+     set in DejaVu Sans, a font no tablet is going to have. -->
 <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
   <defs>
-    <linearGradient id="knyl-verlauf"
+    <linearGradient id="knyl-gradient"
         x1="569.36572" y1="438.0968" x2="851.64734" y2="718.24396"
         gradientUnits="userSpaceOnUse"
         gradientTransform="matrix(1.3806336,0,0,1.3806336,452.13468,-116.26665)">
@@ -568,9 +567,9 @@ textarea.code-feld{
       <stop offset=".47046" stop-color="#4b4d6f"/>
       <stop offset="1"      stop-color="#8e2bff" stop-opacity=".803"/>
     </linearGradient>
-    <symbol id="knyl-marke" viewBox="0 0 610.00818 554.7558">
+    <symbol id="knyl-mark" viewBox="0 0 610.00818 554.7558">
       <g transform="translate(-1048.881,-333.87114)">
-        <path fill="url(#knyl-verlauf)" d="m 1444.5027,333.87114 -254.1688,259.3272 -13.2616,-34.62369 -128.1913,268.90264 349.9448,-380.88497 -2.9473,119.34929 37.5737,-38.30987 z m 102.4042,194.49675 -203.336,243.85441 1.4749,-160.60382 -53.7827,57.46348 v 218.06999 l 41.2572,-1.47232 111.2462,-145.1364 135.5583,148.08373 79.5644,-2.21116 -177.5489,-190.81058 54.5161,-67.04432 z"/>
+        <path fill="url(#knyl-gradient)" d="m 1444.5027,333.87114 -254.1688,259.3272 -13.2616,-34.62369 -128.1913,268.90264 349.9448,-380.88497 -2.9473,119.34929 37.5737,-38.30987 z m 102.4042,194.49675 -203.336,243.85441 1.4749,-160.60382 -53.7827,57.46348 v 218.06999 l 41.2572,-1.47232 111.2462,-145.1364 135.5583,148.08373 79.5644,-2.21116 -177.5489,-190.81058 54.5161,-67.04432 z"/>
       </g>
     </symbol>
   </defs>
@@ -578,142 +577,142 @@ textarea.code-feld{
 
 <div id="app">
 
-  <header class="kopf">
-    <div class="marke">
-      <svg class="marke-zeichen" viewBox="0 0 610.00818 554.7558" aria-hidden="true" focusable="false"><use href="#knyl-marke"/></svg>
-      <div class="marke-text">
-        <b id="marke-name">Hüttenkasse</b>
-        <small id="marke-uhr">--:--</small>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 610.00818 554.7558" aria-hidden="true" focusable="false"><use href="#knyl-mark"/></svg>
+      <div class="brand-text">
+        <b id="brand-name">Hüttenkasse</b>
+        <small id="brand-clock">--:--</small>
       </div>
     </div>
-    <nav class="reiter" role="tablist">
-      <button role="tab" data-ziel="kasse" aria-selected="true">Kasse</button>
-      <button role="tab" data-ziel="artikel" aria-selected="false">Artikel</button>
-      <button role="tab" data-ziel="berichte" aria-selected="false">Bericht</button>
-      <button role="tab" data-ziel="einstellungen" aria-selected="false">Einstellungen</button>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-target="register" aria-selected="true">Kasse</button>
+      <button role="tab" data-target="tile" aria-selected="false">Artikel</button>
+      <button role="tab" data-target="report" aria-selected="false">Bericht</button>
+      <button role="tab" data-target="settings" aria-selected="false">Einstellungen</button>
     </nav>
-    <div class="kopf-werkzeug">
-      <button class="werkzeug-knopf" id="knopf-modus" title="Tag- und Nachtansicht wechseln">◐</button>
+    <div class="topbar-tools">
+      <button class="tool-button" id="theme-toggle" title="Tag- und Nachtansicht wechseln">◐</button>
     </div>
   </header>
 
-  <!-- ============ KASSE ============ -->
-  <section class="blatt" id="blatt-kasse" data-aktiv="ja">
-    <div class="waren">
-      <div class="kategorien" id="kategorien"></div>
-      <div class="raster" id="raster"></div>
+  <!-- ============ REGISTER ============ -->
+  <section class="view" id="view-register" data-active="yes">
+    <div class="products-pane">
+      <div class="filter-bar" id="filter-bar"></div>
+      <div class="grid" id="grid"></div>
     </div>
 
-    <aside class="bon">
-      <div class="bon-kopf">
+    <aside class="receipt">
+      <div class="receipt-head">
         <h2>Bon</h2>
-        <span id="bon-anzahl">0 Artikel</span>
+        <span id="receipt-count">0 Artikel</span>
       </div>
-      <div class="posten" id="posten"></div>
-      <div class="bon-fuss">
-        <div class="summe-zeile">
+      <div class="receipt-lines" id="receipt-lines"></div>
+      <div class="receipt-foot">
+        <div class="total-row">
           <span class="label">Summe</span>
-          <span class="wert" id="bon-summe">0,00 €</span>
+          <span class="value" id="receipt-total">0,00 €</span>
         </div>
-        <div class="bon-knoepfe">
-          <button class="knopf" id="knopf-leeren" disabled>Leeren</button>
-          <button class="knopf knopf-aktion" id="knopf-kassieren" disabled>Kassieren</button>
+        <div class="receipt-buttons">
+          <button class="button" id="clear-cart" disabled>Leeren</button>
+          <button class="button button-primary" id="checkout" disabled>Kassieren</button>
         </div>
       </div>
-      <div class="abriss"></div>
+      <div class="tear-edge"></div>
     </aside>
   </section>
 
-  <!-- ============ ARTIKEL ============ -->
-  <section class="blatt" id="blatt-artikel">
-    <div class="seite"><div class="seite-innen">
+  <!-- ============ PRODUCTS ============ -->
+  <section class="view" id="view-products">
+    <div class="page"><div class="page-inner">
       <h2>Neuer Artikel</h2>
-      <p class="hinweis">Der Artikel erscheint sofort als Taste auf der Kasse. Für Pfandrückgabe einen Artikel mit negativem Preis anlegen, zum Beispiel „Pfand zurück“ mit −2,00.</p>
-      <div class="reihe">
-        <div class="feld" style="flex:2">
-          <label for="f-name">Bezeichnung</label>
-          <input id="f-name" type="text" placeholder="Helles 0,5 l" autocomplete="off">
+      <p class="note">Der Artikel erscheint sofort als Taste auf der Kasse. Für Pfandrückgabe einen Artikel mit negativem Preis anlegen, zum Beispiel „Pfand zurück“ mit -2,00.</p>
+      <div class="row">
+        <div class="field" style="flex:2">
+          <label for="in-name">Bezeichnung</label>
+          <input id="in-name" type="text" placeholder="Helles 0,5 l" autocomplete="off">
         </div>
-        <div class="feld">
-          <!-- Bewusst kein type="number": Browser verwerfen dort jede Eingabe
-               mit Komma, und genau so tippt man Preise auf Deutsch. -->
-          <label for="f-preis">Preis in Euro</label>
-          <input id="f-preis" type="text" inputmode="decimal" placeholder="4,50" autocomplete="off">
+        <div class="field">
+          <!-- Deliberately not type="number": browsers discard any value with
+               a comma, and that is exactly how German prices are typed. -->
+          <label for="in-price">Preis in Euro</label>
+          <input id="in-price" type="text" inputmode="decimal" placeholder="4,50" autocomplete="off">
         </div>
-        <div class="feld">
-          <label for="f-kategorie">Gruppe</label>
-          <input id="f-kategorie" type="text" placeholder="Bier" list="kategorie-liste" autocomplete="off">
-          <datalist id="kategorie-liste"></datalist>
+        <div class="field">
+          <label for="in-category">Gruppe</label>
+          <input id="in-category" type="text" placeholder="Bier" list="category-options" autocomplete="off">
+          <datalist id="category-options"></datalist>
         </div>
       </div>
-      <div class="feld">
+      <div class="field">
         <label>Farbe der Taste</label>
-        <div class="farbwahl" id="farbwahl"></div>
+        <div class="color-picker" id="color-picker"></div>
       </div>
-      <div class="reihe">
-        <button class="knopf knopf-aktion" id="knopf-artikel-speichern" style="flex:1">Artikel anlegen</button>
-        <button class="knopf" id="knopf-artikel-abbrechen" style="flex:none;display:none">Bearbeiten abbrechen</button>
+      <div class="row">
+        <button class="button button-primary" id="save-product" style="flex:1">Artikel anlegen</button>
+        <button class="button" id="cancel-edit" style="flex:none;display:none">Bearbeiten abbrechen</button>
       </div>
 
-      <section id="anordnen-bereich" hidden>
+      <section id="arrange-section" hidden>
         <h2>Tastenfeld anordnen</h2>
-        <p class="hinweis">Ein Feld antippen, dann das Ziel antippen — die beiden tauschen den Platz. Ein leeres Feld als Ziel verschiebt die Taste dorthin und lässt an der alten Stelle eine Lücke.</p>
-        <div class="seiten-wahl" id="anordnen-seiten"></div>
-        <div class="anordnen-raster" id="anordnen-raster"></div>
+        <p class="note">Ein Feld antippen, dann das Ziel antippen: die beiden tauschen den Platz. Ein leeres Feld als Ziel verschiebt die Taste dorthin und lässt an der alten Stelle eine Lücke.</p>
+        <div class="page-picker" id="arrange-pages"></div>
+        <div class="arrange-grid" id="arrange-grid"></div>
       </section>
 
-      <h2>Sortiment <span id="artikel-anzahl" class="mono" style="text-transform:none;letter-spacing:0"></span></h2>
-      <div class="liste" id="artikel-liste"></div>
+      <h2>Sortiment <span id="product-count" class="mono" style="text-transform:none;letter-spacing:0"></span></h2>
+      <div class="list" id="product-list"></div>
     </div></div>
   </section>
 
-  <!-- ============ BERICHTE ============ -->
-  <section class="blatt" id="blatt-berichte">
-    <div class="seite"><div class="seite-innen">
+  <!-- ============ REPORTS ============ -->
+  <section class="view" id="view-report">
+    <div class="page"><div class="page-inner">
       <h2>Tagesabschluss</h2>
-      <div class="reihe">
-        <div class="feld" style="max-width:220px">
-          <label for="f-datum">Tag</label>
-          <input id="f-datum" type="date">
+      <div class="row">
+        <div class="field" style="max-width:220px">
+          <label for="in-date">Tag</label>
+          <input id="in-date" type="date">
         </div>
-        <div class="feld" style="max-width:220px">
-          <label for="f-wechselgeld">Wechselgeld zu Beginn (€)</label>
-          <input id="f-wechselgeld" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+        <div class="field" style="max-width:220px">
+          <label for="in-float">Wechselgeld zu Beginn (€)</label>
+          <input id="in-float" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
         </div>
       </div>
 
-      <div class="kennzahlen" id="kennzahlen"></div>
+      <div class="stats" id="stats"></div>
 
       <h2>Verkauf nach Artikel</h2>
-      <div class="tabellen-rahmen"><table id="tabelle-artikel"></table></div>
+      <div class="table-wrap"><table id="table-products"></table></div>
 
       <h2>Bons</h2>
-      <div class="tabellen-rahmen"><table id="tabelle-bons"></table></div>
+      <div class="table-wrap"><table id="table-sales"></table></div>
 
       <h2>Export</h2>
-      <p class="hinweis">Beide Dateien öffnen sich per Doppelklick direkt in Excel oder LibreOffice — Semikolon als Trenner, Komma als Dezimalzeichen, deutsche Umlaute inklusive.</p>
-      <div class="reihe">
-        <button class="knopf knopf-gut" id="knopf-export-bericht" style="flex:1">Tagesbericht als CSV</button>
-        <button class="knopf" id="knopf-export-posten" style="flex:1">Alle Einzelposten als CSV</button>
+      <p class="note">Beide Dateien öffnen sich per Doppelklick direkt in Excel oder LibreOffice: Semikolon als Trenner, Komma als Dezimalzeichen, deutsche Umlaute inklusive.</p>
+      <div class="row">
+        <button class="button button-confirm" id="export-report" style="flex:1">Tagesbericht als CSV</button>
+        <button class="button" id="export-items" style="flex:1">Alle Einzelposten als CSV</button>
       </div>
     </div></div>
   </section>
 
-  <!-- ============ EINSTELLUNGEN ============ -->
-  <section class="blatt" id="blatt-einstellungen">
-    <div class="seite"><div class="seite-innen">
+  <!-- ============ SETTINGS ============ -->
+  <section class="view" id="view-settings">
+    <div class="page"><div class="page-inner">
       <h2>Kasse</h2>
-      <div class="feld" style="max-width:360px">
-        <label for="f-betrieb">Name auf Bericht und Export</label>
-        <input id="f-betrieb" type="text" placeholder="Berghütte" autocomplete="off">
+      <div class="field" style="max-width:360px">
+        <label for="in-business">Name auf Bericht und Export</label>
+        <input id="in-business" type="text" placeholder="Berghütte" autocomplete="off">
       </div>
 
       <h2>Tastenfeld</h2>
-      <p class="hinweis">Mitwachsend füllt die Tasten einfach der Reihe nach auf. Bei fester Aufteilung behält jeder Artikel seinen Platz — auch wenn daneben ein Feld frei bleibt. Passen nicht alle Artikel auf eine Seite, entstehen weitere Seiten.</p>
-      <div class="reihe">
-        <div class="feld" style="max-width:220px">
-          <label for="f-spalten">Aufteilung</label>
-          <select id="f-spalten">
+      <p class="note">Mitwachsend füllt die Tasten einfach der Reihe nach auf. Bei fester Aufteilung behält jeder Artikel seinen Platz, auch wenn daneben ein Feld frei bleibt. Passen nicht alle Artikel auf eine Seite, entstehen weitere Seiten.</p>
+      <div class="row">
+        <div class="field" style="max-width:220px">
+          <label for="in-columns">Aufteilung</label>
+          <select id="in-columns">
             <option value="0">Mitwachsend</option>
             <option value="2">2 Spalten</option>
             <option value="3">3 Spalten</option>
@@ -724,9 +723,9 @@ textarea.code-feld{
             <option value="8">8 Spalten</option>
           </select>
         </div>
-        <div class="feld" style="max-width:220px">
-          <label for="f-zeilen">Zeilen</label>
-          <select id="f-zeilen">
+        <div class="field" style="max-width:220px">
+          <label for="in-rows">Zeilen</label>
+          <select id="in-rows">
             <option value="2">2 Zeilen</option>
             <option value="3">3 Zeilen</option>
             <option value="4">4 Zeilen</option>
@@ -734,159 +733,159 @@ textarea.code-feld{
             <option value="6">6 Zeilen</option>
           </select>
         </div>
-        <div class="feld" style="justify-content:flex-end">
-          <span class="hinweis" id="raster-info" style="margin:0"></span>
+        <div class="field" style="justify-content:flex-end">
+          <span class="note" id="grid-info" style="margin:0"></span>
         </div>
       </div>
 
       <h2>Sortiment auf ein zweites Tablet</h2>
-      <p class="hinweis">Ein Gerät einrichten, die anderen scannen das Sortiment ab. Übertragen werden Artikel und Kassenname — die Buchungen bleiben auf jedem Gerät für sich.</p>
-      <div class="reihe">
-        <button class="knopf knopf-aktion" id="knopf-qr-senden" style="flex:1">Als QR-Code zeigen</button>
-        <button class="knopf" id="knopf-qr-empfangen" style="flex:1">QR-Code scannen</button>
+      <p class="note">Ein Gerät einrichten, die anderen scannen das Sortiment ab. Übertragen werden Artikel und Kassenname, die Buchungen bleiben auf jedem Gerät für sich.</p>
+      <div class="row">
+        <button class="button button-primary" id="open-share" style="flex:1">Als QR-Code zeigen</button>
+        <button class="button" id="open-scan" style="flex:1">QR-Code scannen</button>
       </div>
 
       <h2>Datensicherung</h2>
-      <div class="speicher-status" id="speicher-status"></div>
-      <p class="hinweis">Alle Buchungen liegen ausschließlich in diesem Browser auf diesem Gerät. Lösche während des Fests keine Browserdaten und nutze keinen privaten Modus. Für ein Backup zwischendurch: Sicherung herunterladen und die Datei woanders ablegen.</p>
-      <div class="reihe">
-        <button class="knopf" id="knopf-sicherung" style="flex:1">Sicherung herunterladen</button>
-        <button class="knopf" id="knopf-wiederherstellen" style="flex:1">Sicherung einspielen</button>
-        <input type="file" id="datei-wiederherstellen" accept="application/json,.json" hidden>
+      <div class="storage-status" id="storage-status"></div>
+      <p class="note">Alle Buchungen liegen ausschließlich in diesem Browser auf diesem Gerät. Lösche während des Fests keine Browserdaten und nutze keinen privaten Modus. Für ein Backup zwischendurch: Sicherung herunterladen und die Datei woanders ablegen.</p>
+      <div class="row">
+        <button class="button" id="download-backup" style="flex:1">Sicherung herunterladen</button>
+        <button class="button" id="restore-backup" style="flex:1">Sicherung einspielen</button>
+        <input type="file" id="backup-file" accept="application/json,.json" hidden>
       </div>
 
       <h2>Zurücksetzen</h2>
-      <p class="hinweis">Nach dem Fest: Buchungen löschen, das Sortiment bleibt erhalten.</p>
-      <div class="reihe">
-        <button class="knopf" id="knopf-buchungen-loeschen" style="flex:1">Alle Buchungen löschen</button>
-        <button class="knopf knopf-warn" id="knopf-alles-loeschen" style="flex:1">Kasse komplett zurücksetzen</button>
+      <p class="note">Nach dem Fest: Buchungen löschen, das Sortiment bleibt erhalten.</p>
+      <div class="row">
+        <button class="button" id="clear-sales" style="flex:1">Alle Buchungen löschen</button>
+        <button class="button button-danger" id="reset-all" style="flex:1">Kasse komplett zurücksetzen</button>
       </div>
 
       <h2>Bedienung</h2>
-      <p class="hinweis">
+      <p class="note">
         Artikel antippen legt ihn auf den Bon, nochmal antippen erhöht die Menge.<br>
-        Beim Kassieren den erhaltenen Betrag über die Zifferntasten eingeben — getippt wird in Cent, „1000“ ergibt also 10,00 €.<br>
+        Beim Kassieren den erhaltenen Betrag über die Zifferntasten eingeben. Getippt wird in Cent, „1000“ ergibt also 10,00 €.<br>
         Unter dem Rückgeldbetrag steht, welche Scheine und Münzen du herausgeben kannst.<br>
         Falsch gebuchte Bons lassen sich im Bericht stornieren; sie bleiben zur Nachvollziehbarkeit in der Liste stehen.
       </p>
 
-      <div class="herkunft">
-        <svg class="herkunft-zeichen" viewBox="0 0 610.00818 554.7558" aria-hidden="true" focusable="false"><use href="#knyl-marke"/></svg>
+      <div class="credit">
+        <svg class="credit-mark" viewBox="0 0 610.00818 554.7558" aria-hidden="true" focusable="false"><use href="#knyl-mark"/></svg>
         <div>
           <b>KNYL</b> Hüttenkasse
-          <small id="fassung"></small>
+          <small id="version-line"></small>
         </div>
       </div>
     </div></div>
   </section>
 </div>
 
-<!-- ============ KASSIEREN ============ -->
-<div class="overlay" id="overlay-kassieren">
+<!-- ============ CHECKOUT ============ -->
+<div class="overlay" id="dlg-checkout">
   <div class="dialog" role="dialog" aria-modal="true" aria-label="Kassieren">
-    <div class="dialog-kopf">
+    <div class="dialog-head">
       <h3>Kassieren</h3>
-      <button class="mini-knopf" id="knopf-kassieren-zu">Zurück</button>
+      <button class="button-small" id="close-checkout">Zurück</button>
     </div>
-    <div class="dialog-koerper">
-      <div class="kassieren-raster">
+    <div class="dialog-body">
+      <div class="checkout-layout">
       <div>
-      <div class="kassieren-oben">
-        <div class="betrag-block">
-          <div class="bb-label">Zu zahlen</div>
-          <div class="bb-wert" id="kz-summe">0,00 €</div>
+      <div class="checkout-amounts">
+        <div class="amount-box">
+          <div class="amount-label">Zu zahlen</div>
+          <div class="amount-value" id="due-amount">0,00 €</div>
         </div>
-        <div class="betrag-block" data-rolle="gegeben">
-          <div class="bb-label">Gegeben</div>
-          <div class="bb-wert" id="kz-gegeben">0,00 €</div>
+        <div class="amount-box" data-role="tendered">
+          <div class="amount-label">Gegeben</div>
+          <div class="amount-value" id="tendered-amount">0,00 €</div>
         </div>
       </div>
 
-      <div class="rueckgeld" id="kz-rueckgeld-block">
-        <div class="rg-label" id="kz-rg-label">Rückgeld</div>
-        <div class="rg-wert" id="kz-rueckgeld">0,00 €</div>
-        <div class="stueckelung" id="kz-stueckelung"></div>
+      <div class="change-box" id="change-panel">
+        <div class="change-label" id="change-caption">Rückgeld</div>
+        <div class="change-value" id="change-amount">0,00 €</div>
+        <div class="breakdown" id="change-breakdown"></div>
       </div>
 
-      <button class="trinkgeld-schalter" id="knopf-trinkgeld" aria-pressed="false">Rest als Trinkgeld</button>
+      <button class="tip-toggle" id="tip-toggle" aria-pressed="false">Rest als Trinkgeld</button>
       </div>
       <div>
-        <div class="schnellwahl" id="kz-schnellwahl"></div>
-        <div class="block" id="kz-block"></div>
+        <div class="quick-amounts" id="quick-amounts"></div>
+        <div class="keypad" id="keypad"></div>
       </div>
       </div>
     </div>
-    <div class="dialog-fuss">
-      <button class="knopf" id="knopf-karte">Mit Karte</button>
-      <button class="knopf knopf-gut" id="knopf-abschliessen" style="flex:2">Bar abschließen</button>
+    <div class="dialog-foot">
+      <button class="button" id="pay-card">Mit Karte</button>
+      <button class="button button-confirm" id="pay-cash" style="flex:2">Bar abschließen</button>
     </div>
   </div>
 </div>
 
-<!-- ============ KONFIGURATION SENDEN ============ -->
-<div class="overlay" id="overlay-senden">
+<!-- ============ SHARE CONFIG ============ -->
+<div class="overlay" id="dlg-share">
   <div class="dialog" role="dialog" aria-modal="true" aria-label="Konfiguration übertragen" style="max-width:480px">
-    <div class="dialog-kopf">
+    <div class="dialog-head">
       <h3>Sortiment übertragen</h3>
-      <button class="mini-knopf" id="knopf-senden-zu">Zurück</button>
+      <button class="button-small" id="close-share">Zurück</button>
     </div>
-    <div class="dialog-koerper">
-      <p class="hinweis" id="senden-hinweis"></p>
-      <div class="qr-buehne"><canvas id="qr-flaeche"></canvas></div>
-      <div class="qr-schritt">
-        <button class="mini-knopf" id="knopf-teil-zurueck">← Vorheriger</button>
-        <span class="zaehlstand" id="teil-stand">Code 1 von 1</span>
-        <button class="mini-knopf" id="knopf-teil-vor">Nächster →</button>
+    <div class="dialog-body">
+      <p class="note" id="share-note"></p>
+      <div class="qr-stage"><canvas id="qr-canvas"></canvas></div>
+      <div class="qr-step">
+        <button class="button-small" id="part-prev">Vorheriger</button>
+        <span class="step-count" id="part-status">Code 1 von 1</span>
+        <button class="button-small" id="part-next">Nächster</button>
       </div>
-      <button class="knopf" id="knopf-code-kopieren" style="width:100%">Stattdessen als Text kopieren</button>
+      <button class="button" id="copy-config" style="width:100%">Stattdessen als Text kopieren</button>
     </div>
   </div>
 </div>
 
-<!-- ============ KONFIGURATION EMPFANGEN ============ -->
-<div class="overlay" id="overlay-empfangen">
+<!-- ============ RECEIVE CONFIG ============ -->
+<div class="overlay" id="dlg-scan">
   <div class="dialog" role="dialog" aria-modal="true" aria-label="Konfiguration einlesen" style="max-width:480px">
-    <div class="dialog-kopf">
+    <div class="dialog-head">
       <h3>Sortiment einlesen</h3>
-      <button class="mini-knopf" id="knopf-empfangen-zu">Zurück</button>
+      <button class="button-small" id="close-scan">Zurück</button>
     </div>
-    <div class="dialog-koerper">
-      <div class="scan-buehne" id="scan-buehne">
+    <div class="dialog-body">
+      <div class="scan-stage" id="scan-stage">
         <video id="scan-video" playsinline muted></video>
         <div class="scan-status" id="scan-status">Kamera wird gestartet …</div>
       </div>
-      <div class="teil-punkte" id="teil-punkte"></div>
-      <p class="hinweis">Kein Kamerazugriff? Den kopierten Text vom anderen Tablet hier einfügen:</p>
-      <textarea class="code-feld" id="code-einfuegen" placeholder="HK1&#10;Berghütte&#10;Helles 0,5 l&#9;450&#9;Bier&#9;0" spellcheck="false"></textarea>
-      <button class="knopf" id="knopf-code-uebernehmen" style="width:100%;margin-top:10px">Eingefügten Text übernehmen</button>
+      <div class="part-dots" id="part-dots"></div>
+      <p class="note">Kein Kamerazugriff? Den kopierten Text vom anderen Tablet hier einfügen:</p>
+      <textarea class="paste-field" id="paste-config" placeholder="HK1&#10;Berghütte&#10;Helles 0,5 l&#9;450&#9;Bier&#9;0" spellcheck="false"></textarea>
+      <button class="button" id="apply-pasted" style="width:100%;margin-top:10px">Eingefügten Text übernehmen</button>
     </div>
   </div>
 </div>
 
-<!-- ============ RÜCKFRAGE ============ -->
-<div class="overlay" id="overlay-frage">
+<!-- ============ CONFIRM ============ -->
+<div class="overlay" id="dlg-confirm">
   <div class="dialog" role="dialog" aria-modal="true" style="max-width:440px">
-    <div class="dialog-kopf"><h3 id="frage-titel">Sicher?</h3></div>
-    <div class="dialog-koerper"><p id="frage-text" style="line-height:1.65;font-size:16px"></p></div>
-    <div class="dialog-fuss">
-      <button class="knopf" id="frage-nein">Abbrechen</button>
-      <button class="knopf knopf-warn" id="frage-ja">Ja</button>
+    <div class="dialog-head"><h3 id="confirm-title">Sicher?</h3></div>
+    <div class="dialog-body"><p id="confirm-text" style="line-height:1.65;font-size:16px"></p></div>
+    <div class="dialog-foot">
+      <button class="button" id="confirm-no">Abbrechen</button>
+      <button class="button button-danger" id="confirm-yes">Ja</button>
     </div>
   </div>
 </div>
 
-<div class="meldung" id="meldung"></div>
+<div class="toast" id="toast"></div>
 
 <script>
 /* ============================================================
-   QR-Encoder, Byte-Modus, Fehlerkorrektur L, Version 1-25.
-   Eigenbau, damit die Kasse ohne Internet und ohne fremde
-   Bibliothek auskommt. Gegen qrencode und zbar geprüft.
+   QR encoder, byte mode, error correction L, versions 1-25.
+   Hand-rolled so the register needs no internet and no third
+   party library. Verified against qrencode and zbar.
    ============================================================ */
 const QR = (function(){
   "use strict";
 
-  // Galois-Feld GF(256), Primpolynom 0x11D
+  // Galois field GF(256), primitive polynomial 0x11D
   const EXP = new Uint8Array(512), LOG = new Uint8Array(256);
   (function(){
     let x = 1;
@@ -895,7 +894,7 @@ const QR = (function(){
   })();
   const mul = (a,b) => (a===0||b===0) ? 0 : EXP[LOG[a]+LOG[b]];
 
-  // Stufe L: [ECWörter je Block, [[Blockanzahl, Datenwörter], ...]]
+  // Level L: [EC words per block, [[block count, data words], ...]]
   const EC_L = {
      1:[ 7,[[1, 19]]],              2:[10,[[1, 34]]],             3:[15,[[1, 55]]],
      4:[20,[[1, 80]]],              5:[26,[[1,108]]],             6:[18,[[2, 68]]],
@@ -907,7 +906,7 @@ const QR = (function(){
     22:[28,[[2,111],[7,112]]],     23:[30,[[4,121],[5,122]]],    24:[30,[[6,117],[4,118]]],
     25:[26,[[8,106],[4,107]]]
   };
-  const AUSRICHTUNG = {
+  const ALIGNMENT = {
      1:[],            2:[6,18],       3:[6,22],       4:[6,26],       5:[6,30],
      6:[6,34],        7:[6,22,38],    8:[6,24,42],    9:[6,26,46],   10:[6,28,50],
     11:[6,30,54],    12:[6,32,58],   13:[6,34,62],   14:[6,26,46,66],15:[6,26,48,70],
@@ -915,7 +914,7 @@ const QR = (function(){
     21:[6,28,50,72,94], 22:[6,26,50,74,98], 23:[6,30,54,78,102],
     24:[6,28,54,80,106], 25:[6,32,58,84,110]
   };
-  const MASKEN = [
+  const MASKS = [
     (i,j)=>((i+j)%2)===0,
     (i,j)=>(i%2)===0,
     (i,j)=>(j%3)===0,
@@ -926,7 +925,7 @@ const QR = (function(){
     (i,j)=>((((i+j)%2)+((i*j)%3))%2)===0
   ];
 
-  function generator(n){
+  function generatorPoly(n){
     let p = [1];
     for(let i=0;i<n;i++){
       const r = new Array(p.length+1).fill(0);
@@ -940,164 +939,164 @@ const QR = (function(){
     }
     return p;
   }
-  function ecWoerter(daten, ecLen){
-    const gen = generator(ecLen);
-    const rest = new Uint8Array(ecLen);
-    for(let d=0; d<daten.length; d++){
-      const faktor = daten[d] ^ rest[0];
-      rest.copyWithin(0,1);
-      rest[ecLen-1] = 0;
-      if(faktor !== 0) for(let i=0;i<ecLen;i++) rest[i] ^= mul(gen[i+1], faktor);
+  function ecWords(data, ecLen){
+    const gen = generatorPoly(ecLen);
+    const rem = new Uint8Array(ecLen);
+    for(let d=0; d<data.length; d++){
+      const factor = data[d] ^ rem[0];
+      rem.copyWithin(0,1);
+      rem[ecLen-1] = 0;
+      if(factor !== 0) for(let i=0;i<ecLen;i++) rem[i] ^= mul(gen[i+1], factor);
     }
-    return rest;
+    return rem;
   }
-  function formatBits(maske){
-    const roh = (0b01 << 3) | maske;                 // Stufe L = 01
-    let rest = roh << 10;
-    for(let i=14;i>=10;i--) if((rest>>i)&1) rest ^= 0x537 << (i-10);
-    return ((roh<<10) | rest) ^ 0x5412;
+  function formatBits(mask){
+    const raw = (0b01 << 3) | mask;                 // level L = 01
+    let rem = raw << 10;
+    for(let i=14;i>=10;i--) if((rem>>i)&1) rem ^= 0x537 << (i-10);
+    return ((raw<<10) | rem) ^ 0x5412;
   }
   function versionBits(v){
-    let rest = v << 12;
-    for(let i=17;i>=12;i--) if((rest>>i)&1) rest ^= 0x1F25 << (i-12);
-    return (v<<12) | rest;
+    let rem = v << 12;
+    for(let i=17;i>=12;i--) if((rem>>i)&1) rem ^= 0x1F25 << (i-12);
+    return (v<<12) | rem;
   }
-  function kapazitaet(v){ return EC_L[v][1].reduce((s,[n,d])=>s+n*d, 0); }
+  function capacity(v){ return EC_L[v][1].reduce((s,[n,d])=>s+n*d, 0); }
 
-  function grenze(){ return kapazitaet(25); }
+  function limit(){ return capacity(25); }
 
   function matrix(text){
     const bytes = new TextEncoder().encode(text);
 
     let version = 0;
     for(let v=1;v<=25;v++){
-      const zaehlBits = v < 10 ? 8 : 16;
-      if(4 + zaehlBits + bytes.length*8 <= kapazitaet(v)*8){ version = v; break; }
+      const countBits = v < 10 ? 8 : 16;
+      if(4 + countBits + bytes.length*8 <= capacity(v)*8){ version = v; break; }
     }
-    if(!version) throw new Error("Zu viele Daten für einen QR-Code");
+    if(!version) throw new Error("Payload exceeds QR capacity");
 
     const bits = [];
-    const schieben = (wert,len) => { for(let i=len-1;i>=0;i--) bits.push((wert>>i)&1); };
-    schieben(4, 4);                                   // Byte-Modus
-    schieben(bytes.length, version < 10 ? 8 : 16);
-    for(const b of bytes) schieben(b, 8);
+    const pushBits = (val,len) => { for(let i=len-1;i>=0;i--) bits.push((val>>i)&1); };
+    pushBits(4, 4);                                   // byte mode
+    pushBits(bytes.length, version < 10 ? 8 : 16);
+    for(const b of bytes) pushBits(b, 8);
 
-    const kapBits = kapazitaet(version)*8;
-    for(let i=0;i<4 && bits.length<kapBits;i++) bits.push(0);
+    const capBits = capacity(version)*8;
+    for(let i=0;i<4 && bits.length<capBits;i++) bits.push(0);
     while(bits.length % 8) bits.push(0);
-    const fuell = [0xEC, 0x11];
+    const padding = [0xEC, 0x11];
     let fi = 0;
-    while(bits.length < kapBits) schieben(fuell[fi++ % 2], 8);
+    while(bits.length < capBits) pushBits(padding[fi++ % 2], 8);
 
-    const woerter = new Uint8Array(kapBits/8);
-    for(let i=0;i<woerter.length;i++){
+    const words = new Uint8Array(capBits/8);
+    for(let i=0;i<words.length;i++){
       let w = 0;
       for(let k=0;k<8;k++) w = (w<<1) | bits[i*8+k];
-      woerter[i] = w;
+      words[i] = w;
     }
 
-    const [ecLen, gruppen] = EC_L[version];
-    const bloecke = [];
+    const [ecLen, groups] = EC_L[version];
+    const blocks = [];
     let pos = 0;
-    for(const [anzahl,len] of gruppen){
-      for(let i=0;i<anzahl;i++){ bloecke.push(woerter.slice(pos,pos+len)); pos += len; }
+    for(const [count,len] of groups){
+      for(let i=0;i<count;i++){ blocks.push(words.slice(pos,pos+len)); pos += len; }
     }
-    const ecBloecke = bloecke.map(b => ecWoerter(b, ecLen));
+    const ecBlocks = blocks.map(b => ecWords(b, ecLen));
 
-    const folge = [];
-    const maxLen = Math.max(...bloecke.map(b=>b.length));
-    for(let i=0;i<maxLen;i++) for(const b of bloecke) if(i < b.length) folge.push(b[i]);
-    for(let i=0;i<ecLen;i++)  for(const b of ecBloecke) folge.push(b[i]);
+    const sequence = [];
+    const maxLen = Math.max(...blocks.map(b=>b.length));
+    for(let i=0;i<maxLen;i++) for(const b of blocks) if(i < b.length) sequence.push(b[i]);
+    for(let i=0;i<ecLen;i++)  for(const b of ecBlocks) sequence.push(b[i]);
 
-    const groesse = 17 + 4*version;
-    const mod  = Array.from({length:groesse}, ()=>new Uint8Array(groesse));
-    const fest = Array.from({length:groesse}, ()=>new Uint8Array(groesse));
-    const setzen = (r,c,v) => {
-      if(r<0||c<0||r>=groesse||c>=groesse) return;
+    const size = 17 + 4*version;
+    const mod  = Array.from({length:size}, ()=>new Uint8Array(size));
+    const fest = Array.from({length:size}, ()=>new Uint8Array(size));
+    const place = (r,c,v) => {
+      if(r<0||c<0||r>=size||c>=size) return;
       mod[r][c] = v; fest[r][c] = 1;
     };
 
-    for(const [zr,zc] of [[0,0],[0,groesse-7],[groesse-7,0]]){
+    for(const [zr,zc] of [[0,0],[0,size-7],[size-7,0]]){
       for(let i=-1;i<=7;i++) for(let j=-1;j<=7;j++){
-        const innen = i>=0 && i<=6 && j>=0 && j<=6;
-        const dunkel = innen && (i===0||i===6||j===0||j===6||(i>=2&&i<=4&&j>=2&&j<=4));
-        setzen(zr+i, zc+j, dunkel ? 1 : 0);
+        const inside = i>=0 && i<=6 && j>=0 && j<=6;
+        const dark = inside && (i===0||i===6||j===0||j===6||(i>=2&&i<=4&&j>=2&&j<=4));
+        place(zr+i, zc+j, dark ? 1 : 0);
       }
     }
-    for(let i=8;i<groesse-8;i++){
-      setzen(6, i, i%2===0 ? 1 : 0);
-      setzen(i, 6, i%2===0 ? 1 : 0);
+    for(let i=8;i<size-8;i++){
+      place(6, i, i%2===0 ? 1 : 0);
+      place(i, 6, i%2===0 ? 1 : 0);
     }
-    const ap = AUSRICHTUNG[version];
+    const ap = ALIGNMENT[version];
     for(const r of ap) for(const c of ap){
-      if((r<8&&c<8) || (r<8&&c>groesse-9) || (r>groesse-9&&c<8)) continue;
+      if((r<8&&c<8) || (r<8&&c>size-9) || (r>size-9&&c<8)) continue;
       for(let i=-2;i<=2;i++) for(let j=-2;j<=2;j++)
-        setzen(r+i, c+j, Math.max(Math.abs(i),Math.abs(j))!==1 ? 1 : 0);
+        place(r+i, c+j, Math.max(Math.abs(i),Math.abs(j))!==1 ? 1 : 0);
     }
-    setzen(groesse-8, 8, 1);
+    place(size-8, 8, 1);
     for(let i=0;i<9;i++){ if(i!==6){ fest[8][i]=1; fest[i][8]=1; } }
-    for(let i=0;i<8;i++) fest[8][groesse-1-i] = 1;
-    for(let i=0;i<7;i++) fest[groesse-1-i][8] = 1;
+    for(let i=0;i<8;i++) fest[8][size-1-i] = 1;
+    for(let i=0;i<7;i++) fest[size-1-i][8] = 1;
     if(version >= 7){
       const vb = versionBits(version);
       for(let i=0;i<18;i++){
         const bit = (vb>>i)&1;
-        const a = Math.floor(i/3), b = i%3 + groesse - 11;
-        setzen(a, b, bit); setzen(b, a, bit);
+        const a = Math.floor(i/3), b = i%3 + size - 11;
+        place(a, b, bit); place(b, a, bit);
       }
     }
 
-    // Daten im Zickzack von rechts unten einfüllen
-    let bitZ = 0, aufwaerts = true;
-    const gesamtBits = folge.length*8;
-    for(let c=groesse-1; c>0; c-=2){
-      if(c === 6) c--;                                // Taktspalte überspringen
-      for(let n=0;n<groesse;n++){
-        const r = aufwaerts ? groesse-1-n : n;
+    // Fill data in a zigzag starting bottom right
+    let bitIdx = 0, upward = true;
+    const totalBits = sequence.length*8;
+    for(let c=size-1; c>0; c-=2){
+      if(c === 6) c--;                                // skip the timing column
+      for(let n=0;n<size;n++){
+        const r = upward ? size-1-n : n;
         for(let k=0;k<2;k++){
           const cc = c-k;
           if(fest[r][cc]) continue;
           let bit = 0;
-          if(bitZ < gesamtBits) bit = (folge[bitZ>>3] >> (7-(bitZ&7))) & 1;
-          bitZ++;
+          if(bitIdx < totalBits) bit = (sequence[bitIdx>>3] >> (7-(bitIdx&7))) & 1;
+          bitIdx++;
           mod[r][cc] = bit;
         }
       }
-      aufwaerts = !aufwaerts;
+      upward = !upward;
     }
 
-    let besteMaske = 0, bestStrafe = Infinity, bestesRaster = null;
+    let bestMask = 0, bestPenalty = Infinity, bestGrid = null;
     for(let m=0;m<8;m++){
-      const kandidat = mod.map((zeile,r) => {
-        const neu = Uint8Array.from(zeile);
-        for(let c=0;c<groesse;c++) if(!fest[r][c] && MASKEN[m](r,c)) neu[c] ^= 1;
-        return neu;
+      const candidate = mod.map((line,r) => {
+        const masked = Uint8Array.from(line);
+        for(let c=0;c<size;c++) if(!fest[r][c] && MASKS[m](r,c)) masked[c] ^= 1;
+        return masked;
       });
-      formatSetzen(kandidat, groesse, m);
-      const s = strafe(kandidat, groesse);
-      if(s < bestStrafe){ bestStrafe = s; besteMaske = m; bestesRaster = kandidat; }
+      placeFormat(candidate, size, m);
+      const s = penalty(candidate, size);
+      if(s < bestPenalty){ bestPenalty = s; bestMask = m; bestGrid = candidate; }
     }
-    return {matrix:bestesRaster, groesse, version, maske:besteMaske};
+    return {matrix:bestGrid, size, version, mask:bestMask};
   }
 
-  function formatSetzen(raster, groesse, maske){
-    const fb = formatBits(maske);
+  function placeFormat(grid, size, mask){
+    const fb = formatBits(mask);
     const bit = i => (fb>>i)&1;
-    // erste Kopie: Spalte 8 von oben herab, dann Zeile 8 nach links
-    for(let i=0;i<=5;i++)  raster[i][8] = bit(i);
-    raster[7][8] = bit(6);
-    raster[8][8] = bit(7);
-    raster[8][7] = bit(8);
-    for(let i=9;i<15;i++)  raster[8][14-i] = bit(i);
-    // zweite Kopie: Zeile 8 von rechts nach innen, dann Spalte 8 nach unten
-    for(let i=0;i<8;i++)   raster[8][groesse-1-i] = bit(i);
-    for(let i=8;i<15;i++)  raster[groesse-15+i][8] = bit(i);
-    raster[groesse-8][8] = 1;
+    // first copy: column 8 downward, then row 8 leftward
+    for(let i=0;i<=5;i++)  grid[i][8] = bit(i);
+    grid[7][8] = bit(6);
+    grid[8][8] = bit(7);
+    grid[8][7] = bit(8);
+    for(let i=9;i<15;i++)  grid[8][14-i] = bit(i);
+    // second copy: row 8 inward from the right, then column 8 downward
+    for(let i=0;i<8;i++)   grid[8][size-1-i] = bit(i);
+    for(let i=8;i<15;i++)  grid[size-15+i][8] = bit(i);
+    grid[size-8][8] = 1;
   }
 
-  function strafe(m, n){
+  function penalty(m, n){
     let s = 0;
-    for(let i=0;i<n;i++){                             // Regel 1: Läufe ab 5
+    for(let i=0;i<n;i++){                             // rule 1: runs of five or more
       let lz=1, ls=1;
       for(let j=1;j<n;j++){
         lz = m[i][j]===m[i][j-1] ? lz+1 : 1;
@@ -1106,52 +1105,54 @@ const QR = (function(){
         if(ls===5) s+=3; else if(ls>5) s+=1;
       }
     }
-    for(let i=0;i<n-1;i++) for(let j=0;j<n-1;j++){    // Regel 2: 2x2-Blöcke
+    for(let i=0;i<n-1;i++) for(let j=0;j<n-1;j++){    // rule 2: 2x2 blocks
       const v = m[i][j];
       if(v===m[i][j+1] && v===m[i+1][j] && v===m[i+1][j+1]) s += 3;
     }
     const a = [1,0,1,1,1,0,1,0,0,0,0], b = [0,0,0,0,1,0,1,1,1,0,1];
-    const passt = (holen,j) => {                      // Regel 3: sucherähnlich
+    const matches = (at,j) => {                      // rule 3: finder-like patterns
       let ja=true, jb=true;
-      for(let k=0;k<11;k++){ const v=holen(j+k); if(v!==a[k]) ja=false; if(v!==b[k]) jb=false; }
+      for(let k=0;k<11;k++){ const v=at(j+k); if(v!==a[k]) ja=false; if(v!==b[k]) jb=false; }
       return ja||jb;
     };
     for(let i=0;i<n;i++) for(let j=0;j+11<=n;j++){
-      if(passt(k=>m[i][k], j)) s += 40;
-      if(passt(k=>m[k][i], j)) s += 40;
+      if(matches(k=>m[i][k], j)) s += 40;
+      if(matches(k=>m[k][i], j)) s += 40;
     }
-    let dunkel = 0;                                   // Regel 4: Schwarzanteil
-    for(let i=0;i<n;i++) for(let j=0;j<n;j++) dunkel += m[i][j];
-    s += Math.floor(Math.abs(dunkel*100/(n*n)-50)/5)*10;
+    let dark = 0;                                   // rule 4: proportion of dark modules
+    for(let i=0;i<n;i++) for(let j=0;j<n;j++) dark += m[i][j];
+    s += Math.floor(Math.abs(dark*100/(n*n)-50)/5)*10;
     return s;
   }
 
-  return {matrix, grenze};
+  return {matrix, limit};
 })();
 </script>
 
 <script>
 "use strict";
 /* ============================================================
-   Alle Beträge werden als ganze Cent gerechnet — mit Fließkomma
-   entstehen sonst Rundungsfehler, die abends nicht aufgehen.
+   All amounts are whole cents. Floating point would introduce
+   rounding errors that do not add up at the end of the night.
    ============================================================ */
 
-const FASSUNG  = "1.0";
-const SPEICHER = "huettenkasse.v1";
-const SPIEGEL  = "huettenkasse.v1.spiegel";
-const FARBEN = [
-  ["Bernstein","var(--emaille-bernstein)"], ["Rot","var(--emaille-rot)"],
-  ["Kobalt","var(--emaille-kobalt)"],       ["Grün","var(--emaille-gruen)"],
-  ["Kupfer","var(--emaille-kupfer)"],       ["Pflaume","var(--emaille-pflaume)"],
-  ["Schiefer","var(--emaille-schiefer)"],   ["Messing","var(--emaille-messing)"]
+const VERSION  = "1.0";
+const STORE_KEY  = "knyl.pos.v1";
+const MIRROR_KEY = "knyl.pos.v1.mirror";
+// Keys used before the rename; still read so no data is lost on upgrade.
+const LEGACY_KEYS = ["huettenkasse.v1", "huettenkasse.v1.spiegel"];
+const COLORS = [
+  ["Bernstein","var(--enamel-amber)"], ["Rot","var(--enamel-red)"],
+  ["Kobalt","var(--enamel-cobalt)"],       ["Grün","var(--enamel-green)"],
+  ["Kupfer","var(--enamel-copper)"],       ["Pflaume","var(--enamel-plum)"],
+  ["Schiefer","var(--enamel-slate)"],   ["Messing","var(--enamel-brass)"]
 ];
-const STUECKE = [
+const DENOMINATIONS = [
   [10000,"100 €"],[5000,"50 €"],[2000,"20 €"],[1000,"10 €"],[500,"5 €"],
   [200,"2 €"],[100,"1 €"],[50,"50 ct"],[20,"20 ct"],[10,"10 ct"],[5,"5 ct"],[2,"2 ct"],[1,"1 ct"]
 ];
 
-const START_SORTIMENT = [
+const DEFAULT_PRODUCTS = [
   ["Helles 0,5 l",450,"Bier",0],   ["Radler 0,5 l",450,"Bier",0],
   ["Weißbier 0,5 l",480,"Bier",0], ["Alkoholfrei 0,5 l",420,"Bier",0],
   ["Cola 0,33 l",300,"Alkoholfrei",2], ["Spezi 0,5 l",350,"Alkoholfrei",2],
@@ -1165,834 +1166,875 @@ const START_SORTIMENT = [
   ["Pfand zurück",-200,"Pfand",6]
 ];
 
-/* ---------- Zustand ---------- */
-let daten = laden();
-let bon = [];                 // [{produktId, name, preisCent, menge}]
-let kategorieFilter = "alle";
-let aktuelleSeite = 0;
-let anordnenSeite = 0, anordnenGewaehlt = null;
-let bearbeiteId = null;
-let neueFarbe = FARBEN[0][1];
-let gegebenRoh = "";          // Ziffernfolge der Kassiereingabe
-let trinkgeldAn = false;
-let frageAntwort = null;
-let qrTeile = [], qrIndex = 0;          // Konfiguration senden
-let scanTeile = new Map(), scanGesamt = 0, scanStrom = null, scanLaeuft = false;
+/* ---------- State ---------- */
+let data = loadState();
+let cart = [];                 // [{productId, name, priceCents, qty}]
+let categoryFilter = "all";
+let currentPage = 0;
+let arrangePage = 0, arrangeSelected = null;
+let editingId = null;
+let newColor = COLORS[0][1];
+let tenderedRaw = "";          // digits typed at checkout
+let tipOn = false;
+let confirmResolve = null;
+let qrParts = [], qrIndex = 0;          // config sharing
+let scanParts = new Map(), scanTotal = 0, scanStream = null, scanRunning = false;
 
-function standard(){
+function defaults(){
   return {
-    betrieb:"Berghütte",
-    modus:"nacht",
-    wechselgeld:{},           // { "2026-08-14": 15000 }
-    letzteSicherung:0,
-    raster:{spalten:0, zeilen:4},   // spalten 0 = mitwachsendes Raster
-    produkte: START_SORTIMENT.map((p,i)=>({
-      id:"p"+i, name:p[0], preisCent:p[1], kategorie:p[2], farbe:FARBEN[p[3]][1], sort:i, platz:i
+    businessName:"Berghütte",
+    theme:"night",
+    openingFloat:{},           // { "2026-08-14": 15000 }
+    lastBackup:0,
+    grid:{columns:0, rows:4},   // columns 0 = flowing grid
+    products: DEFAULT_PRODUCTS.map((p,i)=>({
+      id:"p"+i, name:p[0], priceCents:p[1], category:p[2], color:COLORS[p[3]][1], sort:i, slot:i
     })),
-    buchungen: []
+    sales: []
   };
 }
 
 /* ------------------------------------------------------------
-   Festes Tastenfeld: jeder Artikel hat einen Platz, der sich
-   nicht verschiebt. Lücken bleiben Lücken — genau darum geht es,
-   sonst wandern die Tasten unter den Fingern weg.
+   Fixed keypad: every product owns a slot that never moves.
+   Gaps stay gaps, which is the whole point. Otherwise the keys
+   drift around under the operator's fingers.
    ------------------------------------------------------------ */
-const festesRaster = () => daten.raster && daten.raster.spalten > 0;
-const feldZahl     = () => daten.raster.spalten * daten.raster.zeilen;
+const hasFixedGrid = () => data.grid && data.grid.columns > 0;
+const slotsPerPage     = () => data.grid.columns * data.grid.rows;
 
-function plaetzeOrdnen(){
-  const belegt = new Set();
-  const ohnePlatz = [];
-  daten.produkte.slice().sort((a,b)=>a.sort-b.sort).forEach(p=>{
-    if(Number.isInteger(p.platz) && p.platz >= 0 && !belegt.has(p.platz)) belegt.add(p.platz);
-    else ohnePlatz.push(p);
+function normalizeSlots(){
+  const taken = new Set();
+  const unplaced = [];
+  data.products.slice().sort((a,b)=>a.sort-b.sort).forEach(p=>{
+    if(Number.isInteger(p.slot) && p.slot >= 0 && !taken.has(p.slot)) taken.add(p.slot);
+    else unplaced.push(p);
   });
   let n = 0;
-  ohnePlatz.forEach(p=>{
-    while(belegt.has(n)) n++;
-    p.platz = n;
-    belegt.add(n);
+  unplaced.forEach(p=>{
+    while(taken.has(n)) n++;
+    p.slot = n;
+    taken.add(n);
   });
 }
 
-function seitenZahl(){
-  if(!festesRaster()) return 1;
-  const hoechster = daten.produkte.reduce((m,p)=>Math.max(m, p.platz||0), 0);
-  return Math.max(1, Math.ceil((hoechster+1) / feldZahl()));
+function pageCount(){
+  if(!hasFixedGrid()) return 1;
+  const highest = data.products.reduce((m,p)=>Math.max(m, p.slot||0), 0);
+  return Math.max(1, Math.ceil((highest+1) / slotsPerPage()));
 }
-const artikelAufPlatz = i => daten.produkte.find(p => p.platz === i) || null;
+const productAtSlot = i => data.products.find(p => p.slot === i) || null;
 
 /* ------------------------------------------------------------
-   Speicherung: zwei Kopien mit Prüfsumme und Zeitstempel.
-   Bricht ein Schreibvorgang mittendrin ab, bleibt die andere
-   Kopie heil — an einem Festabend zählt jeder gebuchte Bon.
+   Persistence: two copies, each with a checksum and timestamp.
+   If a write is cut short, the other copy survives. On a busy
+   night every recorded sale matters.
    ------------------------------------------------------------ */
-let speicherOk = true;
+let storageOk = true;
 
-function pruefsumme(d){
+function checksumOf(d){
   let h = 2166136261;
-  const misch = n => { h ^= n; h = Math.imul(h, 16777619); };
-  misch(d.produkte.length);
-  misch(d.buchungen.length);
-  for(const b of d.buchungen){ misch(b.summeCent|0); misch((b.trinkgeldCent|0)+1); misch(b.storniert?7:3); }
-  for(const p of d.produkte) misch(p.preisCent|0);
+  const mix = n => { h ^= n; h = Math.imul(h, 16777619); };
+  mix(d.products.length);
+  mix(d.sales.length);
+  for(const b of d.sales){ mix(b.totalCents|0); mix((b.tipCents|0)+1); mix(b.voided?7:3); }
+  for(const p of d.products) mix(p.priceCents|0);
   return h >>> 0;
 }
 
-function laden(){
-  const kandidaten = [];
-  for(const schluessel of [SPEICHER, SPIEGEL]){
-    let roh;
-    try{ roh = localStorage.getItem(schluessel); }catch(e){ speicherOk = false; continue; }
-    if(!roh) continue;
+/* Builds before the rename stored German property names. Convert them
+   so an upgrade never loses a night's takings. */
+function migrate(old){
+  if(!old || !Array.isArray(old.produkte)) return old;
+  const colorMap = {
+    "var(--emaille-bernstein)":"var(--enamel-amber)",
+    "var(--emaille-rot)":"var(--enamel-red)",
+    "var(--emaille-kobalt)":"var(--enamel-cobalt)",
+    "var(--emaille-gruen)":"var(--enamel-green)",
+    "var(--emaille-kupfer)":"var(--enamel-copper)",
+    "var(--emaille-pflaume)":"var(--enamel-plum)",
+    "var(--emaille-schiefer)":"var(--enamel-slate)",
+    "var(--emaille-messing)":"var(--enamel-brass)"
+  };
+  return {
+    businessName: old.betrieb,
+    theme: old.modus === "tag" ? "day" : "night",
+    openingFloat: old.wechselgeld || {},
+    lastBackup: old.letzteSicherung || 0,
+    grid: old.raster ? {columns: old.raster.spalten|0, rows: old.raster.zeilen|4} : {columns:0, rows:4},
+    products: old.produkte.map(p=>({
+      id:p.id, name:p.name, priceCents:p.preisCent, category:p.kategorie,
+      color: colorMap[p.farbe] || p.farbe, sort:p.sort, slot:p.platz
+    })),
+    sales: (old.buchungen || []).map(b=>({
+      id:b.id, ts:b.ts,
+      items:(b.positionen||[]).map(p=>({
+        productId:p.produktId, name:p.name, priceCents:p.preisCent, qty:p.menge
+      })),
+      totalCents:b.summeCent,
+      payment: b.zahlart === "karte" ? "card" : "cash",
+      tenderedCents:b.gegebenCent, tipCents:b.trinkgeldCent|0,
+      changeCents:b.rueckgeldCent, voided:!!b.storniert
+    }))
+  };
+}
+
+function loadState(){
+  const candidates = [];
+  for(const key of [STORE_KEY, MIRROR_KEY, ...LEGACY_KEYS]){
+    let raw;
+    try{ raw = localStorage.getItem(key); }catch(e){ storageOk = false; continue; }
+    if(!raw) continue;
     try{
-      const huelle = JSON.parse(roh);
-      const stand = (huelle && huelle.stand) ? huelle.stand : huelle;   // ältere Fassung ohne Hülle
-      if(!stand || !Array.isArray(stand.produkte) || !Array.isArray(stand.buchungen)) continue;
-      const heil = huelle.pruef === undefined || huelle.pruef === pruefsumme(stand);
-      kandidaten.push({stand, zeit: huelle.zeit || 0, heil});
+      const envelope = JSON.parse(raw);
+      let state = (envelope && envelope.state) ? envelope.state : envelope;   // older build without the envelope
+      let migrated = false;
+      if(state && Array.isArray(state.produkte)){ state = migrate(state); migrated = true; }
+      if(!state || !Array.isArray(state.products) || !Array.isArray(state.sales)) continue;
+      // A migrated state cannot match a checksum taken over the old field names.
+      const intact = migrated || envelope.checksum === undefined
+                     || envelope.checksum === checksumOf(state);
+      candidates.push({state, time: envelope.time || 0, intact});
     }catch(e){
-      console.warn("Speicherstand", schluessel, "nicht lesbar:", e);
+      console.warn("Stored state", key, "is unreadable:", e);
     }
   }
-  const heile = kandidaten.filter(k=>k.heil).sort((a,b)=>b.zeit-a.zeit);
-  const wahl = heile[0] || kandidaten.sort((a,b)=>b.zeit-a.zeit)[0];
-  if(!wahl) return standard();
-  if(!wahl.heil) console.warn("Prüfsumme passt nicht — Stand wird trotzdem geladen.");
-  return Object.assign(standard(), wahl.stand);
+  const intactOnes = candidates.filter(k=>k.intact).sort((a,b)=>b.time-a.time);
+  const chosen = intactOnes[0] || candidates.sort((a,b)=>b.time-a.time)[0];
+  if(!chosen) return defaults();
+  if(!chosen.intact) console.warn("Checksum mismatch, loading the state anyway.");
+  return Object.assign(defaults(), chosen.state);
 }
 
-function sichern(){
-  const paket = JSON.stringify({stand:daten, pruef:pruefsumme(daten), zeit:Date.now()});
-  let geschrieben = false;
+function saveState(){
+  const packet = JSON.stringify({state:data, checksum:checksumOf(data), time:Date.now()});
+  let written = false;
   try{
-    localStorage.setItem(SPEICHER, paket);
-    geschrieben = localStorage.getItem(SPEICHER) === paket;   // zurücklesen und vergleichen
-  }catch(e){ console.error("Hauptspeicher:", e); }
-  try{ localStorage.setItem(SPIEGEL, paket); }
-  catch(e){ console.error("Spiegel:", e); }
+    localStorage.setItem(STORE_KEY, packet);
+    written = localStorage.getItem(STORE_KEY) === packet;   // read back and compare
+  }catch(e){ console.error("primary store:", e); }
+  try{ localStorage.setItem(MIRROR_KEY, packet); }
+  catch(e){ console.error("mirror store:", e); }
 
-  if(!geschrieben && speicherOk){
-    speicherOk = false;
-    melden("Achtung: Speichern schlägt fehl!");
-  }else if(geschrieben && !speicherOk){
-    speicherOk = true;
+  if(!written && storageOk){
+    storageOk = false;
+    toastMsg("Achtung: Speichern schlägt fehl!");
+  }else if(written && !storageOk){
+    storageOk = true;
   }
-  zeichneSpeicherStatus();
-  return geschrieben;
+  renderStorageStatus();
+  return written;
 }
 
-/* Bittet den Browser, die Daten nicht von selbst zu verwerfen. */
-async function speicherFestnageln(){
+/* Ask the browser not to evict our data on its own. */
+async function requestPersistence(){
   try{
     if(navigator.storage && navigator.storage.persist){
       const schon = await navigator.storage.persisted();
       if(!schon) await navigator.storage.persist();
     }
-  }catch(e){ /* ohne Berechtigung läuft die Kasse trotzdem */ }
-  zeichneSpeicherStatus();
+  }catch(e){ /* the register still works without the permission */ }
+  renderStorageStatus();
 }
 
-async function zeichneSpeicherStatus(){
-  const ziel = $("#speicher-status");
-  if(!ziel) return;
-  let dauerhaft = null;
+async function renderStorageStatus(){
+  const target = $("#storage-status");
+  if(!target) return;
+  let persistent = null;
   try{
-    if(navigator.storage && navigator.storage.persisted) dauerhaft = await navigator.storage.persisted();
+    if(navigator.storage && navigator.storage.persisted) persistent = await navigator.storage.persisted();
   }catch(e){}
-  const bons = daten.buchungen.length;
-  const letzte = daten.letzteSicherung
-    ? new Date(daten.letzteSicherung).toLocaleString("de-DE",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})
+  const saleCount = data.sales.length;
+  const lastText = data.lastBackup
+    ? new Date(data.lastBackup).toLocaleString("de-DE",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})
     : "noch nie";
-  const warnung = !speicherOk || (bons > 0 && !daten.letzteSicherung);
-  ziel.dataset.warnung = warnung ? "ja" : "nein";
-  ziel.innerHTML = "";
-  const zeilen = [
-    ["Gespeicherte Bons", String(bons)],
-    ["Schreiben auf dieses Gerät", speicherOk ? "läuft" : "schlägt fehl"],
-    ["Vom Browser geschützt", dauerhaft === null ? "unbekannt" : (dauerhaft ? "ja" : "nein — Daten könnten bei Platzmangel verworfen werden")],
-    ["Letzte heruntergeladene Sicherung", letzte]
+  const warning = !storageOk || (saleCount > 0 && !data.lastBackup);
+  target.dataset.warn = warning ? "yes":"no";
+  target.innerHTML = "";
+  const rows = [
+    ["Gespeicherte Bons", String(saleCount)],
+    ["Schreiben auf dieses Gerät", storageOk ? "läuft" : "schlägt fehl"],
+    ["Vom Browser geschützt", persistent === null ? "unbekannt" : (persistent ? "ja" : "nein, Daten könnten bei Platzmangel verworfen werden")],
+    ["Letzte heruntergeladene Sicherung", lastText]
   ];
-  zeilen.forEach(([k,v])=>{
+  rows.forEach(([k,v])=>{
     const d = document.createElement("div");
     d.innerHTML = "<b></b> ";
     d.querySelector("b").textContent = k + ":";
     d.appendChild(document.createTextNode(" " + v));
-    ziel.appendChild(d);
+    target.appendChild(d);
   });
 }
 
-/* ---------- Helfer ---------- */
+/* ---------- Helpers ---------- */
 const $  = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
-const euroFmt = new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"});
-const euro = c => euroFmt.format(c/100);
-const zahl = c => (c/100).toFixed(2).replace(".",",");   // für CSV
+const moneyFmt = new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"});
+const money = c => moneyFmt.format(c/100);
+const csvNum = c => (c/100).toFixed(2).replace(".",",");   // for CSV
 
-/* Nimmt „4,50“, „4.50“, „1.234,50“ oder „-2“ und liefert ganze Cent.
-   Bei Unsinn null, damit der Aufrufer nachfragen kann. */
-function centAus(eingabe){
-  let s = String(eingabe).trim().replace(/\s/g,"").replace(/€/g,"");
+/* Accepts "4,50", "4.50", "1.234,50" or "-2" and returns whole cents.
+   Returns null on nonsense so the caller can ask again. */
+function parseCents(input){
+  let s = String(input).trim().replace(/\s/g,"").replace(/€/g,"");
   if(s === "") return null;
-  if(s.includes(",") && s.includes(".")) s = s.replace(/\./g,"");   // Tausenderpunkte
+  if(s.includes(",") && s.includes(".")) s = s.replace(/\./g,"");   // thousands separators
   s = s.replace(",", ".");
   if(!/^-?\d*\.?\d*$/.test(s)) return null;
   const z = parseFloat(s);
   if(!Number.isFinite(z)) return null;
   return Math.round(z*100);
 }
-function tagVon(ts){
+function dayOf(ts){
   const d = new Date(ts);
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
-function uhrzeit(ts){
+function timeOf(ts){
   return new Date(ts).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
 }
-let meldeTimer;
-function melden(text){
-  const el = $("#meldung");
+let toastTimer;
+function toastMsg(text){
+  const el = $("#toast");
   el.textContent = text;
-  el.dataset.sichtbar = "ja";
-  clearTimeout(meldeTimer);
-  meldeTimer = setTimeout(()=>{ el.dataset.sichtbar = "nein"; }, 2200);
+  el.dataset.visible = "yes";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ el.dataset.visible = "no"; }, 2200);
 }
-function fragen(titel, text, jaText){
-  $("#frage-titel").textContent = titel;
-  $("#frage-text").textContent  = text;
-  $("#frage-ja").textContent    = jaText || "Ja";
-  $("#overlay-frage").dataset.offen = "ja";
-  return new Promise(res => { frageAntwort = res; });
+function askConfirm(title, text, yesLabel){
+  $("#confirm-title").textContent = title;
+  $("#confirm-text").textContent  = text;
+  $("#confirm-yes").textContent    = yesLabel || "Ja";
+  $("#dlg-confirm").dataset.open = "yes";
+  return new Promise(res => { confirmResolve = res; });
 }
-function frageSchliessen(antwort){
-  $("#overlay-frage").dataset.offen = "nein";
-  if(frageAntwort){ frageAntwort(antwort); frageAntwort = null; }
+function closeConfirm(answer){
+  $("#dlg-confirm").dataset.open = "no";
+  if(confirmResolve){ confirmResolve(answer); confirmResolve = null; }
 }
 
 /* ============================================================
-   KASSE
+   REGISTER
    ============================================================ */
-function kategorien(){
-  const gesehen = [];
-  daten.produkte.slice().sort((a,b)=>a.sort-b.sort).forEach(p=>{
-    const k = (p.kategorie||"Sonstiges").trim();
-    if(!gesehen.includes(k)) gesehen.push(k);
+function categoryNames(){
+  const seen = [];
+  data.products.slice().sort((a,b)=>a.sort-b.sort).forEach(p=>{
+    const k = (p.category||"Sonstiges").trim();
+    if(!seen.includes(k)) seen.push(k);
   });
-  return gesehen;
+  return seen;
 }
 
-/* Im festen Raster steht oben die Seitenwahl, sonst der Kategorienfilter. */
-function zeichneKategorien(){
-  const ziel = $("#kategorien");
-  ziel.innerHTML = "";
+/* Fixed grid shows page tabs up top, otherwise the category filter. */
+function renderFilterBar(){
+  const target = $("#filter-bar");
+  target.innerHTML = "";
 
-  if(festesRaster()){
-    const seiten = seitenZahl();
-    if(seiten <= 1){ ziel.dataset.leer = "ja"; return; }
-    delete ziel.dataset.leer;
-    if(aktuelleSeite >= seiten) aktuelleSeite = seiten - 1;
-    for(let s=0; s<seiten; s++){
+  if(hasFixedGrid()){
+    const pages = pageCount();
+    if(pages <= 1){ target.dataset.empty = "yes"; return; }
+    delete target.dataset.empty;
+    if(currentPage >= pages) currentPage = pages - 1;
+    for(let s=0; s<pages; s++){
       const b = document.createElement("button");
       b.textContent = "Seite " + (s+1);
-      b.setAttribute("aria-pressed", aktuelleSeite===s ? "true":"false");
-      b.addEventListener("click", ()=>{ aktuelleSeite = s; zeichneKategorien(); zeichneRaster(); });
-      ziel.appendChild(b);
+      b.setAttribute("aria-pressed", currentPage===s ? "true":"false");
+      b.addEventListener("click", ()=>{ currentPage = s; renderFilterBar(); renderGrid(); });
+      target.appendChild(b);
     }
     return;
   }
 
-  delete ziel.dataset.leer;
-  const alle = kategorien();
-  if(!alle.includes(kategorieFilter)) kategorieFilter = "alle";
-  const bauen = (wert, text) => {
+  delete target.dataset.empty;
+  const all = categoryNames();
+  if(!all.includes(categoryFilter)) categoryFilter = "all";
+  const makeTab = (val, text) => {
     const b = document.createElement("button");
     b.textContent = text;
-    b.setAttribute("aria-pressed", kategorieFilter===wert ? "true":"false");
-    b.addEventListener("click", ()=>{ kategorieFilter = wert; zeichneKategorien(); zeichneRaster(); });
-    ziel.appendChild(b);
+    b.setAttribute("aria-pressed", categoryFilter===val ? "true":"false");
+    b.addEventListener("click", ()=>{ categoryFilter = val; renderFilterBar(); renderGrid(); });
+    target.appendChild(b);
   };
-  bauen("alle","Alle");
-  alle.forEach(k => bauen(k,k));
+  makeTab("all","Alle");
+  all.forEach(k => makeTab(k,k));
 }
 
-function artikelTaste(p){
-  const imBon = bon.find(z=>z.produktId===p.id);
+function productTile(p){
+  const inCart = cart.find(z=>z.productId===p.id);
   const b = document.createElement("button");
-  b.className = "artikel";
-  b.style.setProperty("--k", p.farbe);
-  if(imBon) b.dataset.imbon = "ja";
+  b.className = "tile";
+  b.style.setProperty("--k", p.color);
+  if(inCart) b.dataset.incart = "yes";
   b.innerHTML =
-    '<span class="zaehler"></span>' +
-    '<span class="name"></span>' +
-    '<span class="preis"></span>';
-  b.querySelector(".name").textContent  = p.name;
-  b.querySelector(".preis").textContent = euro(p.preisCent);
-  b.querySelector(".zaehler").textContent = imBon ? imBon.menge : "";
-  b.addEventListener("click", ()=> bonHinzu(p));
+    '<span class="tile-count"></span>' +
+    '<span class="tile-name"></span>' +
+    '<span class="tile-price"></span>';
+  b.querySelector(".tile-name").textContent  = p.name;
+  b.querySelector(".tile-price").textContent = money(p.priceCents);
+  b.querySelector(".tile-count").textContent = inCart ? inCart.qty : "";
+  b.addEventListener("click", ()=> cartAdd(p));
   return b;
 }
 
-function zeichneRaster(){
-  const ziel = $("#raster");
-  ziel.innerHTML = "";
+function renderGrid(){
+  const target = $("#grid");
+  target.innerHTML = "";
 
-  if(festesRaster()){
-    const {spalten, zeilen} = daten.raster;
-    ziel.dataset.modus = "fest";
-    ziel.style.gridTemplateColumns = `repeat(${spalten}, 1fr)`;
-    ziel.style.gridTemplateRows    = `repeat(${zeilen}, 1fr)`;
-    const start = aktuelleSeite * feldZahl();
-    for(let i=0; i<feldZahl(); i++){
-      const p = artikelAufPlatz(start + i);
-      if(p) ziel.appendChild(artikelTaste(p));
+  if(hasFixedGrid()){
+    const {columns, rows} = data.grid;
+    target.dataset.layout = "fixed";
+    target.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+    target.style.gridTemplateRows    = `repeat(${rows}, 1fr)`;
+    const start = currentPage * slotsPerPage();
+    for(let i=0; i<slotsPerPage(); i++){
+      const p = productAtSlot(start + i);
+      if(p) target.appendChild(productTile(p));
       else {
-        const leer = document.createElement("div");
-        leer.className = "artikel-leer";
-        leer.setAttribute("aria-hidden", "true");
-        ziel.appendChild(leer);
+        const blank = document.createElement("div");
+        blank.className = "tile-empty";
+        blank.setAttribute("aria-hidden", "true");
+        target.appendChild(blank);
       }
     }
     return;
   }
 
-  delete ziel.dataset.modus;
-  ziel.style.gridTemplateColumns = "";
-  ziel.style.gridTemplateRows    = "";
-  const liste = daten.produkte
+  delete target.dataset.layout;
+  target.style.gridTemplateColumns = "";
+  target.style.gridTemplateRows    = "";
+  const list = data.products
     .slice()
     .sort((a,b)=>a.sort-b.sort)
-    .filter(p => kategorieFilter==="alle" || (p.kategorie||"Sonstiges").trim()===kategorieFilter);
+    .filter(p => categoryFilter==="all" || (p.category||"Sonstiges").trim()===categoryFilter);
 
-  if(!liste.length){
+  if(!list.length){
     const p = document.createElement("p");
-    p.className = "leer-hinweis";
-    p.textContent = daten.produkte.length
+    p.className = "grid-hint";
+    p.textContent = data.products.length
       ? "In dieser Gruppe steht nichts."
       : "Noch keine Artikel. Lege sie im Reiter „Artikel“ an.";
-    ziel.appendChild(p);
+    target.appendChild(p);
     return;
   }
-  liste.forEach(p => ziel.appendChild(artikelTaste(p)));
+  list.forEach(p => target.appendChild(productTile(p)));
 }
 
-function bonHinzu(produkt){
-  const zeile = bon.find(z=>z.produktId===produkt.id);
-  if(zeile) zeile.menge++;
-  else bon.push({produktId:produkt.id, name:produkt.name, preisCent:produkt.preisCent, menge:1});
-  zeichneBon(); zeichneRaster();
+function cartAdd(product){
+  const rowEl = cart.find(z=>z.productId===product.id);
+  if(rowEl) rowEl.qty++;
+  else cart.push({productId:product.id, name:product.name, priceCents:product.priceCents, qty:1});
+  renderCart(); renderGrid();
 }
-function bonAendern(produktId, delta){
-  const i = bon.findIndex(z=>z.produktId===produktId);
+function cartChange(productId, delta){
+  const i = cart.findIndex(z=>z.productId===productId);
   if(i<0) return;
-  bon[i].menge += delta;
-  if(bon[i].menge<=0) bon.splice(i,1);
-  zeichneBon(); zeichneRaster();
+  cart[i].qty += delta;
+  if(cart[i].qty<=0) cart.splice(i,1);
+  renderCart(); renderGrid();
 }
-const bonSumme = () => bon.reduce((s,z)=>s + z.preisCent*z.menge, 0);
-const bonStueck = () => bon.reduce((s,z)=>s + z.menge, 0);
+const cartTotal = () => cart.reduce((s,z)=>s + z.priceCents*z.qty, 0);
+const cartCount = () => cart.reduce((s,z)=>s + z.qty, 0);
 
-function zeichneBon(){
-  const ziel = $("#posten");
-  ziel.innerHTML = "";
-  bon.forEach(z=>{
-    const zeile = document.createElement("div");
-    zeile.className = "posten-zeile";
-    zeile.innerHTML =
-      '<span class="pz-name"></span>' +
-      '<span class="pz-summe"></span>' +
-      '<span class="pz-steuer">' +
-        '<button class="pz-knopf" data-r="minus" aria-label="Weniger">−</button>' +
-        '<span class="pz-menge"></span>' +
-        '<button class="pz-knopf" data-r="plus" aria-label="Mehr">+</button>' +
-        '<span class="pz-einzel"></span>' +
+function renderCart(){
+  const target = $("#receipt-lines");
+  target.innerHTML = "";
+  cart.forEach(z=>{
+    const rowEl = document.createElement("div");
+    rowEl.className = "receipt-line";
+    rowEl.innerHTML =
+      '<span class="line-name"></span>' +
+      '<span class="line-total"></span>' +
+      '<span class="line-controls">' +
+        '<button class="line-button" data-act="minus" aria-label="Weniger">-</button>' +
+        '<span class="line-qty"></span>' +
+        '<button class="line-button" data-act="plus" aria-label="Mehr">+</button>' +
+        '<span class="line-unit"></span>' +
       '</span>';
-    zeile.querySelector(".pz-name").textContent  = z.name;
-    zeile.querySelector(".pz-summe").textContent = euro(z.preisCent*z.menge);
-    zeile.querySelector(".pz-menge").textContent = z.menge;
-    zeile.querySelector(".pz-einzel").textContent = "à " + euro(z.preisCent);
-    zeile.querySelector('[data-r="minus"]').addEventListener("click", ()=>bonAendern(z.produktId,-1));
-    zeile.querySelector('[data-r="plus"]').addEventListener("click",  ()=>bonAendern(z.produktId, 1));
-    ziel.appendChild(zeile);
+    rowEl.querySelector(".line-name").textContent  = z.name;
+    rowEl.querySelector(".line-total").textContent = money(z.priceCents*z.qty);
+    rowEl.querySelector(".line-qty").textContent = z.qty;
+    rowEl.querySelector(".line-unit").textContent = "à " + money(z.priceCents);
+    rowEl.querySelector('[data-act="minus"]').addEventListener("click", ()=>cartChange(z.productId,-1));
+    rowEl.querySelector('[data-act="plus"]').addEventListener("click",  ()=>cartChange(z.productId, 1));
+    target.appendChild(rowEl);
   });
 
-  const stueck = bonStueck();
-  $("#bon-anzahl").textContent = stueck===1 ? "1 Artikel" : stueck+" Artikel";
-  $("#bon-summe").textContent  = euro(bonSumme());
-  $("#knopf-leeren").disabled     = stueck===0;
-  $("#knopf-kassieren").disabled  = stueck===0;
+  const count = cartCount();
+  $("#receipt-count").textContent = count===1 ? "1 Artikel" : count+" Artikel";
+  $("#receipt-total").textContent  = money(cartTotal());
+  $("#clear-cart").disabled     = count===0;
+  $("#checkout").disabled  = count===0;
 }
 
 /* ============================================================
-   KASSIEREN
+   CHECKOUT
    ============================================================ */
-function kassierenOeffnen(){
-  if(!bon.length) return;
-  gegebenRoh = "";
-  trinkgeldAn = false;
-  $("#overlay-kassieren").dataset.offen = "ja";
-  zeichneBlock();
-  zeichneKassieren();
+function openCheckout(){
+  if(!cart.length) return;
+  tenderedRaw = "";
+  tipOn = false;
+  $("#dlg-checkout").dataset.open = "yes";
+  renderKeypad();
+  renderCheckout();
 }
-function kassierenSchliessen(){
-  $("#overlay-kassieren").dataset.offen = "nein";
+function closeCheckout(){
+  $("#dlg-checkout").dataset.open = "no";
 }
-function zeichneBlock(){
-  const ziel = $("#kz-block");
-  if(ziel.childElementCount) return;                       // nur einmal bauen
-  ["1","2","3","4","5","6","7","8","9","00","0","⌫"].forEach(t=>{
+function renderKeypad(){
+  const target = $("#keypad");
+  if(target.childElementCount) return;                       // build once
+  ["1","2","3","4","5","6","7","8","9","00","0","Korr"].forEach(t=>{
     const b = document.createElement("button");
     b.textContent = t;
     b.addEventListener("click", ()=>{
-      if(t==="⌫") gegebenRoh = gegebenRoh.slice(0,-1);
-      else if(gegebenRoh.length < 7) gegebenRoh += t;
-      zeichneKassieren();
+      if(t==="Korr") tenderedRaw = tenderedRaw.slice(0,-1);
+      else if(tenderedRaw.length < 7) tenderedRaw += t;
+      renderCheckout();
     });
-    ziel.appendChild(b);
+    target.appendChild(b);
   });
 }
-function schnellwerte(summe){
-  const werte = new Set([summe]);
-  const aufRunden = s => [100,500,1000,2000,5000,10000]
-    .forEach(schritt => werte.add(Math.ceil(s/schritt)*schritt));
-  aufRunden(summe);
-  [500,1000,2000,5000].forEach(schein => { if(schein > summe) werte.add(schein); });
-  return Array.from(werte).filter(w=>w>=summe).sort((a,b)=>a-b).slice(0,6);
+function quickValues(total){
+  const values = new Set([total]);
+  const roundUp = s => [100,500,1000,2000,5000,10000]
+    .forEach(step => values.add(Math.ceil(s/step)*step));
+  roundUp(total);
+  [500,1000,2000,5000].forEach(bill => { if(bill > total) values.add(bill); });
+  return Array.from(values).filter(w=>w>=total).sort((a,b)=>a-b).slice(0,6);
 }
-function stueckeln(rest){
-  const raus = [];
-  STUECKE.forEach(([wert,name])=>{
-    const n = Math.floor(rest/wert);
-    if(n>0){ raus.push(n+"× "+name); rest -= n*wert; }
+function breakDown(change){
+  const out = [];
+  DENOMINATIONS.forEach(([val,name])=>{
+    const n = Math.floor(change/val);
+    if(n>0){ out.push(n+"x "+name); change -= n*val; }
   });
-  return raus;
+  return out;
 }
-function zeichneKassieren(){
-  const summe   = bonSumme();
-  const gegeben = gegebenRoh ? parseInt(gegebenRoh,10) : 0;
-  const rest    = gegeben - summe;
+function renderCheckout(){
+  const total   = cartTotal();
+  const tendered = tenderedRaw ? parseInt(tenderedRaw,10) : 0;
+  const change    = tendered - total;
 
-  $("#kz-summe").textContent   = euro(summe);
-  $("#kz-gegeben").textContent = gegebenRoh ? euro(gegeben) : "—";
+  $("#due-amount").textContent   = money(total);
+  $("#tendered-amount").textContent = tenderedRaw ? money(tendered) : "-";
 
-  const block   = $("#kz-rueckgeld-block");
-  const schalter = $("#knopf-trinkgeld");
-  const ziel    = $("#kz-stueckelung");
-  ziel.innerHTML = "";
-  block.dataset.trinkgeld = "nein";
+  const block   = $("#change-panel");
+  const toggle = $("#tip-toggle");
+  const target    = $("#change-breakdown");
+  target.innerHTML = "";
+  block.dataset.tip = "no";
 
-  // Trinkgeld nur anbieten, wenn tatsächlich etwas übrig bleibt
-  const restVerfuegbar = gegebenRoh !== "" && rest > 0;
-  schalter.dataset.zeigen = restVerfuegbar ? "ja" : "nein";
-  if(!restVerfuegbar) trinkgeldAn = false;
-  schalter.setAttribute("aria-pressed", trinkgeldAn ? "true" : "false");
-  schalter.textContent = trinkgeldAn
-    ? "Trinkgeld " + euro(rest) + " — antippen zum Aufheben"
+  // only offer a tip when something is actually left over
+  const changeAvailable = tenderedRaw !== "" && change > 0;
+  toggle.dataset.show = changeAvailable ? "yes":"no";
+  if(!changeAvailable) tipOn = false;
+  toggle.setAttribute("aria-pressed", tipOn ? "true" : "false");
+  toggle.textContent = tipOn
+    ? "Trinkgeld " + money(change) + ", antippen zum Aufheben"
     : "Rest als Trinkgeld";
 
-  if(!gegebenRoh){
-    block.dataset.fehlt = "ja";
-    $("#kz-rg-label").textContent   = "Rückgeld";
-    $("#kz-rueckgeld").textContent  = "—";
-  }else if(rest < 0){
-    block.dataset.fehlt = "ja";
-    $("#kz-rg-label").textContent   = "Es fehlen noch";
-    $("#kz-rueckgeld").textContent  = euro(-rest);
-  }else if(trinkgeldAn){
-    block.dataset.fehlt = "nein";
-    block.dataset.trinkgeld = "ja";
-    $("#kz-rg-label").textContent   = "Trinkgeld — nichts zurück";
-    $("#kz-rueckgeld").textContent  = euro(rest);
+  if(!tenderedRaw){
+    block.dataset.short = "yes";
+    $("#change-caption").textContent   = "Rückgeld";
+    $("#change-amount").textContent  = "-";
+  }else if(change < 0){
+    block.dataset.short = "yes";
+    $("#change-caption").textContent   = "Es fehlen noch";
+    $("#change-amount").textContent  = money(-change);
+  }else if(tipOn){
+    block.dataset.short = "no";
+    block.dataset.tip = "yes";
+    $("#change-caption").textContent   = "Trinkgeld, nichts zurück";
+    $("#change-amount").textContent  = money(change);
   }else{
-    block.dataset.fehlt = "nein";
-    $("#kz-rg-label").textContent   = "Rückgeld";
-    $("#kz-rueckgeld").textContent  = euro(rest);
-    stueckeln(rest).forEach(t=>{
+    block.dataset.short = "no";
+    $("#change-caption").textContent   = "Rückgeld";
+    $("#change-amount").textContent  = money(change);
+    breakDown(change).forEach(t=>{
       const s = document.createElement("span");
       s.textContent = t;
-      ziel.appendChild(s);
+      target.appendChild(s);
     });
   }
 
-  const sw = $("#kz-schnellwahl");
-  sw.innerHTML = "";
-  schnellwerte(summe).forEach(w=>{
+  const quickBox = $("#quick-amounts");
+  quickBox.innerHTML = "";
+  quickValues(total).forEach(w=>{
     const b = document.createElement("button");
-    b.textContent = w===summe ? "Passend" : euro(w);
-    if(w===summe) b.dataset.passend = "ja";
-    b.addEventListener("click", ()=>{ gegebenRoh = String(w); zeichneKassieren(); });
-    sw.appendChild(b);
+    b.textContent = w===total ? "Passend" : money(w);
+    if(w===total) b.dataset.exact = "yes";
+    b.addEventListener("click", ()=>{ tenderedRaw = String(w); renderCheckout(); });
+    quickBox.appendChild(b);
   });
 
-  $("#knopf-abschliessen").disabled = gegebenRoh !== "" && rest < 0;
+  $("#pay-cash").disabled = tenderedRaw !== "" && change < 0;
 }
 
-function buchen(zahlart){
-  const summe   = bonSumme();
-  const gegeben = gegebenRoh ? parseInt(gegebenRoh,10) : summe;
-  if(gegeben < summe){ melden("Der gegebene Betrag reicht nicht"); return; }
+function recordSale(payment){
+  const total   = cartTotal();
+  const tendered = tenderedRaw ? parseInt(tenderedRaw,10) : total;
+  if(tendered < total){ toastMsg("Der gegebene Betrag reicht nicht"); return; }
 
-  const ueberschuss = gegeben - summe;
-  const trinkgeld   = trinkgeldAn ? ueberschuss : 0;
-  const rueckgeld   = ueberschuss - trinkgeld;
+  const surplus = tendered - total;
+  const tips   = tipOn ? surplus : 0;
+  const change   = surplus - tips;
 
-  daten.buchungen.push({
+  data.sales.push({
     id: "b" + Date.now() + Math.random().toString(36).slice(2,6),
     ts: Date.now(),
-    positionen: bon.map(z=>({produktId:z.produktId, name:z.name, preisCent:z.preisCent, menge:z.menge})),
-    summeCent: summe,
-    zahlart,
-    gegebenCent: gegeben,
-    trinkgeldCent: trinkgeld,
-    rueckgeldCent: rueckgeld,
-    storniert: false
+    items: cart.map(z=>({productId:z.productId, name:z.name, priceCents:z.priceCents, qty:z.qty})),
+    totalCents: total,
+    payment,
+    tenderedCents: tendered,
+    tipCents: tips,
+    changeCents: change,
+    voided: false
   });
-  sichern();
+  saveState();
 
-  bon = [];
-  gegebenRoh = "";
-  trinkgeldAn = false;
-  kassierenSchliessen();
-  zeichneBon(); zeichneRaster();
+  cart = [];
+  tenderedRaw = "";
+  tipOn = false;
+  closeCheckout();
+  renderCart(); renderGrid();
 
-  const teile = [];
-  if(zahlart === "karte") teile.push("Mit Karte gebucht");
-  else if(rueckgeld > 0)  teile.push("Gebucht — " + euro(rueckgeld) + " zurück");
-  else                    teile.push("Gebucht — passend");
-  if(trinkgeld > 0) teile.push(euro(trinkgeld) + " Trinkgeld");
-  melden(teile.join(", "));
+  const parts = [];
+  if(payment === "card") parts.push("Mit Karte gebucht");
+  else if(change > 0)  parts.push("Gebucht, " + money(change) + " zurück");
+  else                    parts.push("Gebucht, passend");
+  if(tips > 0) parts.push(money(tips) + " Trinkgeld");
+  toastMsg(parts.join(", "));
 }
 
 /* ============================================================
-   ARTIKELVERWALTUNG
+   PRODUCT MANAGEMENT
    ============================================================ */
-function zeichneFarbwahl(){
-  const ziel = $("#farbwahl");
-  ziel.innerHTML = "";
-  FARBEN.forEach(([name,wert])=>{
+function renderColorPicker(){
+  const target = $("#color-picker");
+  target.innerHTML = "";
+  COLORS.forEach(([name,val])=>{
     const b = document.createElement("button");
-    b.style.background = wert;
+    b.style.background = val;
     b.title = name;
     b.setAttribute("aria-label", "Farbe " + name);
-    b.setAttribute("aria-pressed", neueFarbe===wert ? "true":"false");
-    b.addEventListener("click", ()=>{ neueFarbe = wert; zeichneFarbwahl(); });
-    ziel.appendChild(b);
+    b.setAttribute("aria-pressed", newColor===val ? "true":"false");
+    b.addEventListener("click", ()=>{ newColor = val; renderColorPicker(); });
+    target.appendChild(b);
   });
 }
 
-function zeichneArtikelListe(){
-  const ziel = $("#artikel-liste");
-  ziel.innerHTML = "";
-  const liste = daten.produkte.slice().sort((a,b)=>a.sort-b.sort);
-  $("#artikel-anzahl").textContent = liste.length ? "(" + liste.length + ")" : "";
+function renderProductList(){
+  const target = $("#product-list");
+  target.innerHTML = "";
+  const list = data.products.slice().sort((a,b)=>a.sort-b.sort);
+  $("#product-count").textContent = list.length ? "(" + list.length + ")" : "";
 
-  const dl = $("#kategorie-liste");
+  const dl = $("#category-options");
   dl.innerHTML = "";
-  kategorien().forEach(k=>{
+  categoryNames().forEach(k=>{
     const o = document.createElement("option");
     o.value = k;
     dl.appendChild(o);
   });
 
-  if(!liste.length){
+  if(!list.length){
     const p = document.createElement("p");
-    p.className = "hinweis";
+    p.className = "note";
     p.textContent = "Noch keine Artikel angelegt.";
-    ziel.appendChild(p);
+    target.appendChild(p);
     return;
   }
 
-  liste.forEach((p,i)=>{
-    const zeile = document.createElement("div");
-    zeile.className = "listen-zeile";
-    zeile.innerHTML =
-      '<span class="farbtupfer"></span>' +
-      '<span class="lz-text"><b></b><small></small></span>' +
-      '<span class="lz-preis"></span>' +
-      '<button class="mini-knopf" data-r="hoch" aria-label="Nach oben">↑</button>' +
-      '<button class="mini-knopf" data-r="runter" aria-label="Nach unten">↓</button>' +
-      '<button class="mini-knopf" data-r="bearbeiten">Ändern</button>' +
-      '<button class="mini-knopf" data-r="loeschen" aria-label="Löschen">✕</button>';
-    zeile.querySelector(".farbtupfer").style.background = p.farbe;
-    zeile.querySelector("b").textContent = p.name;
-    zeile.querySelector(".lz-preis").textContent = euro(p.preisCent);
+  list.forEach((p,i)=>{
+    const rowEl = document.createElement("div");
+    rowEl.className = "list-row";
+    rowEl.innerHTML =
+      '<span class="color-chip"></span>' +
+      '<span class="row-text"><b></b><small></small></span>' +
+      '<span class="row-price"></span>' +
+      '<button class="button-small" data-act="up" aria-label="Nach oben">Hoch</button>' +
+      '<button class="button-small" data-act="down" aria-label="Nach unten">Runter</button>' +
+      '<button class="button-small" data-act="edit">Ändern</button>' +
+      '<button class="button-small" data-act="delete" aria-label="Löschen">Weg</button>';
+    rowEl.querySelector(".color-chip").style.background = p.color;
+    rowEl.querySelector("b").textContent = p.name;
+    rowEl.querySelector(".row-price").textContent = money(p.priceCents);
 
-    if(festesRaster()){
-      // Die Reihenfolge ergibt sich aus dem Tastenfeld, nicht aus dieser Liste
-      const seite = Math.floor((p.platz||0) / feldZahl()) + 1;
-      const feld  = ((p.platz||0) % feldZahl()) + 1;
-      zeile.querySelector("small").textContent =
-        (p.kategorie || "Sonstiges") + " · Seite " + seite + ", Feld " + feld;
-      zeile.querySelector('[data-r="hoch"]').remove();
-      zeile.querySelector('[data-r="runter"]').remove();
+    if(hasFixedGrid()){
+      // order comes from the keypad, not from this list
+      const page = Math.floor((p.slot||0) / slotsPerPage()) + 1;
+      const slotNum  = ((p.slot||0) % slotsPerPage()) + 1;
+      rowEl.querySelector("small").textContent =
+        (p.category || "Sonstiges") + ", Seite " + page + ", Feld " + slotNum;
+      rowEl.querySelector('[data-act="up"]').remove();
+      rowEl.querySelector('[data-act="down"]').remove();
     }else{
-      zeile.querySelector("small").textContent = p.kategorie || "Sonstiges";
-      zeile.querySelector('[data-r="hoch"]').disabled   = i===0;
-      zeile.querySelector('[data-r="runter"]').disabled = i===liste.length-1;
-      zeile.querySelector('[data-r="hoch"]').addEventListener("click",   ()=>verschieben(p.id,-1));
-      zeile.querySelector('[data-r="runter"]').addEventListener("click", ()=>verschieben(p.id, 1));
+      rowEl.querySelector("small").textContent = p.category || "Sonstiges";
+      rowEl.querySelector('[data-act="up"]').disabled   = i===0;
+      rowEl.querySelector('[data-act="down"]').disabled = i===list.length-1;
+      rowEl.querySelector('[data-act="up"]').addEventListener("click",   ()=>moveProduct(p.id,-1));
+      rowEl.querySelector('[data-act="down"]').addEventListener("click", ()=>moveProduct(p.id, 1));
     }
-    zeile.querySelector('[data-r="bearbeiten"]').addEventListener("click", ()=>artikelBearbeiten(p.id));
-    zeile.querySelector('[data-r="loeschen"]').addEventListener("click", async ()=>{
-      const ok = await fragen("Artikel löschen?",
+    rowEl.querySelector('[data-act="edit"]').addEventListener("click", ()=>editProduct(p.id));
+    rowEl.querySelector('[data-act="delete"]').addEventListener("click", async ()=>{
+      const ok = await askConfirm("Artikel löschen?",
         "„"+p.name+"“ verschwindet von der Kasse. Bereits gebuchte Bons bleiben unverändert.","Löschen");
       if(!ok) return;
-      daten.produkte = daten.produkte.filter(x=>x.id!==p.id);
-      sichern(); zeichneAlles();
-      melden("Artikel gelöscht");
+      data.products = data.products.filter(x=>x.id!==p.id);
+      saveState(); renderAll();
+      toastMsg("Artikel gelöscht");
     });
-    ziel.appendChild(zeile);
+    target.appendChild(rowEl);
   });
 }
 
-/* ---------- Tastenfeld anordnen ---------- */
-function zeichneAnordnung(){
-  const bereich = $("#anordnen-bereich");
-  if(!festesRaster()){ bereich.hidden = true; anordnenGewaehlt = null; return; }
-  bereich.hidden = false;
+/* ---------- Arrange the keypad ---------- */
+function renderArrangeGrid(){
+  const section = $("#arrange-section");
+  if(!hasFixedGrid()){ section.hidden = true; arrangeSelected = null; return; }
+  section.hidden = false;
 
-  const seiten = seitenZahl();
-  if(anordnenSeite >= seiten) anordnenSeite = seiten - 1;
+  const pages = pageCount();
+  if(arrangePage >= pages) arrangePage = pages - 1;
 
-  const seitenZiel = $("#anordnen-seiten");
-  seitenZiel.innerHTML = "";
-  if(seiten > 1){
-    for(let s=0;s<seiten;s++){
+  const pagesEl = $("#arrange-pages");
+  pagesEl.innerHTML = "";
+  if(pages > 1){
+    for(let s=0;s<pages;s++){
       const b = document.createElement("button");
       b.textContent = "Seite " + (s+1);
-      b.setAttribute("aria-pressed", anordnenSeite===s ? "true":"false");
-      b.addEventListener("click", ()=>{ anordnenSeite = s; zeichneAnordnung(); });
-      seitenZiel.appendChild(b);
+      b.setAttribute("aria-pressed", arrangePage===s ? "true":"false");
+      b.addEventListener("click", ()=>{ arrangePage = s; renderArrangeGrid(); });
+      pagesEl.appendChild(b);
     }
   }
 
-  const {spalten, zeilen} = daten.raster;
-  const ziel = $("#anordnen-raster");
-  ziel.style.gridTemplateColumns = `repeat(${spalten}, 1fr)`;
-  ziel.innerHTML = "";
-  const start = anordnenSeite * feldZahl();
+  const {columns, rows} = data.grid;
+  const target = $("#arrange-grid");
+  target.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+  target.innerHTML = "";
+  const start = arrangePage * slotsPerPage();
 
-  for(let i=0;i<feldZahl();i++){
-    const platz = start + i;
-    const p = artikelAufPlatz(platz);
+  for(let i=0;i<slotsPerPage();i++){
+    const slot = start + i;
+    const p = productAtSlot(slot);
     const f = document.createElement("button");
-    f.className = "anordnen-feld";
-    f.setAttribute("aria-pressed", anordnenGewaehlt === platz ? "true":"false");
+    f.className = "arrange-slot";
+    f.setAttribute("aria-pressed", arrangeSelected === slot ? "true":"false");
     if(p){
-      f.style.setProperty("--k", p.farbe);
-      f.innerHTML = '<span class="af-name"></span><span class="af-preis"></span>';
-      f.querySelector(".af-name").textContent  = p.name;
-      f.querySelector(".af-preis").textContent = euro(p.preisCent);
-      f.setAttribute("aria-label", p.name + ", Platz " + (platz+1));
+      f.style.setProperty("--k", p.color);
+      f.innerHTML = '<span class="slot-name"></span><span class="slot-price"></span>';
+      f.querySelector(".slot-name").textContent  = p.name;
+      f.querySelector(".slot-price").textContent = money(p.priceCents);
+      f.setAttribute("aria-label", p.name + ", Platz " + (slot+1));
     }else{
-      f.dataset.frei = "ja";
+      f.dataset.free = "yes";
       f.textContent = "frei";
-      f.setAttribute("aria-label", "Freies Feld, Platz " + (platz+1));
+      f.setAttribute("aria-label", "Freies Feld, Platz " + (slot+1));
     }
-    f.addEventListener("click", ()=> anordnenKlick(platz));
-    ziel.appendChild(f);
+    f.addEventListener("click", ()=> arrangeTap(slot));
+    target.appendChild(f);
   }
 }
 
-function anordnenKlick(platz){
-  if(anordnenGewaehlt === null){
-    if(!artikelAufPlatz(platz)) return;        // ein leeres Feld kann nicht wandern
-    anordnenGewaehlt = platz;
-    zeichneAnordnung();
+function arrangeTap(slot){
+  if(arrangeSelected === null){
+    if(!productAtSlot(slot)) return;        // an empty slot has nothing to move
+    arrangeSelected = slot;
+    renderArrangeGrid();
     return;
   }
-  if(anordnenGewaehlt === platz){              // Auswahl wieder aufheben
-    anordnenGewaehlt = null;
-    zeichneAnordnung();
+  if(arrangeSelected === slot){              // tapping the same slot clears the selection
+    arrangeSelected = null;
+    renderArrangeGrid();
     return;
   }
-  const a = artikelAufPlatz(anordnenGewaehlt);
-  const b = artikelAufPlatz(platz);
-  if(a) a.platz = platz;
-  if(b) b.platz = anordnenGewaehlt;
-  anordnenGewaehlt = null;
-  sichern();
-  zeichneAnordnung();
-  zeichneKategorien();
-  zeichneRaster();
-  melden(b ? "Tasten getauscht" : "Taste verschoben");
+  const a = productAtSlot(arrangeSelected);
+  const b = productAtSlot(slot);
+  if(a) a.slot = slot;
+  if(b) b.slot = arrangeSelected;
+  arrangeSelected = null;
+  saveState();
+  renderArrangeGrid();
+  renderFilterBar();
+  renderGrid();
+  toastMsg(b ? "Tasten getauscht" : "Taste verschoben");
 }
 
-function verschieben(id, richtung){
-  const liste = daten.produkte.slice().sort((a,b)=>a.sort-b.sort);
-  const i = liste.findIndex(p=>p.id===id);
-  const j = i + richtung;
-  if(i<0 || j<0 || j>=liste.length) return;
-  [liste[i].sort, liste[j].sort] = [liste[j].sort, liste[i].sort];
-  sichern(); zeichneAlles();
+function moveProduct(id, dir){
+  const list = data.products.slice().sort((a,b)=>a.sort-b.sort);
+  const i = list.findIndex(p=>p.id===id);
+  const j = i + dir;
+  if(i<0 || j<0 || j>=list.length) return;
+  [list[i].sort, list[j].sort] = [list[j].sort, list[i].sort];
+  saveState(); renderAll();
 }
 
-function artikelBearbeiten(id){
-  const p = daten.produkte.find(x=>x.id===id);
+function editProduct(id){
+  const p = data.products.find(x=>x.id===id);
   if(!p) return;
-  bearbeiteId = id;
-  neueFarbe = p.farbe;
-  $("#f-name").value      = p.name;
-  $("#f-preis").value     = (p.preisCent/100).toFixed(2);
-  $("#f-kategorie").value = p.kategorie || "";
-  $("#knopf-artikel-speichern").textContent = "Änderung speichern";
-  $("#knopf-artikel-abbrechen").style.display = "grid";
-  zeichneFarbwahl();
-  $("#f-name").focus();
-  $("#f-name").scrollIntoView({block:"start", behavior:"smooth"});
+  editingId = id;
+  newColor = p.color;
+  $("#in-name").value      = p.name;
+  $("#in-price").value     = (p.priceCents/100).toFixed(2);
+  $("#in-category").value = p.category || "";
+  $("#save-product").textContent = "Änderung speichern";
+  $("#cancel-edit").style.display = "grid";
+  renderColorPicker();
+  $("#in-name").focus();
+  $("#in-name").scrollIntoView({block:"start", behavior:"smooth"});
 }
 
-function artikelFormularLeeren(){
-  bearbeiteId = null;
-  $("#f-name").value = "";
-  $("#f-preis").value = "";
-  $("#knopf-artikel-speichern").textContent = "Artikel anlegen";
-  $("#knopf-artikel-abbrechen").style.display = "none";
+function clearProductForm(){
+  editingId = null;
+  $("#in-name").value = "";
+  $("#in-price").value = "";
+  $("#save-product").textContent = "Artikel anlegen";
+  $("#cancel-edit").style.display = "none";
 }
 
-function artikelSpeichern(){
-  const name = $("#f-name").value.trim();
-  const kategorie = $("#f-kategorie").value.trim() || "Sonstiges";
+function saveProduct(){
+  const name = $("#in-name").value.trim();
+  const category = $("#in-category").value.trim() || "Sonstiges";
 
-  if(!name){ melden("Bezeichnung fehlt"); $("#f-name").focus(); return; }
-  const preisCent = centAus($("#f-preis").value);
-  if(preisCent === null){ melden("Preis fehlt oder ist keine Zahl"); $("#f-preis").focus(); return; }
+  if(!name){ toastMsg("Bezeichnung fehlt"); $("#in-name").focus(); return; }
+  const priceCents = parseCents($("#in-price").value);
+  if(priceCents === null){ toastMsg("Preis fehlt oder ist keine Zahl"); $("#in-price").focus(); return; }
 
-  if(bearbeiteId){
-    const p = daten.produkte.find(x=>x.id===bearbeiteId);
-    Object.assign(p, {name, preisCent, kategorie, farbe:neueFarbe});
-    melden("Artikel geändert");
+  if(editingId){
+    const p = data.products.find(x=>x.id===editingId);
+    Object.assign(p, {name, priceCents, category, color:newColor});
+    toastMsg("Artikel geändert");
   }else{
-    const maxSort = daten.produkte.reduce((m,p)=>Math.max(m,p.sort), -1);
-    daten.produkte.push({
+    const maxSort = data.products.reduce((m,p)=>Math.max(m,p.sort), -1);
+    data.products.push({
       id:"p"+Date.now()+Math.random().toString(36).slice(2,5),
-      name, preisCent, kategorie, farbe:neueFarbe, sort:maxSort+1
+      name, priceCents, category, color:newColor, sort:maxSort+1
     });
-    melden("Artikel angelegt");
+    toastMsg("Artikel angelegt");
   }
-  sichern();
-  artikelFormularLeeren();
-  zeichneAlles();
+  saveState();
+  clearProductForm();
+  renderAll();
 }
 
 /* ============================================================
-   BERICHTE
+   REPORTS
    ============================================================ */
-function bonsAmTag(tag){
-  return daten.buchungen.filter(b => tagVon(b.ts)===tag).sort((a,b)=>a.ts-b.ts);
+function salesOnDay(day){
+  return data.sales.filter(b => dayOf(b.ts)===day).sort((a,b)=>a.ts-b.ts);
 }
 
-function zeichneBericht(){
-  const tag  = $("#f-datum").value || tagVon(Date.now());
-  const alle = bonsAmTag(tag);
-  const echt = alle.filter(b=>!b.storniert);
+function renderReport(){
+  const day  = $("#in-date").value || dayOf(Date.now());
+  const all = salesOnDay(day);
+  const valid = all.filter(b=>!b.voided);
 
-  const umsatz = echt.reduce((s,b)=>s+b.summeCent,0);
-  const bar    = echt.filter(b=>b.zahlart==="bar").reduce((s,b)=>s+b.summeCent,0);
-  const karte  = echt.filter(b=>b.zahlart==="karte").reduce((s,b)=>s+b.summeCent,0);
-  const trinkgeld    = echt.reduce((s,b)=>s+(b.trinkgeldCent||0),0);
-  const trinkgeldBar = echt.filter(b=>b.zahlart==="bar").reduce((s,b)=>s+(b.trinkgeldCent||0),0);
-  const schnitt = echt.length ? Math.round(umsatz/echt.length) : 0;
-  const anfang = daten.wechselgeld[tag] || 0;
+  const revenue = valid.reduce((s,b)=>s+b.totalCents,0);
+  const bar    = valid.filter(b=>b.payment==="cash").reduce((s,b)=>s+b.totalCents,0);
+  const karte  = valid.filter(b=>b.payment==="card").reduce((s,b)=>s+b.totalCents,0);
+  const tips    = valid.reduce((s,b)=>s+(b.tipCents||0),0);
+  const cashTips = valid.filter(b=>b.payment==="cash").reduce((s,b)=>s+(b.tipCents||0),0);
+  const average = valid.length ? Math.round(revenue/valid.length) : 0;
+  const float = data.openingFloat[day] || 0;
 
-  const kennzahlen = [
-    ["Umsatz", euro(umsatz), "aktion"],
-    ["Bons", String(echt.length), ""],
-    ["Bar", euro(bar), ""],
-    ["Karte", euro(karte), ""],
-    ["Trinkgeld", euro(trinkgeld), ""],
-    ["Ø je Bon", euro(schnitt), ""],
-    ["Soll in der Kasse", euro(anfang + bar + trinkgeldBar), ""]
+  const statRows = [
+    ["Umsatz", money(revenue), "aktion"],
+    ["Bons", String(valid.length), ""],
+    ["Bar", money(bar), ""],
+    ["Karte", money(karte), ""],
+    ["Trinkgeld", money(tips), ""],
+    ["Ø je Bon", money(average), ""],
+    ["Soll in der Kasse", money(float + bar + cashTips), ""]
   ];
-  const kz = $("#kennzahlen");
-  kz.innerHTML = "";
-  kennzahlen.forEach(([label,wert,ton])=>{
+  const statsBefore = $("#stats");
+  statsBefore.innerHTML = "";
+  statRows.forEach(([label,val,ton])=>{
     const d = document.createElement("div");
-    d.className = "kennzahl";
-    if(ton) d.dataset.ton = ton;
-    d.innerHTML = '<div class="kz-label"></div><div class="kz-wert"></div>';
-    d.querySelector(".kz-label").textContent = label;
-    d.querySelector(".kz-wert").textContent  = wert;
-    kz.appendChild(d);
+    d.className = "stat";
+    if(ton) d.dataset.tone = ton;
+    d.innerHTML = '<div class="stat-label"></div><div class="stat-value"></div>';
+    d.querySelector(".stat-label").textContent = label;
+    d.querySelector(".stat-value").textContent  = val;
+    statsBefore.appendChild(d);
   });
 
-  // Verkauf nach Artikel
-  const proArtikel = new Map();
-  echt.forEach(b => b.positionen.forEach(p=>{
-    const e = proArtikel.get(p.name) || {menge:0, summe:0};
-    e.menge += p.menge;
-    e.summe += p.menge * p.preisCent;
-    proArtikel.set(p.name, e);
+  // sales per product
+  const perProduct = new Map();
+  valid.forEach(b => b.items.forEach(p=>{
+    const e = perProduct.get(p.name) || {qty:0, total:0};
+    e.qty += p.qty;
+    e.total += p.qty * p.priceCents;
+    perProduct.set(p.name, e);
   }));
-  const artikelReihen = Array.from(proArtikel.entries()).sort((a,b)=>b[1].summe-a[1].summe);
+  const productRows = Array.from(perProduct.entries()).sort((a,b)=>b[1].total-a[1].total);
 
-  const tA = $("#tabelle-artikel");
-  if(!artikelReihen.length){
-    tA.innerHTML = '<tbody><tr><td style="color:var(--text-leise)">An diesem Tag wurde nichts gebucht.</td></tr></tbody>';
+  const tableProducts = $("#table-products");
+  if(!productRows.length){
+    tableProducts.innerHTML = '<tbody><tr><td style="color:var(--text-muted)">An diesem Tag wurde nichts gebucht.</td></tr></tbody>';
   }else{
-    let html = '<thead><tr><th>Artikel</th><th class="zahl">Anzahl</th><th class="zahl">Umsatz</th></tr></thead><tbody>';
-    artikelReihen.forEach(([name,e])=>{
-      html += '<tr><td>'+esc(name)+'</td><td class="zahl">'+e.menge+'</td><td class="zahl">'+euro(e.summe)+'</td></tr>';
+    let html = '<thead><tr><th>Artikel</th><th class="num">Anzahl</th><th class="num">Umsatz</th></tr></thead><tbody>';
+    productRows.forEach(([name,e])=>{
+      html += '<tr><td>'+escapeHtml(name)+'</td><td class="num">'+e.qty+'</td><td class="num">'+money(e.total)+'</td></tr>';
     });
-    html += '<tr><td><b>Gesamt</b></td><td class="zahl"><b>'+
-            artikelReihen.reduce((s,[,e])=>s+e.menge,0)+'</b></td><td class="zahl"><b>'+euro(umsatz)+'</b></td></tr>';
-    tA.innerHTML = html + '</tbody>';
+    html += '<tr><td><b>Gesamt</b></td><td class="num"><b>'+
+            productRows.reduce((s,[,e])=>s+e.qty,0)+'</b></td><td class="num"><b>'+money(revenue)+'</b></td></tr>';
+    tableProducts.innerHTML = html + '</tbody>';
   }
 
-  // Bonliste
-  const tB = $("#tabelle-bons");
-  if(!alle.length){
-    tB.innerHTML = '<tbody><tr><td style="color:var(--text-leise)">Keine Bons an diesem Tag.</td></tr></tbody>';
+  // list of sales
+  const tableSales = $("#table-sales");
+  if(!all.length){
+    tableSales.innerHTML = '<tbody><tr><td style="color:var(--text-muted)">Keine Bons an diesem Tag.</td></tr></tbody>';
   }else{
-    const rahmen = document.createElement("tbody");
-    const kopf = document.createElement("thead");
-    kopf.innerHTML = '<tr><th>Zeit</th><th>Artikel</th><th>Zahlart</th><th class="zahl">Summe</th><th class="zahl">Trinkgeld</th><th></th></tr>';
-    alle.slice().reverse().forEach(b=>{
+    const tbody = document.createElement("tbody");
+    const head = document.createElement("thead");
+    head.innerHTML = '<tr><th>Zeit</th><th>Artikel</th><th>Zahlart</th><th class="num">Summe</th><th class="num">Trinkgeld</th><th></th></tr>';
+    all.slice().reverse().forEach(b=>{
       const tr = document.createElement("tr");
-      if(b.storniert) tr.dataset.storno = "ja";
-      const inhalt = b.positionen.map(p=>p.menge+"× "+p.name).join(", ");
+      if(b.voided) tr.dataset.void = "yes";
+      const content = b.items.map(p=>p.qty+"x "+p.name).join(", ");
       tr.innerHTML =
-        '<td class="zahl">'+uhrzeit(b.ts)+'</td>' +
-        '<td>'+esc(inhalt)+'</td>' +
-        '<td>'+(b.zahlart==="karte"?"Karte":"Bar")+'</td>' +
-        '<td class="zahl">'+euro(b.summeCent)+'</td>' +
-        '<td class="zahl">'+(b.trinkgeldCent ? euro(b.trinkgeldCent) : "—")+'</td>' +
+        '<td class="num">'+timeOf(b.ts)+'</td>' +
+        '<td>'+escapeHtml(content)+'</td>' +
+        '<td>'+(b.payment==="card"?"Karte":"Bar")+'</td>' +
+        '<td class="num">'+money(b.totalCents)+'</td>' +
+        '<td class="num">'+(b.tipCents ? money(b.tipCents) : "-")+'</td>' +
         '<td></td>';
-      if(!b.storniert){
-        const knopf = document.createElement("button");
-        knopf.className = "mini-knopf";
-        knopf.textContent = "Stornieren";
-        knopf.addEventListener("click", async ()=>{
-          const ok = await fragen("Bon stornieren?",
-            "Der Bon über "+euro(b.summeCent)+" von "+uhrzeit(b.ts)+
+      if(!b.voided){
+        const btn = document.createElement("button");
+        btn.className = "button-small";
+        btn.textContent = "Stornieren";
+        btn.addEventListener("click", async ()=>{
+          const ok = await askConfirm("Bon stornieren?",
+            "Der Bon über "+money(b.totalCents)+" von "+timeOf(b.ts)+
             " zählt dann nicht mehr zum Umsatz, bleibt aber in der Liste stehen.","Stornieren");
           if(!ok) return;
-          b.storniert = true;
-          sichern(); zeichneBericht();
-          melden("Bon storniert");
+          b.voided = true;
+          saveState(); renderReport();
+          toastMsg("Bon storniert");
         });
-        tr.lastElementChild.appendChild(knopf);
+        tr.lastElementChild.appendChild(btn);
       }
-      rahmen.appendChild(tr);
+      tbody.appendChild(tr);
     });
-    tB.innerHTML = "";
-    tB.appendChild(kopf);
-    tB.appendChild(rahmen);
+    tableSales.innerHTML = "";
+    tableSales.appendChild(head);
+    tableSales.appendChild(tbody);
   }
 
-  $("#f-wechselgeld").value = anfang ? zahl(anfang) : "";
+  $("#in-float").value = float ? csvNum(float) : "";
 }
-function esc(s){
+function escapeHtml(s){
   return String(s).replace(/[&<>"]/g, z => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[z]));
 }
 
 /* ---------- CSV ---------- */
-function csvFeld(w){
+function csvField(w){
   const s = String(w);
   return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
 }
-function csvDatei(zeilen, name){
-  const inhalt = "﻿" + zeilen.map(z=>z.map(csvFeld).join(";")).join("\r\n");
-  const blob = new Blob([inhalt], {type:"text/csv;charset=utf-8"});
+function csvDownload(rows, name){
+  const content = "﻿" + rows.map(z=>z.map(csvField).join(";")).join("\r\n");
+  const blob = new Blob([content], {type:"text/csv;charset=utf-8"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -2001,527 +2043,527 @@ function csvDatei(zeilen, name){
   a.click();
   a.remove();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  melden("CSV gespeichert");
+  toastMsg("CSV gespeichert");
 }
 
-function exportBericht(){
-  const tag  = $("#f-datum").value || tagVon(Date.now());
-  const alle = bonsAmTag(tag);
-  const echt = alle.filter(b=>!b.storniert);
-  const umsatz = echt.reduce((s,b)=>s+b.summeCent,0);
-  const bar    = echt.filter(b=>b.zahlart==="bar").reduce((s,b)=>s+b.summeCent,0);
-  const karte  = echt.filter(b=>b.zahlart==="karte").reduce((s,b)=>s+b.summeCent,0);
-  const trinkgeld    = echt.reduce((s,b)=>s+(b.trinkgeldCent||0),0);
-  const trinkgeldBar = echt.filter(b=>b.zahlart==="bar").reduce((s,b)=>s+(b.trinkgeldCent||0),0);
-  const anfang = daten.wechselgeld[tag] || 0;
+function exportReport(){
+  const day  = $("#in-date").value || dayOf(Date.now());
+  const all = salesOnDay(day);
+  const valid = all.filter(b=>!b.voided);
+  const revenue = valid.reduce((s,b)=>s+b.totalCents,0);
+  const bar    = valid.filter(b=>b.payment==="cash").reduce((s,b)=>s+b.totalCents,0);
+  const karte  = valid.filter(b=>b.payment==="card").reduce((s,b)=>s+b.totalCents,0);
+  const tips    = valid.reduce((s,b)=>s+(b.tipCents||0),0);
+  const cashTips = valid.filter(b=>b.payment==="cash").reduce((s,b)=>s+(b.tipCents||0),0);
+  const float = data.openingFloat[day] || 0;
 
   const z = [];
-  z.push([daten.betrieb, "Tagesabschluss", tag]);
-  z.push(["erstellt mit", "KNYL Hüttenkasse " + FASSUNG,
+  z.push([data.businessName, "Tagesabschluss", day]);
+  z.push(["erstellt mit", "KNYL Hüttenkasse " + VERSION,
           new Date().toLocaleString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})]);
   z.push([]);
-  z.push(["Umsatz gesamt", zahl(umsatz)]);
-  z.push(["davon bar", zahl(bar)]);
-  z.push(["davon Karte", zahl(karte)]);
-  z.push(["Trinkgeld gesamt", zahl(trinkgeld)]);
-  z.push(["davon bar", zahl(trinkgeldBar)]);
-  z.push(["Anzahl Bons", echt.length]);
-  z.push(["Stornierte Bons", alle.length - echt.length]);
-  z.push(["Wechselgeld zu Beginn", zahl(anfang)]);
-  z.push(["Soll-Bestand Kasse", zahl(anfang + bar + trinkgeldBar)]);
+  z.push(["Umsatz gesamt", csvNum(revenue)]);
+  z.push(["davon bar", csvNum(bar)]);
+  z.push(["davon Karte", csvNum(karte)]);
+  z.push(["Trinkgeld gesamt", csvNum(tips)]);
+  z.push(["davon bar", csvNum(cashTips)]);
+  z.push(["Anzahl Bons", valid.length]);
+  z.push(["Stornierte Bons", all.length - valid.length]);
+  z.push(["Wechselgeld zu Beginn", csvNum(float)]);
+  z.push(["Soll-Bestand Kasse", csvNum(float + bar + cashTips)]);
   z.push([]);
   z.push(["Artikel","Anzahl","Einzelpreis","Umsatz"]);
 
-  const proArtikel = new Map();
-  echt.forEach(b => b.positionen.forEach(p=>{
-    const e = proArtikel.get(p.name) || {menge:0, summe:0, preis:p.preisCent};
-    e.menge += p.menge;
-    e.summe += p.menge * p.preisCent;
-    proArtikel.set(p.name, e);
+  const perProduct = new Map();
+  valid.forEach(b => b.items.forEach(p=>{
+    const e = perProduct.get(p.name) || {qty:0, total:0, price:p.priceCents};
+    e.qty += p.qty;
+    e.total += p.qty * p.priceCents;
+    perProduct.set(p.name, e);
   }));
-  Array.from(proArtikel.entries())
-    .sort((a,b)=>b[1].summe-a[1].summe)
-    .forEach(([name,e]) => z.push([name, e.menge, zahl(e.preis), zahl(e.summe)]));
+  Array.from(perProduct.entries())
+    .sort((a,b)=>b[1].total-a[1].total)
+    .forEach(([name,e]) => z.push([name, e.qty, csvNum(e.price), csvNum(e.total)]));
 
   z.push([]);
   z.push(["Zeit","Zahlart","Summe","Trinkgeld","Gegeben","Rückgeld","Storniert","Artikel"]);
-  alle.forEach(b => z.push([
-    uhrzeit(b.ts),
-    b.zahlart==="karte" ? "Karte" : "Bar",
-    zahl(b.summeCent), zahl(b.trinkgeldCent||0), zahl(b.gegebenCent), zahl(b.rueckgeldCent),
-    b.storniert ? "ja" : "nein",
-    b.positionen.map(p=>p.menge+"× "+p.name).join(", ")
+  all.forEach(b => z.push([
+    timeOf(b.ts),
+    b.payment==="card" ? "Karte" : "Bar",
+    csvNum(b.totalCents), csvNum(b.tipCents||0), csvNum(b.tenderedCents), csvNum(b.changeCents),
+    b.voided ? "ja" : "nein",
+    b.items.map(p=>p.qty+"x "+p.name).join(", ")
   ]));
 
-  csvDatei(z, "Tagesabschluss_"+tag+".csv");
+  csvDownload(z, "Tagesabschluss_"+day+".csv");
 }
 
-function exportPosten(){
-  const tag  = $("#f-datum").value || tagVon(Date.now());
-  const alle = bonsAmTag(tag);
+function exportLineItems(){
+  const day  = $("#in-date").value || dayOf(Date.now());
+  const all = salesOnDay(day);
   const z = [["Datum","Zeit","Bon-Nr","Artikel","Anzahl","Einzelpreis","Zeilensumme","Zahlart","Storniert"]];
-  alle.forEach((b,i) => b.positionen.forEach(p => z.push([
-    tag, uhrzeit(b.ts), i+1, p.name, p.menge,
-    zahl(p.preisCent), zahl(p.preisCent*p.menge),
-    b.zahlart==="karte" ? "Karte" : "Bar",
-    b.storniert ? "ja" : "nein"
+  all.forEach((b,i) => b.items.forEach(p => z.push([
+    day, timeOf(b.ts), i+1, p.name, p.qty,
+    csvNum(p.priceCents), csvNum(p.priceCents*p.qty),
+    b.payment==="card" ? "Karte" : "Bar",
+    b.voided ? "ja" : "nein"
   ])));
-  if(z.length===1){ melden("An diesem Tag gibt es nichts zu exportieren"); return; }
-  csvDatei(z, "Einzelposten_"+tag+".csv");
+  if(z.length===1){ toastMsg("An diesem Tag gibt es nichts zu exportieren"); return; }
+  csvDownload(z, "Einzelposten_"+day+".csv");
 }
 
 /* ============================================================
-   SICHERUNG
+   BACKUP
    ============================================================ */
-function sicherungLaden(){
-  daten.letzteSicherung = Date.now();
-  const blob = new Blob([JSON.stringify(daten,null,2)], {type:"application/json"});
+function downloadBackup(){
+  data.lastBackup = Date.now();
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "Kassensicherung_" + tagVon(Date.now()) + ".json";
+  a.download = "Kassensicherung_" + dayOf(Date.now()) + ".json";
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  sichern();
-  melden("Sicherung gespeichert");
+  saveState();
+  toastMsg("Sicherung gespeichert");
 }
-function sicherungEinspielen(datei){
-  const leser = new FileReader();
-  leser.onload = async ()=>{
-    let neu;
-    try{ neu = JSON.parse(leser.result); }
-    catch(e){ melden("Datei ist keine gültige Sicherung"); return; }
-    if(!neu || !Array.isArray(neu.produkte) || !Array.isArray(neu.buchungen)){
-      melden("Datei ist keine gültige Sicherung"); return;
+function restoreBackupFile(file){
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    let fresh;
+    try{ fresh = JSON.parse(reader.result); }
+    catch(e){ toastMsg("Datei ist keine gültige Sicherung"); return; }
+    if(!fresh || !Array.isArray(fresh.products) || !Array.isArray(fresh.sales)){
+      toastMsg("Datei ist keine gültige Sicherung"); return;
     }
-    const ok = await fragen("Sicherung einspielen?",
+    const ok = await askConfirm("Sicherung einspielen?",
       "Die aktuellen Artikel und Buchungen werden durch die Datei ersetzt ("+
-      neu.produkte.length+" Artikel, "+neu.buchungen.length+" Bons).","Einspielen");
+      fresh.products.length+" Artikel, "+fresh.sales.length+" Bons).","Einspielen");
     if(!ok) return;
-    daten = Object.assign(standard(), neu);
-    bon = [];
-    sichern(); zeichneAlles();
-    melden("Sicherung eingespielt");
+    data = Object.assign(defaults(), fresh);
+    cart = [];
+    saveState(); renderAll();
+    toastMsg("Sicherung eingespielt");
   };
-  leser.readAsText(datei);
+  reader.readAsText(file);
 }
 
 /* ============================================================
-   KONFIGURATIONSÜBERNAHME
-   Übertragen wird nur das Sortiment, nie die Buchungen.
-   Der Text ist absichtlich lesbar, damit er notfalls auch
-   per Nachricht verschickt und eingefügt werden kann.
+   CONFIG TRANSFER
+   Only the product range travels, never the sales. The payload
+   is deliberately human readable so it can also be sent over a
+   messenger and pasted in as a fallback.
    ============================================================ */
-const TEIL_BYTES = 450;   // je Code — klein genug, um ihn vom Display abzuscannen
+const PART_BYTES = 450;   // per code, small enough to scan off a tablet screen
 
-const ohneTrenner = s => String(s).replace(/[\t\r\n]/g, " ").trim();
+const stripSeparators = s => String(s).replace(/[\t\r\n]/g, " ").trim();
 
-/* HK2 trägt zusätzlich die Aufteilung des Tastenfelds und den Platz
-   jedes Artikels. HK1 aus einer älteren Fassung wird weiter gelesen. */
-function konfigText(){
-  const zeilen = [
+/* HK2 additionally carries the keypad layout and each product's
+   slot. HK1 from an older build is still accepted. */
+function configText(){
+  const rows = [
     "HK2",
-    ohneTrenner(daten.betrieb || ""),
-    daten.raster.spalten + "x" + daten.raster.zeilen
+    stripSeparators(data.businessName || ""),
+    data.grid.columns + "x" + data.grid.rows
   ];
-  daten.produkte.slice().sort((a,b)=>a.sort-b.sort).forEach(p=>{
-    let fi = FARBEN.findIndex(f => f[1] === p.farbe);
-    if(fi < 0) fi = 0;
-    zeilen.push([
-      ohneTrenner(p.name), p.preisCent, ohneTrenner(p.kategorie||"Sonstiges"), fi, p.platz|0
+  data.products.slice().sort((a,b)=>a.sort-b.sort).forEach(p=>{
+    let colorIdx = COLORS.findIndex(f => f[1] === p.color);
+    if(colorIdx < 0) colorIdx = 0;
+    rows.push([
+      stripSeparators(p.name), p.priceCents, stripSeparators(p.category||"Sonstiges"), colorIdx, p.slot|0
     ].join("\t"));
   });
-  return zeilen.join("\n");
+  return rows.join("\n");
 }
 
-function konfigLesen(text){
-  const zeilen = String(text).replace(/\r/g,"").split("\n");
-  const kopf = zeilen[0].trim();
-  if(kopf !== "HK1" && kopf !== "HK2") return null;
-  const betrieb = (zeilen[1] || "").trim();
+function parseConfig(text){
+  const rows = String(text).replace(/\r/g,"").split("\n");
+  const head = rows[0].trim();
+  if(head !== "HK1" && head !== "HK2") return null;
+  const businessName = (rows[1] || "").trim();
 
-  let ab = 2, raster = null;
-  if(kopf === "HK2"){
-    const m = /^(\d+)x(\d+)$/.exec((zeilen[2] || "").trim());
+  let ab = 2, grid = null;
+  if(head === "HK2"){
+    const m = /^(\d+)x(\d+)$/.exec((rows[2] || "").trim());
     if(!m) return null;
-    const spalten = parseInt(m[1],10), zeilenZahl = parseInt(m[2],10);
-    if(spalten > 8 || zeilenZahl < 1 || zeilenZahl > 6) return null;
-    raster = {spalten, zeilen:zeilenZahl};
+    const columns = parseInt(m[1],10), rowCount = parseInt(m[2],10);
+    if(columns > 8 || rowCount < 1 || rowCount > 6) return null;
+    grid = {columns, rows:rowCount};
     ab = 3;
   }
 
-  const produkte = [];
-  for(let i=ab;i<zeilen.length;i++){
-    if(!zeilen[i].trim()) continue;
-    const t = zeilen[i].split("\t");
+  const products = [];
+  for(let i=ab;i<rows.length;i++){
+    if(!rows[i].trim()) continue;
+    const t = rows[i].split("\t");
     if(t.length < 4) return null;
-    const preis = parseInt(t[1], 10);
-    if(!Number.isFinite(preis)) return null;
-    let fi = parseInt(t[3], 10);
-    if(!(fi >= 0 && fi < FARBEN.length)) fi = 0;
-    const platz = t.length >= 5 ? parseInt(t[4], 10) : produkte.length;
-    produkte.push({
-      name:t[0].trim(), preisCent:preis, kategorie:t[2].trim() || "Sonstiges",
-      farbe:FARBEN[fi][1], platz: Number.isInteger(platz) && platz >= 0 ? platz : produkte.length
+    const price = parseInt(t[1], 10);
+    if(!Number.isFinite(price)) return null;
+    let colorIdx = parseInt(t[3], 10);
+    if(!(colorIdx >= 0 && colorIdx < COLORS.length)) colorIdx = 0;
+    const slot = t.length >= 5 ? parseInt(t[4], 10) : products.length;
+    products.push({
+      name:t[0].trim(), priceCents:price, category:t[2].trim() || "Sonstiges",
+      color:COLORS[colorIdx][1], slot: Number.isInteger(slot) && slot >= 0 ? slot : products.length
     });
   }
-  if(!produkte.length) return null;
-  return {betrieb, produkte, raster};
+  if(!products.length) return null;
+  return {businessName, products, grid};
 }
 
-/* Teilt zeilenweise, damit kein Mehrbyte-Zeichen zerschnitten wird. */
-function inTeile(text){
-  const laenge = s => new TextEncoder().encode(s).length;
-  const zeilen = text.split("\n");
-  const teile = [];
-  let akt = "";
-  for(const z of zeilen){
-    const kandidat = akt ? akt + "\n" + z : z;
-    if(akt && laenge(kandidat) > TEIL_BYTES){ teile.push(akt); akt = z; }
-    else akt = kandidat;
+/* Split on line boundaries so no multi-byte character is cut in half. */
+function splitParts(text){
+  const byteLen = s => new TextEncoder().encode(s).length;
+  const rows = text.split("\n");
+  const parts = [];
+  let cur = "";
+  for(const z of rows){
+    const candidate = cur ? cur + "\n" + z : z;
+    if(cur && byteLen(candidate) > PART_BYTES){ parts.push(cur); cur = z; }
+    else cur = candidate;
   }
-  if(akt) teile.push(akt);
-  return teile.map((inhalt,i) => `QK${i+1}/${teile.length}\n${inhalt}`);
+  if(cur) parts.push(cur);
+  return parts.map((content,i) => `QK${i+1}/${parts.length}\n${content}`);
 }
 
-function ausTeil(rohtext){
-  const bruch = rohtext.indexOf("\n");
-  if(bruch < 0) return null;
-  const kopf = rohtext.slice(0, bruch);
-  const treffer = /^QK(\d+)\/(\d+)$/.exec(kopf.trim());
-  if(!treffer) return null;
-  return {nr:parseInt(treffer[1],10), gesamt:parseInt(treffer[2],10), inhalt:rohtext.slice(bruch+1)};
+function parsePart(rawText){
+  const nl = rawText.indexOf("\n");
+  if(nl < 0) return null;
+  const head = rawText.slice(0, nl);
+  const match = /^QK(\d+)\/(\d+)$/.exec(head.trim());
+  if(!match) return null;
+  return {num:parseInt(match[1],10), total:parseInt(match[2],10), content:rawText.slice(nl+1)};
 }
 
-function qrZeichnen(flaeche, text){
+function drawQr(canvas, text){
   const r = QR.matrix(text);
-  const rand = 4, n = r.groesse;
-  const px = Math.max(2, Math.floor(600/(n + 2*rand)));
-  const seite = (n + 2*rand) * px;
-  flaeche.width = seite; flaeche.height = seite;
-  const g = flaeche.getContext("2d");
-  g.fillStyle = "#ffffff"; g.fillRect(0,0,seite,seite);
+  const quiet = 4, n = r.size;
+  const px = Math.max(2, Math.floor(600/(n + 2*quiet)));
+  const side = (n + 2*quiet) * px;
+  canvas.width = side; canvas.height = side;
+  const g = canvas.getContext("2d");
+  g.fillStyle = "#ffffff"; g.fillRect(0,0,side,side);
   g.fillStyle = "#000000";
   for(let y=0;y<n;y++) for(let x=0;x<n;x++)
-    if(r.matrix[y][x]) g.fillRect((x+rand)*px, (y+rand)*px, px, px);
+    if(r.matrix[y][x]) g.fillRect((x+quiet)*px, (y+quiet)*px, px, px);
 }
 
-function sendenOeffnen(){
-  const text = konfigText();
-  try{ qrTeile = inTeile(text); }
-  catch(e){ melden("Sortiment lässt sich nicht übertragen"); return; }
+function openShare(){
+  const text = configText();
+  try{ qrParts = splitParts(text); }
+  catch(e){ toastMsg("Sortiment lässt sich nicht übertragen"); return; }
   qrIndex = 0;
-  $("#overlay-senden").dataset.offen = "ja";
-  zeichneSenden();
+  $("#dlg-share").dataset.open = "yes";
+  renderShare();
 }
-function zeichneSenden(){
-  const mehrere = qrTeile.length > 1;
-  $("#teil-stand").textContent = "Code " + (qrIndex+1) + " von " + qrTeile.length;
-  $("#knopf-teil-zurueck").disabled = qrIndex === 0;
-  $("#knopf-teil-vor").disabled     = qrIndex >= qrTeile.length - 1;
-  $("#knopf-teil-zurueck").style.visibility = mehrere ? "visible" : "hidden";
-  $("#knopf-teil-vor").style.visibility     = mehrere ? "visible" : "hidden";
-  $("#senden-hinweis").textContent = mehrere
-    ? "Am anderen Tablet „QR-Code scannen“ öffnen und alle " + qrTeile.length + " Codes nacheinander abfilmen. Die Reihenfolge ist egal."
+function renderShare(){
+  const multiple = qrParts.length > 1;
+  $("#part-status").textContent = "Code " + (qrIndex+1) + " von " + qrParts.length;
+  $("#part-prev").disabled = qrIndex === 0;
+  $("#part-next").disabled     = qrIndex >= qrParts.length - 1;
+  $("#part-prev").style.visibility = multiple ? "visible" : "hidden";
+  $("#part-next").style.visibility     = multiple ? "visible" : "hidden";
+  $("#share-note").textContent = multiple
+    ? "Am anderen Tablet „QR-Code scannen“ öffnen und alle " + qrParts.length + " Codes nacheinander abfilmen. Die Reihenfolge ist egal."
     : "Am anderen Tablet „QR-Code scannen“ öffnen und diesen Code abfilmen.";
-  try{ qrZeichnen($("#qr-flaeche"), qrTeile[qrIndex]); }
-  catch(e){ melden("QR-Code lässt sich nicht erzeugen"); console.error(e); }
+  try{ drawQr($("#qr-canvas"), qrParts[qrIndex]); }
+  catch(e){ toastMsg("QR-Code lässt sich nicht erzeugen"); console.error(e); }
 }
 
-async function empfangenOeffnen(){
-  scanTeile = new Map(); scanGesamt = 0;
-  $("#code-einfuegen").value = "";
-  $("#overlay-empfangen").dataset.offen = "ja";
-  zeichneTeilPunkte();
-  scanStarten();
+async function openScan(){
+  scanParts = new Map(); scanTotal = 0;
+  $("#paste-config").value = "";
+  $("#dlg-scan").dataset.open = "yes";
+  renderPartDots();
+  startScan();
 }
-function empfangenSchliessen(){
-  scanStoppen();
-  $("#overlay-empfangen").dataset.offen = "nein";
+function closeScan(){
+  stopScan();
+  $("#dlg-scan").dataset.open = "no";
 }
-function scanStoppen(){
-  scanLaeuft = false;
-  if(scanStrom){ scanStrom.getTracks().forEach(t=>t.stop()); scanStrom = null; }
+function stopScan(){
+  scanRunning = false;
+  if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream = null; }
   const v = $("#scan-video");
   if(v) v.srcObject = null;
 }
-function scanStatus(text){ $("#scan-status").textContent = text; }
+function setScanStatus(text){ $("#scan-status").textContent = text; }
 
-async function scanStarten(){
+async function startScan(){
   if(!("BarcodeDetector" in window)){
-    scanStatus("Dieser Browser kann keine QR-Codes lesen — Text unten einfügen.");
+    setScanStatus("Dieser Browser kann keine QR-Codes lesen. Text unten einfügen.");
     return;
   }
-  let leser;
+  let reader;
   try{
-    const formate = await window.BarcodeDetector.getSupportedFormats();
-    if(!formate.includes("qr_code")){
-      scanStatus("Dieser Browser liest keine QR-Codes — Text unten einfügen.");
+    const formats = await window.BarcodeDetector.getSupportedFormats();
+    if(!formats.includes("qr_code")){
+      setScanStatus("Dieser Browser liest keine QR-Codes. Text unten einfügen.");
       return;
     }
-    leser = new window.BarcodeDetector({formats:["qr_code"]});
+    reader = new window.BarcodeDetector({formats:["qr_code"]});
   }catch(e){
-    scanStatus("QR-Erkennung nicht verfügbar — Text unten einfügen.");
+    setScanStatus("QR-Erkennung nicht verfügbar. Text unten einfügen.");
     return;
   }
   try{
-    scanStrom = await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
+    scanStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
   }catch(e){
-    scanStatus("Kein Kamerazugriff — Text unten einfügen.");
+    setScanStatus("Kein Kamerazugriff. Text unten einfügen.");
     return;
   }
   const video = $("#scan-video");
-  video.srcObject = scanStrom;
+  video.srcObject = scanStream;
   try{ await video.play(); }catch(e){}
-  scanLaeuft = true;
-  scanStatus("Code ins Bild halten …");
+  scanRunning = true;
+  setScanStatus("Code ins Bild halten …");
 
-  const schleife = async () => {
-    if(!scanLaeuft) return;
+  const loop = async () => {
+    if(!scanRunning) return;
     try{
-      const funde = await leser.detect(video);
-      for(const f of funde) scanTreffer(f.rawValue);
-    }catch(e){ /* einzelne Fehlversuche sind normal */ }
-    if(scanLaeuft) setTimeout(schleife, 220);
+      const found = await reader.detect(video);
+      for(const f of found) onScanResult(f.rawValue);
+    }catch(e){ /* occasional misses are normal */ }
+    if(scanRunning) setTimeout(loop, 220);
   };
-  schleife();
+  loop();
 }
 
-function scanTreffer(rohtext){
-  const teil = ausTeil(rohtext);
-  if(!teil){
-    // Vielleicht wurde ein vollständiger Text ohne Kopfzeile gescannt
-    if(konfigLesen(rohtext)){ konfigUebernehmen(rohtext); }
-    else scanStatus("Das ist kein Kassen-Code.");
+function onScanResult(rawText){
+  const part = parsePart(rawText);
+  if(!part){
+    // maybe a complete payload without the part header was scanned
+    if(parseConfig(rawText)){ applyConfig(rawText); }
+    else setScanStatus("Das ist kein Kassen-Code.");
     return;
   }
-  if(scanGesamt && teil.gesamt !== scanGesamt){
-    scanTeile = new Map();                       // andere Übertragung, neu anfangen
+  if(scanTotal && part.total !== scanTotal){
+    scanParts = new Map();                       // different transfer, start over
   }
-  scanGesamt = teil.gesamt;
-  const neu = !scanTeile.has(teil.nr);
-  scanTeile.set(teil.nr, teil.inhalt);
-  zeichneTeilPunkte();
-  if(neu) melden("Code " + teil.nr + " von " + teil.gesamt + " gelesen");
+  scanTotal = part.total;
+  const fresh = !scanParts.has(part.num);
+  scanParts.set(part.num, part.content);
+  renderPartDots();
+  if(fresh) toastMsg("Code " + part.num + " von " + part.total + " gelesen");
 
-  if(scanTeile.size === scanGesamt){
-    const zusammen = Array.from({length:scanGesamt}, (_,i)=>scanTeile.get(i+1)).join("\n");
-    konfigUebernehmen(zusammen);
+  if(scanParts.size === scanTotal){
+    const joined = Array.from({length:scanTotal}, (_,i)=>scanParts.get(i+1)).join("\n");
+    applyConfig(joined);
   }else{
-    const fehlen = [];
-    for(let i=1;i<=scanGesamt;i++) if(!scanTeile.has(i)) fehlen.push(i);
-    scanStatus("Es fehlt noch: Code " + fehlen.join(", "));
+    const missing = [];
+    for(let i=1;i<=scanTotal;i++) if(!scanParts.has(i)) missing.push(i);
+    setScanStatus("Es fehlt noch: Code " + missing.join(", "));
   }
 }
 
-function zeichneTeilPunkte(){
-  const ziel = $("#teil-punkte");
-  ziel.innerHTML = "";
-  if(!scanGesamt) return;
-  for(let i=1;i<=scanGesamt;i++){
+function renderPartDots(){
+  const target = $("#part-dots");
+  target.innerHTML = "";
+  if(!scanTotal) return;
+  for(let i=1;i<=scanTotal;i++){
     const s = document.createElement("span");
     s.textContent = i;
-    if(scanTeile.has(i)) s.dataset.da = "ja";
-    ziel.appendChild(s);
+    if(scanParts.has(i)) s.dataset.have = "yes";
+    target.appendChild(s);
   }
 }
 
-async function konfigUebernehmen(text){
-  const konf = konfigLesen(text);
-  if(!konf){ melden("Der Code enthält kein gültiges Sortiment"); return; }
-  scanStoppen();
-  const ok = await fragen("Sortiment übernehmen?",
-    konf.produkte.length + " Artikel" + (konf.betrieb ? " von „"+konf.betrieb+"“" : "") +
+async function applyConfig(text){
+  const config = parseConfig(text);
+  if(!config){ toastMsg("Der Code enthält kein gültiges Sortiment"); return; }
+  stopScan();
+  const ok = await askConfirm("Sortiment übernehmen?",
+    config.products.length + " Artikel" + (config.businessName ? " von „"+config.businessName+"“" : "") +
     " ersetzen das bisherige Sortiment. Deine Buchungen bleiben unverändert.", "Übernehmen");
-  if(!ok){ if($("#overlay-empfangen").dataset.offen === "ja") scanStarten(); return; }
+  if(!ok){ if($("#dlg-scan").dataset.open === "yes") startScan(); return; }
 
-  daten.produkte = konf.produkte.map((p,i)=>({
+  data.products = config.products.map((p,i)=>({
     id: "p" + Date.now() + i.toString(36),
-    name:p.name, preisCent:p.preisCent, kategorie:p.kategorie, farbe:p.farbe, sort:i, platz:p.platz
+    name:p.name, priceCents:p.priceCents, category:p.category, color:p.color, sort:i, slot:p.slot
   }));
-  if(konf.betrieb) daten.betrieb = konf.betrieb;
-  if(konf.raster)  daten.raster  = konf.raster;
-  bon = [];
-  aktuelleSeite = 0; anordnenSeite = 0; anordnenGewaehlt = null;
-  sichern();
-  empfangenSchliessen();
-  zeichneAlles();
-  melden(konf.produkte.length + " Artikel übernommen");
+  if(config.businessName) data.businessName = config.businessName;
+  if(config.grid)  data.grid  = config.grid;
+  cart = [];
+  currentPage = 0; arrangePage = 0; arrangeSelected = null;
+  saveState();
+  closeScan();
+  renderAll();
+  toastMsg(config.products.length + " Artikel übernommen");
 }
 
 /* ============================================================
-   AUFBAU
+   RENDERING
    ============================================================ */
-function zeichneRasterEinstellung(){
-  $("#f-spalten").value = String(daten.raster.spalten);
-  $("#f-zeilen").value  = String(daten.raster.zeilen);
-  $("#f-zeilen").disabled = !festesRaster();
-  const info = $("#raster-info");
-  if(!festesRaster()){
+function renderGridSetting(){
+  $("#in-columns").value = String(data.grid.columns);
+  $("#in-rows").value  = String(data.grid.rows);
+  $("#in-rows").disabled = !hasFixedGrid();
+  const info = $("#grid-info");
+  if(!hasFixedGrid()){
     info.textContent = "Die Tasten füllen die Fläche der Reihe nach.";
   }else{
-    const felder = feldZahl(), seiten = seitenZahl();
-    info.textContent = felder + " Tasten je Seite, " +
-      (seiten === 1 ? "eine Seite" : seiten + " Seiten") +
-      " für " + daten.produkte.length + " Artikel.";
+    const slots = slotsPerPage(), pages = pageCount();
+    info.textContent = slots + " Tasten je Seite, " +
+      (pages === 1 ? "eine Seite" : pages + " Seiten") +
+      " für " + data.products.length + " Artikel.";
   }
 }
 
-function zeichneAlles(){
-  document.documentElement.dataset.mode = daten.modus;
-  $("#marke-name").textContent = daten.betrieb || "Hüttenkasse";
-  $("#f-betrieb").value = daten.betrieb || "";
-  plaetzeOrdnen();
-  zeichneKategorien();
-  zeichneRaster();
-  zeichneBon();
-  zeichneFarbwahl();
-  zeichneArtikelListe();
-  zeichneAnordnung();
-  zeichneRasterEinstellung();
-  zeichneBericht();
-  zeichneSpeicherStatus();
+function renderAll(){
+  document.documentElement.dataset.theme = data.theme;
+  $("#brand-name").textContent = data.businessName || "Hüttenkasse";
+  $("#in-business").value = data.businessName || "";
+  normalizeSlots();
+  renderFilterBar();
+  renderGrid();
+  renderCart();
+  renderColorPicker();
+  renderProductList();
+  renderArrangeGrid();
+  renderGridSetting();
+  renderReport();
+  renderStorageStatus();
 }
 
-function reiterWechseln(ziel){
-  $$(".reiter button").forEach(b => b.setAttribute("aria-selected", b.dataset.ziel===ziel ? "true":"false"));
-  $$(".blatt").forEach(s => { if(s.id==="blatt-"+ziel) s.dataset.aktiv="ja"; else delete s.dataset.aktiv; });
-  if(ziel==="berichte") zeichneBericht();
+function switchTab(target){
+  $$(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.target===target ? "true":"false"));
+  $$(".view").forEach(s => { if(s.id==="view-"+target) s.dataset.active="yes"; else delete s.dataset.active; });
+  if(target==="berichte") renderReport();
 }
 
-function uhrStellen(){
-  $("#marke-uhr").textContent = new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+function updateClock(){
+  $("#brand-clock").textContent = new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
 }
 
-/* ---------- Ereignisse ---------- */
-$$(".reiter button").forEach(b => b.addEventListener("click", ()=>reiterWechseln(b.dataset.ziel)));
+/* ---------- Event wiring ---------- */
+$$(".tabs button").forEach(b => b.addEventListener("click", ()=>switchTab(b.dataset.target)));
 
-$("#knopf-modus").addEventListener("click", ()=>{
-  daten.modus = daten.modus==="nacht" ? "tag" : "nacht";
-  document.documentElement.dataset.mode = daten.modus;
-  sichern();
+$("#theme-toggle").addEventListener("click", ()=>{
+  data.theme = data.theme==="night" ? "day" : "night";
+  document.documentElement.dataset.theme = data.theme;
+  saveState();
 });
 
-$("#knopf-leeren").addEventListener("click", async ()=>{
-  if(!bon.length) return;
-  const ok = await fragen("Bon leeren?", "Alle "+bonStueck()+" Artikel werden vom Bon genommen.","Leeren");
+$("#clear-cart").addEventListener("click", async ()=>{
+  if(!cart.length) return;
+  const ok = await askConfirm("Bon leeren?", "Alle "+cartCount()+" Artikel werden vom Bon genommen.","Leeren");
   if(!ok) return;
-  bon = [];
-  zeichneBon(); zeichneRaster();
+  cart = [];
+  renderCart(); renderGrid();
 });
-$("#knopf-kassieren").addEventListener("click", kassierenOeffnen);
-$("#knopf-kassieren-zu").addEventListener("click", kassierenSchliessen);
-$("#knopf-abschliessen").addEventListener("click", ()=>buchen("bar"));
-$("#knopf-karte").addEventListener("click", ()=>buchen("karte"));
-$("#overlay-kassieren").addEventListener("click", e=>{ if(e.target.id==="overlay-kassieren") kassierenSchliessen(); });
+$("#checkout").addEventListener("click", openCheckout);
+$("#close-checkout").addEventListener("click", closeCheckout);
+$("#pay-cash").addEventListener("click", ()=>recordSale("cash"));
+$("#pay-card").addEventListener("click", ()=>recordSale("card"));
+$("#dlg-checkout").addEventListener("click", e=>{ if(e.target.id==="dlg-checkout") closeCheckout(); });
 
-$("#frage-ja").addEventListener("click",  ()=>frageSchliessen(true));
-$("#frage-nein").addEventListener("click",()=>frageSchliessen(false));
-$("#overlay-frage").addEventListener("click", e=>{ if(e.target.id==="overlay-frage") frageSchliessen(false); });
+$("#confirm-yes").addEventListener("click",  ()=>closeConfirm(true));
+$("#confirm-no").addEventListener("click",()=>closeConfirm(false));
+$("#dlg-confirm").addEventListener("click", e=>{ if(e.target.id==="dlg-confirm") closeConfirm(false); });
 
-$("#knopf-artikel-speichern").addEventListener("click", artikelSpeichern);
-$("#knopf-artikel-abbrechen").addEventListener("click", artikelFormularLeeren);
-$("#f-preis").addEventListener("keydown", e=>{ if(e.key==="Enter") artikelSpeichern(); });
+$("#save-product").addEventListener("click", saveProduct);
+$("#cancel-edit").addEventListener("click", clearProductForm);
+$("#in-price").addEventListener("keydown", e=>{ if(e.key==="Enter") saveProduct(); });
 
-$("#f-datum").addEventListener("change", zeichneBericht);
-$("#f-wechselgeld").addEventListener("change", ()=>{
-  const tag = $("#f-datum").value || tagVon(Date.now());
-  const cent = centAus($("#f-wechselgeld").value);
-  if(cent === null) delete daten.wechselgeld[tag];
-  else daten.wechselgeld[tag] = cent;
-  sichern(); zeichneBericht();
+$("#in-date").addEventListener("change", renderReport);
+$("#in-float").addEventListener("change", ()=>{
+  const day = $("#in-date").value || dayOf(Date.now());
+  const cents = parseCents($("#in-float").value);
+  if(cents === null) delete data.openingFloat[day];
+  else data.openingFloat[day] = cents;
+  saveState(); renderReport();
 });
-$("#knopf-export-bericht").addEventListener("click", exportBericht);
-$("#knopf-export-posten").addEventListener("click", exportPosten);
+$("#export-report").addEventListener("click", exportReport);
+$("#export-items").addEventListener("click", exportLineItems);
 
-$("#f-betrieb").addEventListener("input", ()=>{
-  daten.betrieb = $("#f-betrieb").value.trim();
-  $("#marke-name").textContent = daten.betrieb || "Hüttenkasse";
-  sichern();
+$("#in-business").addEventListener("input", ()=>{
+  data.businessName = $("#in-business").value.trim();
+  $("#brand-name").textContent = data.businessName || "Hüttenkasse";
+  saveState();
 });
-function rasterAendern(){
-  const spalten = parseInt($("#f-spalten").value, 10) || 0;
-  const zeilen  = parseInt($("#f-zeilen").value, 10) || 4;
-  daten.raster = {spalten, zeilen};
-  aktuelleSeite = 0; anordnenSeite = 0; anordnenGewaehlt = null;
-  sichern();
-  zeichneAlles();
-  melden(spalten ? spalten + " × " + zeilen + " Tastenfeld" : "Mitwachsendes Raster");
+function onGridChange(){
+  const columns = parseInt($("#in-columns").value, 10) || 0;
+  const rows  = parseInt($("#in-rows").value, 10) || 4;
+  data.grid = {columns, rows};
+  currentPage = 0; arrangePage = 0; arrangeSelected = null;
+  saveState();
+  renderAll();
+  toastMsg(columns ? columns + " x " + rows + " Tastenfeld" : "Mitwachsendes Raster");
 }
-$("#f-spalten").addEventListener("change", rasterAendern);
-$("#f-zeilen").addEventListener("change", rasterAendern);
+$("#in-columns").addEventListener("change", onGridChange);
+$("#in-rows").addEventListener("change", onGridChange);
 
-$("#knopf-trinkgeld").addEventListener("click", ()=>{
-  trinkgeldAn = !trinkgeldAn;
-  zeichneKassieren();
+$("#tip-toggle").addEventListener("click", ()=>{
+  tipOn = !tipOn;
+  renderCheckout();
 });
 
-$("#knopf-qr-senden").addEventListener("click", sendenOeffnen);
-$("#knopf-senden-zu").addEventListener("click", ()=>{ $("#overlay-senden").dataset.offen = "nein"; });
-$("#overlay-senden").addEventListener("click", e=>{ if(e.target.id==="overlay-senden") $("#overlay-senden").dataset.offen="nein"; });
-$("#knopf-teil-zurueck").addEventListener("click", ()=>{ if(qrIndex>0){ qrIndex--; zeichneSenden(); } });
-$("#knopf-teil-vor").addEventListener("click",     ()=>{ if(qrIndex<qrTeile.length-1){ qrIndex++; zeichneSenden(); } });
-$("#knopf-code-kopieren").addEventListener("click", async ()=>{
-  const text = konfigText();
+$("#open-share").addEventListener("click", openShare);
+$("#close-share").addEventListener("click", ()=>{ $("#dlg-share").dataset.open = "no"; });
+$("#dlg-share").addEventListener("click", e=>{ if(e.target.id==="dlg-share") $("#dlg-share").dataset.open="no"; });
+$("#part-prev").addEventListener("click", ()=>{ if(qrIndex>0){ qrIndex--; renderShare(); } });
+$("#part-next").addEventListener("click",     ()=>{ if(qrIndex<qrParts.length-1){ qrIndex++; renderShare(); } });
+$("#copy-config").addEventListener("click", async ()=>{
+  const text = configText();
   try{
     await navigator.clipboard.writeText(text);
-    melden("Sortiment in die Zwischenablage kopiert");
+    toastMsg("Sortiment in die Zwischenablage kopiert");
   }catch(e){
-    // Ohne Zwischenablage-Recht: Text zum Abschreiben anbieten
-    $("#overlay-senden").dataset.offen = "nein";
-    reiterWechseln("einstellungen");
-    melden("Kopieren nicht erlaubt — Sicherung als Datei nutzen");
+    // no clipboard permission: point at the file backup instead
+    $("#dlg-share").dataset.open = "no";
+    switchTab("settings");
+    toastMsg("Kopieren nicht erlaubt. Sicherung als Datei nutzen");
   }
 });
 
-$("#knopf-qr-empfangen").addEventListener("click", empfangenOeffnen);
-$("#knopf-empfangen-zu").addEventListener("click", empfangenSchliessen);
-$("#overlay-empfangen").addEventListener("click", e=>{ if(e.target.id==="overlay-empfangen") empfangenSchliessen(); });
-$("#knopf-code-uebernehmen").addEventListener("click", ()=>{
-  const text = $("#code-einfuegen").value.trim();
-  if(!text){ melden("Kein Text eingefügt"); return; }
-  konfigUebernehmen(text);
+$("#open-scan").addEventListener("click", openScan);
+$("#close-scan").addEventListener("click", closeScan);
+$("#dlg-scan").addEventListener("click", e=>{ if(e.target.id==="dlg-scan") closeScan(); });
+$("#apply-pasted").addEventListener("click", ()=>{
+  const text = $("#paste-config").value.trim();
+  if(!text){ toastMsg("Kein Text eingefügt"); return; }
+  applyConfig(text);
 });
 
-$("#knopf-sicherung").addEventListener("click", sicherungLaden);
-$("#knopf-wiederherstellen").addEventListener("click", ()=>$("#datei-wiederherstellen").click());
-$("#datei-wiederherstellen").addEventListener("change", e=>{
-  if(e.target.files[0]) sicherungEinspielen(e.target.files[0]);
+$("#download-backup").addEventListener("click", downloadBackup);
+$("#restore-backup").addEventListener("click", ()=>$("#backup-file").click());
+$("#backup-file").addEventListener("change", e=>{
+  if(e.target.files[0]) restoreBackupFile(e.target.files[0]);
   e.target.value = "";
 });
-$("#knopf-buchungen-loeschen").addEventListener("click", async ()=>{
-  const ok = await fragen("Buchungen löschen?",
-    "Alle "+daten.buchungen.length+" Bons werden gelöscht. Lade dir vorher eine Sicherung herunter, falls du die Zahlen noch brauchst.","Löschen");
+$("#clear-sales").addEventListener("click", async ()=>{
+  const ok = await askConfirm("Buchungen löschen?",
+    "Alle "+data.sales.length+" Bons werden gelöscht. Lade dir vorher eine Sicherung herunter, falls du die Zahlen noch brauchst.","Löschen");
   if(!ok) return;
-  daten.buchungen = [];
-  daten.wechselgeld = {};
-  sichern(); zeichneAlles();
-  melden("Buchungen gelöscht");
+  data.sales = [];
+  data.openingFloat = {};
+  saveState(); renderAll();
+  toastMsg("Buchungen gelöscht");
 });
-$("#knopf-alles-loeschen").addEventListener("click", async ()=>{
-  const ok = await fragen("Kasse zurücksetzen?",
+$("#reset-all").addEventListener("click", async ()=>{
+  const ok = await askConfirm("Kasse zurücksetzen?",
     "Artikel und Buchungen werden gelöscht, die Kasse startet mit dem Standardsortiment neu.","Zurücksetzen");
   if(!ok) return;
-  daten = standard();
-  bon = [];
-  sichern(); zeichneAlles();
-  melden("Kasse zurückgesetzt");
+  data = defaults();
+  cart = [];
+  saveState(); renderAll();
+  toastMsg("Kasse zurückgesetzt");
 });
 
-// Versehentliches Verlassen mit offenem Bon abfangen
+// catch an accidental reload while a sale is open
 window.addEventListener("beforeunload", e=>{
-  if(bon.length){ e.preventDefault(); e.returnValue = ""; }
+  if(cart.length){ e.preventDefault(); e.returnValue = ""; }
 });
 
-/* ---------- Start ---------- */
-$("#fassung").textContent = "Fassung " + FASSUNG + " · läuft ohne Internet auf diesem Gerät";
-$("#f-datum").value = tagVon(Date.now());
-zeichneAlles();
-uhrStellen();
-setInterval(uhrStellen, 20000);
-speicherFestnageln();
+/* ---------- Startup ---------- */
+$("#version-line").textContent = "Fassung " + VERSION + ", läuft ohne Internet auf diesem Gerät";
+$("#in-date").value = dayOf(Date.now());
+renderAll();
+updateClock();
+setInterval(updateClock, 20000);
+requestPersistence();
 </script>
 </body>
 </html>
