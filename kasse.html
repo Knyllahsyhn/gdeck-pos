@@ -714,9 +714,12 @@ textarea.paste-field{
           <input id="in-price" type="text" inputmode="decimal" placeholder="4,50" autocomplete="off">
         </div>
         <div class="field">
-          <label for="in-category">Gruppe</label>
-          <input id="in-category" type="text" placeholder="Bier" list="category-options" autocomplete="off">
-          <datalist id="category-options"></datalist>
+          <!-- A real select, not an input with a datalist: on Android the
+               datalist offers no dropdown at all, so the field looked and
+               behaved like a plain text box. -->
+          <label for="in-category-pick">Gruppe</label>
+          <select id="in-category-pick"></select>
+          <input id="in-category" type="text" placeholder="Name der neuen Gruppe" autocomplete="off" hidden>
         </div>
       </div>
       <div class="field">
@@ -1805,13 +1808,7 @@ function renderProductList(){
   const list = data.products.slice().sort((a,b)=>a.sort-b.sort);
   $("#product-count").textContent = list.length ? "(" + list.length + ")" : "";
 
-  const dl = $("#category-options");
-  dl.innerHTML = "";
-  categoryNames().forEach(k=>{
-    const o = document.createElement("option");
-    o.value = k;
-    dl.appendChild(o);
-  });
+  renderCategoryPicker();
 
   if(!list.length){
     const p = document.createElement("p");
@@ -1949,6 +1946,47 @@ function moveProduct(id, dir){
   saveState(); renderAll();
 }
 
+/* Leading space, so it can never collide with a typed name: every group name
+   is trimmed before it is stored. */
+const NEW_CATEGORY = " neue gruppe";
+
+/* Fills the group dropdown with what is already in use, plus one entry for
+   starting a new group. Keeps the current choice unless one is passed in. */
+function renderCategoryPicker(selected){
+  const pick  = $("#in-category-pick");
+  const names = categoryNames();
+  const want  = selected === undefined ? pick.value : (selected||"").trim();
+
+  pick.innerHTML = "";
+  names.forEach(k=>{
+    const o = document.createElement("option");
+    o.value = k; o.textContent = k;
+    pick.appendChild(o);
+  });
+  const fresh = document.createElement("option");
+  fresh.value = NEW_CATEGORY; fresh.textContent = "Neue Gruppe anlegen";
+  pick.appendChild(fresh);
+
+  pick.value = names.includes(want) ? want
+             : (names.length ? names[0] : NEW_CATEGORY);
+  applyCategoryChoice();
+}
+
+/* The free text field exists only while "new group" is chosen. */
+function applyCategoryChoice(){
+  const isNew = $("#in-category-pick").value === NEW_CATEGORY;
+  $("#in-category").hidden = !isNew;
+  if(!isNew) $("#in-category").value = "";
+}
+
+/* Typed name wins, otherwise whatever the dropdown shows. */
+function chosenCategory(){
+  const typed = $("#in-category").value.trim();
+  if(typed) return typed;
+  const picked = $("#in-category-pick").value;
+  return picked && picked !== NEW_CATEGORY ? picked : "Sonstiges";
+}
+
 function editProduct(id){
   const p = data.products.find(x=>x.id===id);
   if(!p) return;
@@ -1956,7 +1994,7 @@ function editProduct(id){
   newColor = p.color;
   $("#in-name").value     = p.name;
   $("#in-price").value    = csvNum(p.priceCents);       // deutsche Schreibweise
-  $("#in-category").value = p.category || "";
+  renderCategoryPicker((p.category || "Sonstiges").trim());
   $("#save-product").textContent = "Änderung speichern";
   $("#cancel-edit").style.display = "grid";
   $("#form-heading").textContent = "Artikel ändern: " + p.name;
@@ -1982,7 +2020,7 @@ function clearProductForm(){
 
 function saveProduct(){
   const name = $("#in-name").value.trim();
-  const category = $("#in-category").value.trim() || "Sonstiges";
+  const category = chosenCategory();
 
   if(!name){ toastMsg("Bezeichnung fehlt"); $("#in-name").focus(); return; }
   const priceCents = parseCents($("#in-price").value);
@@ -2003,6 +2041,9 @@ function saveProduct(){
   saveState();
   clearProductForm();
   renderAll();
+  // Stay on the group just used: several articles of one group in a row is
+  // the normal way this form gets filled.
+  renderCategoryPicker(category);
 }
 
 /* ============================================================
@@ -2607,6 +2648,11 @@ $("#dlg-confirm").addEventListener("click", e=>{ if(e.target.id==="dlg-confirm")
 $("#save-product").addEventListener("click", saveProduct);
 $("#cancel-edit").addEventListener("click", clearProductForm);
 $("#in-price").addEventListener("keydown", e=>{ if(e.key==="Enter") saveProduct(); });
+$("#in-category-pick").addEventListener("change", ()=>{
+  applyCategoryChoice();
+  if(!$("#in-category").hidden) $("#in-category").focus();
+});
+$("#in-category").addEventListener("keydown", e=>{ if(e.key==="Enter") saveProduct(); });
 
 $("#in-date").addEventListener("change", renderReport);
 $("#in-float").addEventListener("change", ()=>{

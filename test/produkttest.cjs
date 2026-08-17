@@ -33,15 +33,48 @@ const zustand = () => w.eval("data");
 const zeilen = () => [...d.querySelectorAll("#product-list .list-row")];
 const namen = () => zeilen().map(z => z.querySelector("b").textContent);
 
+const wechsel = el => el.dispatchEvent(new w.Event("change", {bubbles:true}));
+const auswahl = () => [...$("#in-category-pick").options].map(o => o.textContent);
+
+/* Gruppe so setzen, wie ein Mensch es tut: vorhandene aus der Liste waehlen,
+   sonst „Neue Gruppe anlegen“ und den Namen tippen. Frueher hat der Test
+   einfach das Textfeld beschrieben und haette deshalb nicht gemerkt, dass
+   das Auswahlmenue gar nicht bedienbar ist. */
+function waehleGruppe(gruppe){
+  const pick = $("#in-category-pick");
+  const vorhanden = [...pick.options].some(o => o.value === gruppe);
+  pick.value = vorhanden ? gruppe : w.eval("NEW_CATEGORY");   // const liegt nicht auf window
+  wechsel(pick);
+  if(!vorhanden) $("#in-category").value = gruppe;
+}
+
 function anlegen(name, preis, gruppe){
   $("#in-name").value = name;
   $("#in-price").value = preis;
-  $("#in-category").value = gruppe || "Test";
+  waehleGruppe(gruppe || "Test");
   klick($("#save-product"));
 }
 
 setTimeout(() => {
   w.switchTab("products");
+
+  console.log("\n== Gruppenauswahl ==");
+  // Das Menü war vorher ein Textfeld mit datalist. Unter Android gab es dazu
+  // gar keine Aufklappliste, das Feld sah aus wie ein normales Eingabefeld.
+  pruefe("Menü ist eine echte Auswahl", $("#in-category-pick").tagName, "SELECT");
+  pruefe("vorhandene Gruppen stehen drin",
+    auswahl().slice(0, 3), ["Bier", "Alkoholfrei", "Wein"]);
+  pruefe("letzter Eintrag legt eine neue an",
+    auswahl()[auswahl().length - 1], "Neue Gruppe anlegen");
+  pruefe("Textfeld bleibt verborgen", $("#in-category").hidden, true);
+
+  $("#in-category-pick").value = w.eval("NEW_CATEGORY");
+  wechsel($("#in-category-pick"));
+  pruefe("Textfeld erscheint für neue Gruppe", $("#in-category").hidden, false);
+  $("#in-category-pick").value = "Wein";
+  wechsel($("#in-category-pick"));
+  pruefe("und verschwindet wieder", $("#in-category").hidden, true);
+  pruefe("Textfeld wurde geleert", $("#in-category").value, "");
 
   console.log("\n== Anlegen ==");
   const vorher = zustand().products.length;
@@ -49,6 +82,19 @@ setTimeout(() => {
   pruefe("Artikel hinzugefügt", zustand().products.length, vorher + 1);
   pruefe("erscheint in der Liste", namen().includes("Kräuterlikör"), true);
   pruefe("Formular geleert", $("#in-name").value, "");
+  pruefe("gewählte Gruppe übernommen",
+    zustand().products.find(p=>p.name==="Kräuterlikör").category, "Schnaps");
+  pruefe("Gruppe bleibt für den nächsten Artikel stehen",
+    $("#in-category-pick").value, "Schnaps");
+
+  console.log("\n== Neue Gruppe anlegen ==");
+  anlegen("Met 0,3 l", "5,50", "Honigwein");
+  pruefe("neue Gruppe übernommen",
+    zustand().products.find(p=>p.name==="Met 0,3 l").category, "Honigwein");
+  pruefe("steht danach im Menü", auswahl().includes("Honigwein"), true);
+  pruefe("Textfeld wieder verborgen", $("#in-category").hidden, true);
+  pruefe("Gruppe erscheint als Filter in der Kasse",
+    [...d.querySelectorAll("#filter-bar button")].map(b=>b.textContent).includes("Honigwein"), true);
 
   console.log("\n== Reihenfolge ändern ==");
   const start = namen();
@@ -64,6 +110,7 @@ setTimeout(() => {
   klick(zeilen()[0].querySelector('[data-act="edit"]'));
   pruefe("Name übernommen", $("#in-name").value, "Helles 0,5 l");
   pruefe("Preis in deutscher Schreibweise", $("#in-price").value, "4,50");
+  pruefe("Gruppe im Menü vorgewählt", $("#in-category-pick").value, "Bier");
   pruefe("Knopf umbenannt", $("#save-product").textContent, "Änderung speichern");
   pruefe("Abbrechen sichtbar", $("#cancel-edit").style.display, "grid");
   // Der Zustand muss unübersehbar sein, sonst benennt der naechste Speichern-
