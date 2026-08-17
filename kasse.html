@@ -932,6 +932,7 @@ textarea.paste-field{
         <video id="scan-video" playsinline muted></video>
         <div class="scan-status" id="scan-status">Kamera wird gestartet …</div>
       </div>
+      <p class="note" id="scan-detail"></p>
       <div class="part-dots" id="part-dots"></div>
       <p class="note">Kein Kamerazugriff? Den kopierten Text vom anderen Tablet hier einfügen:</p>
       <textarea class="paste-field" id="paste-config" placeholder="HK1&#10;Berghütte&#10;Helles 0,5 l&#9;450&#9;Bier&#9;0" spellcheck="false"></textarea>
@@ -1657,11 +1658,16 @@ const QR = (function(){
 
   /* The whole way, from a grey picture to the text inside it.
      Returns null whenever anything does not add up, never a guess. */
-  function read(grey, width, height){
+  function read(grey, width, height, notes){
+    const note = (k,v) => { if(notes) notes[k] = v; };
+    note("corners", 0);
     if(!grey || width < 21 || height < 21) return null;
     const bits = binarize(grey, width, height);
-    const three = pickTriple(findFinders(bits, width, height));
+    const candidates = findFinders(bits, width, height);
+    note("corners", candidates.length);
+    const three = pickTriple(candidates);
     if(!three) return null;
+    note("square", true);
     const marks = orient(three);
     const {topLeft, topRight, bottomLeft} = marks;
 
@@ -1918,6 +1924,14 @@ function storageProbe(){
   }
 }
 
+/* The build writes its stamp into the page. Since the service worker serves
+   from its cache first, this is the only honest answer to "which version am
+   I actually looking at". The single file version carries no stamp. */
+function buildStamp(){
+  const tag = document.querySelector('meta[name="build"]');
+  return tag && tag.content ? tag.content : "Einzeldatei ohne Stempel";
+}
+
 /* On iOS an app started from the home screen keeps its own storage, separate
    from the same page in Safari. Worth showing, it looks like data loss. */
 function appMode(){
@@ -1949,7 +1963,8 @@ async function renderStorageStatus(){
     ["Letzte heruntergeladene Sicherung", lastText],
     ["Verbindung abgesichert", window.isSecureContext ? "ja" : "nein"],
     ["Als App gestartet", appMode()],
-    ["Kamera ansprechbar", (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) ? "ja" : "nein"]
+    ["Kamera ansprechbar", (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) ? "ja" : "nein"],
+    ["Stand der App", buildStamp()]
   ];
   rows.forEach(([k,v])=>{
     const d = document.createElement("div");
@@ -2922,6 +2937,8 @@ function renderShare(){
 async function openScan(){
   scanParts = new Map(); scanTotal = 0;
   $("#paste-config").value = "";
+  setScanStatus("Kamera wird gestartet …");
+  setScanDetail("");
   $("#dlg-scan").dataset.open = "yes";
   renderPartDots();
   startScan();
@@ -2959,38 +2976,75 @@ function frameAsGrey(video){
   return {grey, width:w, height:h};
 }
 
+function setScanDetail(text){ const t = $("#scan-detail"); if(t) t.textContent = text; }
+
 async function startScan(){
   // The reading is ours. Relying on the browser's own reader meant the camera
   // stayed dark on anything that is not Chromium, iPhone included.
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     setScanStatus("Dieser Browser gibt keine Kamera her. Text unten einfügen.");
+    setScanDetail("getUserMedia fehlt. Ohne https gibt kein Browser die Kamera her.");
     return;
   }
-  try{
-    scanStream = await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:"environment", width:{ideal:1280}, height:{ideal:720}}
-    });
-  }catch(e){
-    setScanStatus(e && e.name === "NotAllowedError"
+
+  // Some devices refuse the whole request over a single constraint they cannot
+  // meet, so ask politely first and plainly afterwards.
+  const wishes = [
+    {video:{facingMode:{ideal:"environment"}, width:{ideal:1280}, height:{ideal:720}}},
+    {video:{facingMode:{ideal:"environment"}}},
+    {video:true}
+  ];
+  setScanDetail("Kamera wird angefragt. Die Nachfrage des Browsers bitte erlauben.");
+  let last = null;
+  for(const wish of wishes){
+    try{ scanStream = await navigator.mediaDevices.getUserMedia(wish); last = null; break; }
+    catch(e){ last = e; scanStream = null; }
+  }
+  if(!scanStream){
+    const name = (last && last.name) || "unbekannt";
+    setScanStatus(name === "NotAllowedError"
       ? "Kamera nicht erlaubt. Text unten einfügen."
       : "Kein Kamerazugriff. Text unten einfügen.");
+    setScanDetail("Der Browser sagt: " + name + ". Bei NotAllowedError hilft nur die Erlaubnis"
+      + " in den Browsereinstellungen, bei NotFoundError fehlt eine Kamera,"
+      + " bei NotReadableError hat sie eine andere App belegt.");
     return;
   }
+
   const video = $("#scan-video");
   video.srcObject = scanStream;
-  try{ await video.play(); }catch(e){}
+  try{ await video.play(); }catch(e){ /* iOS starts it from the attribute */ }
   scanRunning = true;
   setScanStatus("Code ins Bild halten …");
 
+  // What the reader sees, in plain words. Without this a scan that finds
+  // nothing looks exactly like one that is not running at all.
+  const begonnen = Date.now();
+  let frames = 0, blind = 0;
+  const notes = {};
   const loop = () => {
     if(!scanRunning) return;
+    let waited = Date.now() - begonnen;
     try{
       const frame = frameAsGrey(video);
-      if(frame){
-        const text = QR.read(frame.grey, frame.width, frame.height);
-        if(text !== null) onScanResult(text);
+      if(!frame){
+        blind++;
+        if(waited > 3000) setScanDetail("Die Kamera läuft, liefert aber kein Bild ("
+          + blind + " Versuche). Text unten einfügen.");
+      }else{
+        frames++;
+        const text = QR.read(frame.grey, frame.width, frame.height, notes);
+        if(text !== null){ onScanResult(text); return; }
+        if(waited > 1500){
+          setScanDetail(frame.width + "x" + frame.height + ", " + frames + " Bilder geprüft. "
+            + (notes.square ? "Code erkannt, aber noch nicht lesbar: ruhig halten."
+               : notes.corners ? "Erst " + notes.corners + " von 3 Ecken zu sehen: näher heran."
+               : "Noch kein Code im Bild."));
+        }
       }
-    }catch(e){ /* a frame that yields nothing is the normal case */ }
+    }catch(e){
+      setScanDetail("Der Leser ist ausgestiegen: " + (e && e.message ? e.message : e));
+    }
     if(scanRunning) setTimeout(loop, 120);
   };
   loop();

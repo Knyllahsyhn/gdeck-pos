@@ -16,8 +16,20 @@ const favicon = source.match(/<link rel="icon" type="image\/svg\+xml" href="(dat
 if (!favicon) throw new Error("svg favicon not found in " + SRC);
 const iconSvg = decodeURIComponent(favicon[1].slice("data:image/svg+xml,".length));
 
-/* index.html: the source plus the two things that make it installable. */
+const icon192 = readFileSync("assets/icon-192.png");
+const icon512 = readFileSync("assets/icon-512.png");
+
+/* Stamp taken from the source, not from the finished page, so it can be
+   written into that page. It names the service worker cache and is shown
+   in the settings, which is the only way to tell from the outside whether
+   a device is looking at a fresh copy or at one out of its cache. */
+const stamp = createHash("sha256")
+  .update(source).update(icon192).update(icon512).update(iconSvg)
+  .digest("hex").slice(0, 12);
+
+/* index.html: the source plus the things that make it installable. */
 const injected = `
+<meta name="build" content="${stamp}">
 <link rel="manifest" href="/manifest.webmanifest">
 <script>
 /* The service worker is what keeps the register usable when the hut's
@@ -29,14 +41,6 @@ if ("serviceWorker" in navigator) {
 `;
 const index = source.replace("</head>", injected + "</head>");
 if (index === source) throw new Error("could not inject into <head>");
-
-const icon192 = readFileSync("assets/icon-192.png");
-const icon512 = readFileSync("assets/icon-512.png");
-
-/* Cache name derived from content, so each deploy invalidates exactly once. */
-const stamp = createHash("sha256")
-  .update(index).update(icon192).update(icon512).update(iconSvg)
-  .digest("hex").slice(0, 12);
 
 const manifest = {
   name: "KNYL Hüttenkasse",
