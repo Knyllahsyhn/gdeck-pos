@@ -12,7 +12,8 @@ const suites = [
   ["Tastenfeld", "layouttest.cjs"],
   ["Artikel", "produkttest.cjs"],
   ["Speicherung", "speichertest.cjs"],
-  ["Service Worker", "swtest.cjs"]
+  ["Service Worker", "swtest.cjs"],
+  ["QR-Leser", "qrtest.cjs"]
 ];
 
 let failed = 0;

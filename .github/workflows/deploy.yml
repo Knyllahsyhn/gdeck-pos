@@ -19,7 +19,14 @@ jobs:
 
       - run: npm ci
 
-      # Baut public/ und fährt alle sechs Suiten über das DOM.
+      # Der QR-Leser wird gegen echte Bilder geprüft: qrencode schreibt sie,
+      # zbarimg liest gegen, ImageMagick verdreht und verrauscht sie.
+      # Ohne diese drei überspringt die Suite sich selbst, und dann wäre der
+      # Leser in der CI überhaupt nicht abgedeckt.
+      - name: Bildwerkzeuge
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq qrencode zbar-tools imagemagick
+
+      # Baut public/ und fährt alle sieben Suiten.
       - run: npm test
 
       # Nur von main aus veröffentlichen, Pull Requests bleiben ein Testlauf.
