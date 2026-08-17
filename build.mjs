@@ -89,7 +89,12 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   const req = event.request;
   if (req.method !== "GET") return;
-  if (new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  // Cloudflare's own endpoints, injected into the page by Bot Fight Mode.
+  // They carry one-time tokens, so a cached copy is worthless, and offline
+  // they would be answered with our plain text notice instead of a script.
+  if (url.pathname.startsWith("/cdn-cgi/")) return;
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);

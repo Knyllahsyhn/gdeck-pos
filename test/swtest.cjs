@@ -185,6 +185,22 @@ function baueUmgebung({ antwort }){
     pruefe("nicht abgefangen", ev._antwort === undefined, true);
   }
 
+  console.log("\n== Cloudflare-Pfade bleiben unangetastet ==");
+  {
+    // Bot Fight Mode haengt der Seite einen Aufruf an /cdn-cgi/ an. Der traegt
+    // ein Einmal-Token, gehoert also nicht in den Cache, und ohne Netz duerfen
+    // wir darauf nicht mit unserem Hinweistext antworten.
+    const u = baueUmgebung({ antwort: async (url, R) => new R("x") });
+    await u.feuern("install", u.machEvent());
+    const ev = u.machEvent({ request: { method: "GET",
+      url: "https://kasse.test/cdn-cgi/challenge-platform/scripts/jsd/main.js" } });
+    await u.feuern("fetch", ev);
+    pruefe("nicht abgefangen", ev._antwort === undefined, true);
+    const cacheName = [...u.speicher.keys()][0];
+    pruefe("nichts davon im Cache",
+      [...u.speicher.get(cacheName).keys()].some(k => k.includes("cdn-cgi")), false);
+  }
+
   console.log("\n== Alter Cache wird beim Aktivieren entfernt ==");
   {
     const u = baueUmgebung({ antwort: async (url, R) => new R("x") });
