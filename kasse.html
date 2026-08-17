@@ -59,7 +59,10 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
+/* dvh follows the address bar on phones. Without it the browser sizes the
+   page to the taller viewport and the bottom strip, receipt total included,
+   sits off screen with no way to scroll to it. */
+html,body{height:100%;height:100dvh;overflow:hidden}
 body{
   background:var(--bg);color:var(--text);
   font-family:var(--font-ui);font-size:16px;
@@ -125,7 +128,10 @@ input,select{font:inherit;color:inherit}
    ============================================================ */
 #view-register{flex-direction:row}
 
-.products-pane{flex:1;min-width:0;display:flex;flex-direction:column}
+/* min-height matters in portrait, where the pane stacks above the receipt:
+   without it the pane keeps its full content height and pushes the receipt
+   past the bottom edge. */
+.products-pane{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
 
 .filter-bar{
   display:flex;gap:8px;padding:10px 12px;overflow-x:auto;flex:none;
@@ -155,6 +161,9 @@ input,select{font:inherit;color:inherit}
   overflow:hidden;
   grid-auto-rows:unset;
   align-content:stretch;
+  /* Lower bound for a key. Zero on a tablet, where the whole keypad has to
+     fit on one screen; a real value on a phone, where it may scroll. */
+  --slot-min:0px;
 }
 .tile-empty{
   border-radius:var(--r);
@@ -322,6 +331,7 @@ input,select{font:inherit;color:inherit}
 .row-text b{font-family:var(--font-display);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
 .row-text small{display:block;color:var(--text-muted);font-size:12px;font-family:var(--font-num);margin-top:2px}
 .row-price{font-family:var(--font-num);font-size:17px;font-variant-numeric:tabular-nums}
+.row-break{display:none}
 .button-small{
   min-height:42px;padding:0 12px;border-radius:var(--r);
   border:1px solid var(--line);font-size:14px;background:var(--surface-high);
@@ -555,6 +565,58 @@ textarea.paste-field{
   .checkout-amounts{grid-template-columns:1fr}
   .change-box .change-value{font-size:46px}
   .brand{display:none}
+}
+
+/* A phone turned sideways is short, not narrow: stacking the receipt under
+   the keys leaves it too little height to show the total and the buttons.
+   Put it back beside them. */
+@media (max-width:900px) and (orientation:landscape){
+  #view-register{flex-direction:row}
+  .receipt{
+    width:300px;max-height:none;
+    border-left:2px solid var(--line);border-top:none;
+  }
+}
+
+/* Phone. Tabs plus tools need about 660px side by side; below that the row
+   overflowed and pushed the tools clean off the screen, with no way to
+   scroll after them. So the tabs get a row of their own. */
+@media (max-width:660px){
+  .topbar{flex-wrap:wrap}
+  .topbar-tools{order:1;flex:1;justify-content:flex-end;border-left:none;padding:6px 10px 0}
+  .tool-button{min-width:0;height:38px;padding:0 14px;font-size:12px}
+  .tabs{order:2;flex-basis:100%}
+  /* Width by label length instead of four equal quarters: "Einstellungen"
+     needs more room than "Kasse" and would otherwise run over its edge. */
+  .tabs button{flex:1 1 auto;min-width:0;min-height:46px;padding:0 6px;font-size:12px;letter-spacing:.06em}
+  /* Every pixel the receipt gives back is one the article keys get. */
+  .receipt-lines:empty::after{padding:20px 20px}
+  .total-row .value{font-size:30px}
+  .receipt-foot{padding-top:8px}
+  /* Checkout is where every line counts: the two amount boxes stay side by
+     side even here, so more of the keypad is visible without scrolling. */
+  .amount-box{padding:8px 12px}
+  .amount-box .amount-value{font-size:24px}
+  .checkout-amounts{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+  .change-box{padding:10px 14px;margin-bottom:10px}
+  .change-box .change-value{font-size:38px}
+  /* Article list: name and price on one line, the four buttons on the next.
+     Side by side they squeezed the name until the price sat on top of it. */
+  .list-row{flex-wrap:wrap;gap:8px 10px}
+  .row-break{display:block;flex:0 0 100%;height:0}
+  .list-row .button-small{flex:1 1 0;min-width:0;padding:0 6px}
+}
+
+/* A tablet keypad squeezed onto a phone, upright or sideways: keep the keys
+   readable and let the field scroll instead of flattening the rows until
+   only the price is left. */
+@media (max-width:660px), (max-height:560px){
+  .grid[data-layout="fixed"]{overflow-y:auto;--slot-min:84px}
+  .tile{padding:8px 8px 7px}
+  /* On a narrow key a long single word has to break, otherwise it is simply
+     cut off: "Weissbier" became "Weissbie". */
+  .tile .tile-name{font-size:14px;-webkit-line-clamp:3;overflow-wrap:anywhere}
+  .tile .tile-price{font-size:13px;padding:2px 6px}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
@@ -1494,8 +1556,11 @@ function renderGrid(){
   if(hasFixedGrid()){
     const {columns, rows} = data.grid;
     target.dataset.layout = "fixed";
-    target.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-    target.style.gridTemplateRows    = `repeat(${rows}, 1fr)`;
+    // minmax(0,...) instead of a bare 1fr: a plain 1fr never shrinks below the
+    // widest word in a key, so a narrow screen pushed the last column out of
+    // sight. The row minimum comes from CSS, see --slot-min.
+    target.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
+    target.style.gridTemplateRows    = `repeat(${rows}, minmax(var(--slot-min), 1fr))`;
     const start = currentPage * slotsPerPage();
     for(let i=0; i<slotsPerPage(); i++){
       const p = productAtSlot(start + i);
@@ -1763,6 +1828,9 @@ function renderProductList(){
       '<span class="color-chip"></span>' +
       '<span class="row-text"><b></b><small></small></span>' +
       '<span class="row-price"></span>' +
+      // Line break that only exists on a phone: it puts the buttons on a row
+      // of their own instead of letting them squeeze the name.
+      '<span class="row-break" aria-hidden="true"></span>' +
       '<button class="button-small" data-act="up" aria-label="Nach oben">Hoch</button>' +
       '<button class="button-small" data-act="down" aria-label="Nach unten">Runter</button>' +
       '<button class="button-small" data-act="edit">Ändern</button>' +

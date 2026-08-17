@@ -48,8 +48,10 @@ function lauf(){
   stelleRaster(4,4);
   pruefe("Raster fest", $("#grid").dataset.layout, "fixed");
   pruefe("16 Felder je Seite", $("#grid").children.length, 16);
-  pruefe("4 Spalten gesetzt", $("#grid").style.gridTemplateColumns, "repeat(4, 1fr)");
-  pruefe("4 Zeilen gesetzt", $("#grid").style.gridTemplateRows, "repeat(4, 1fr)");
+  // minmax statt blankem 1fr: sonst schrumpft eine Spalte nie unter das
+  // laengste Wort und die letzte Spalte rutscht auf schmalen Geraeten raus.
+  pruefe("4 Spalten gesetzt", $("#grid").style.gridTemplateColumns, "repeat(4, minmax(0, 1fr))");
+  pruefe("4 Zeilen gesetzt", $("#grid").style.gridTemplateRows, "repeat(4, minmax(var(--slot-min), 1fr))");
   pruefe("Anordnen sichtbar", $("#arrange-section").hidden, false);
   pruefe("gespeicherte Aufteilung", zustand().grid, {columns:4, rows:4});
 
