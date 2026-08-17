@@ -1414,6 +1414,29 @@ async function requestPersistence(){
   renderStorageStatus();
 }
 
+/* Writes a probe key and reads it back, right now. Says what the browser
+   actually does instead of what it claims to support. */
+function storageProbe(){
+  const key = STORE_KEY + ".probe";
+  try{
+    localStorage.setItem(key, "1");
+    const back = localStorage.getItem(key);
+    localStorage.removeItem(key);
+    return back === "1" ? "ok" : "schreibt nicht zurück";
+  }catch(e){
+    return "blockiert (" + ((e && e.name) || "unbekannt") + ")";
+  }
+}
+
+/* On iOS an app started from the home screen keeps its own storage, separate
+   from the same page in Safari. Worth showing, it looks like data loss. */
+function appMode(){
+  const mode = m => window.matchMedia && window.matchMedia("(display-mode: " + m + ")").matches;
+  if(navigator.standalone === true) return "ja, vom Startbildschirm";
+  if(mode("fullscreen") || mode("standalone")) return "ja";
+  return "nein, im Browser";
+}
+
 async function renderStorageStatus(){
   const target = $("#storage-status");
   if(!target) return;
@@ -1431,8 +1454,13 @@ async function renderStorageStatus(){
   const rows = [
     ["Gespeicherte Bons", String(saleCount)],
     ["Schreiben auf dieses Gerät", storageOk ? "läuft" : "schlägt fehl"],
+    ["Speichertest gerade eben", storageProbe()],
     ["Vom Browser geschützt", persistent === null ? "unbekannt" : (persistent ? "ja" : "nein, Daten könnten bei Platzmangel verworfen werden")],
-    ["Letzte heruntergeladene Sicherung", lastText]
+    ["Letzte heruntergeladene Sicherung", lastText],
+    ["Verbindung abgesichert", window.isSecureContext ? "ja" : "nein"],
+    ["Als App gestartet", appMode()],
+    ["QR-Leser im Browser", ("BarcodeDetector" in window) ? "vorhanden" : "fehlt, Kamera bleibt aus"],
+    ["Kamera ansprechbar", (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) ? "ja" : "nein"]
   ];
   rows.forEach(([k,v])=>{
     const d = document.createElement("div");
