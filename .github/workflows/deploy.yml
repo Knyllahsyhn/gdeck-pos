@@ -2,7 +2,6 @@ name: Test und Deploy
 
 on:
   push:
-    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -20,7 +19,7 @@ jobs:
 
       - run: npm ci
 
-      # Baut public/ und fährt alle drei Suiten über das DOM.
+      # Baut public/ und fährt alle sechs Suiten über das DOM.
       - run: npm test
 
       # Nur von main aus veröffentlichen, Pull Requests bleiben ein Testlauf.
@@ -30,3 +29,27 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # Jeder andere Branch bekommt eine Vorschau unter eigener Adresse.
+      # Die nimmt keinen echten Verkehr an, die Kasse läuft weiter auf main.
+      - name: Name für die Vorschau
+        if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
+        id: alias
+        run: |
+          name=$(echo "${{ github.ref_name }}" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9-' '-' | cut -c1-25)
+          name=${name%-}
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Vorschau hochladen
+        if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: versions upload --preview-alias ${{ steps.alias.outputs.name }}
+
+      - name: Adresse der Vorschau
+        if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          echo "### Vorschau" >> "$GITHUB_STEP_SUMMARY"
+          echo "https://${{ steps.alias.outputs.name }}-gdeck-pos.knyl.workers.dev" >> "$GITHUB_STEP_SUMMARY"

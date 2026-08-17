@@ -7,6 +7,9 @@
     // One page only, so anything unknown lands on the register instead of a 404.
     "not_found_handling": "single-page-application"
   },
+  // Branches ausser main gehen als Version mit eigener Vorschauadresse raus,
+  // ohne den laufenden Betrieb anzufassen.
+  "preview_urls": true,
   "observability": {
     "enabled": true
   }
