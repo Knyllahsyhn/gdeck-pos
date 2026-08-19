@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -24,7 +25,14 @@ jobs:
       # Ohne diese drei überspringt die Suite sich selbst, und dann wäre der
       # Leser in der CI überhaupt nicht abgedeckt.
       - name: Bildwerkzeuge
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq qrencode zbar-tools imagemagick
+        # Haengt der Paketspiegel, soll der Schritt abbrechen statt den Lauf
+        # stundenlang zu blockieren. Fehlen die Werkzeuge, ueberspringt sich
+        # die QR-Suite selbst, und dann waere der Leser in der CI ungeprueft.
+        timeout-minutes: 6
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends qrencode zbar-tools imagemagick \
+            || (sleep 10 && sudo apt-get install -y -qq --no-install-recommends qrencode zbar-tools imagemagick)
 
       # Baut public/ und fährt alle sieben Suiten.
       - run: npm test
