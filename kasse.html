@@ -3129,7 +3129,18 @@ async function startScan(){
       }else{
         frames++;
         const text = QR.read(frame.grey, frame.width, frame.height, notes);
-        if(text !== null){ setScanDetail(""); onScanResult(text); return; }
+        if(text !== null){
+          onScanResult(text);
+          // Ein Sortiment kommt in mehreren Codes. Nach dem ersten einfach
+          // aufzuhoeren hiess: umschalten auf den naechsten, und nichts
+          // passiert mehr. applyConfig haelt den Leser selbst an, sobald
+          // alle Teile da sind, daran ist der Abbruch hier gebunden.
+          if(!scanRunning) return;
+          setScanDetail("Gelesen. Jetzt am anderen Gerät auf den nächsten Code umschalten.");
+          // Kurze Pause, sonst liest er denselben Code sofort wieder.
+          setTimeout(loop, 700);
+          return;
+        }
         if(waited > 1500){
           setScanDetail(frame.width + "x" + frame.height + ", " + frames
             + " Bilder geprüft. " + scanHint(notes));

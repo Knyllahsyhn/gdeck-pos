@@ -13,6 +13,7 @@ const suites = [
   ["Artikel", "produkttest.cjs"],
   ["Speicherung", "speichertest.cjs"],
   ["Service Worker", "swtest.cjs"],
+  ["Übertragung", "scantest.cjs"],
   ["QR-Leser", "qrtest.cjs"]
 ];
 
