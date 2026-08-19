@@ -137,9 +137,21 @@ console.log("\n== Ein voller Teil vom Schirm abgefilmt ==");
   const breite = Math.round(hoehe * 9/16);
   const imBild = Math.round(breite * 0.7);       // Code fuellt 70 % der Breite
 
+  const skal = Math.max(1, Math.round(1200/gesamt));
+  const kante = gesamt * skal;      // Kantenlaenge des ungeschrumpften Bildes
+
+  /* Ueber einen Tisch gehalten steht kein Code je gerade vor der Linse. Die
+     Punkte kippen die obere Kante nach rechts und ziehen die untere zusammen,
+     so wie ein Handy ueber einem liegenden Tablet es sieht. */
+  function schraeg(staerke){
+    const k = kante, v = staerke;
+    return ["-alpha","set","-virtual-pixel","white","-distort","Perspective",
+      `0,0,${k*v*0.5},0 ${k},0,${k},${k*v*0.33} 0,${k},0,${k} ${k},${k},${k*(1-v*0.4)},${k*(1-v*0.27)}`];
+  }
+
   function abgefilmt(extra){
     const pbm = H.temp("teil.pbm");
-    H.schreibePBM(q.matrix, q.size, pbm, rand, Math.max(1, Math.round(1200/gesamt)));
+    H.schreibePBM(q.matrix, q.size, pbm, rand, skal);
     const ziel = H.temp("teil.png");
     // Sensorrauschen gehoert dazu, in der Huette wird bei Kunstlicht gefilmt.
     // Fester Startwert, sonst faellt der Test mal so und mal so aus.
@@ -156,8 +168,12 @@ console.log("\n== Ein voller Teil vom Schirm abgefilmt ==");
   const lagen = [
     ["scharf gehalten",   []],
     ["leicht unscharf",   ["-blur","0x1.5"]],
-    ["schief gehalten",   ["-background","white","-rotate","12","-blur","0x1.5"]],
-    ["Schirm statt Papier",["-level","12%,88%","-blur","0x1.5"]]
+    ["gedreht",           ["-background","white","-rotate","12","-blur","0x1.5"]],
+    ["Schirm statt Papier",["-level","12%,88%","-blur","0x1.5"]],
+    // Diese beiden fielen durch, solange die Ausrichtungsmarke nie gefunden
+    // wurde: ohne sie rechnet der Leser das Bild flach und trifft daneben.
+    ["ueber den Tisch gehalten", schraeg(0.16).concat(["-level","12%,88%"])],
+    ["stark gekippt",           schraeg(0.30).concat(["-level","12%,88%","-blur","0x1.5"])]
   ];
   let ok = 0;
   for(const [name, extra] of lagen){

@@ -1475,24 +1475,65 @@ const QR = (function(){
 
   /* The small square near the bottom right corner. It is what makes a photo
      taken at an angle readable, because it pins down the fourth corner. */
+  /* An alignment pattern is a dark ring, a light ring, a dark middle, each one
+     module wide, so a cut through its centre gives five runs. Only the inner
+     three may be measured: the outer ring sits against data modules and merges
+     with every one of them that happens to be dark. Measuring all five was
+     what kept the pattern from ever being found. */
+  function alignAt(list, i, unit){
+    const [p,q,r,s,t] = list.slice(i, i+5);
+    if(!p.colour) return 0;                       // runs alternate, so this fixes the rest
+    const tol = unit/2;
+    if(Math.abs(q.len-unit) >= tol || Math.abs(r.len-unit) >= tol || Math.abs(s.len-unit) >= tol) return 0;
+    if(p.len < unit/2 || t.len < unit/2) return 0;
+    return (q.len + r.len + s.len)/3;
+  }
+
+  /* Confirms a candidate down the column the way crossCheck does for finders,
+     only against the shape of an alignment pattern. */
+  function alignCheck(read, length, near, unit){
+    const span = Math.ceil(unit*5);
+    const from = Math.max(0, near-span), to = Math.min(length, near+span);
+    if(to-from < 5) return null;
+    const list = runs(i => read(from+i), to-from);
+    for(let i=0;i+4<list.length;i++){
+      const u = alignAt(list, i, unit);
+      if(!u) continue;
+      const middle = from + list[i+2].start + list[i+2].len/2;
+      if(Math.abs(middle - near) > unit*2) continue;
+      return {middle, unit:u};
+    }
+    return null;
+  }
+
+  /* Searches in rings around the estimate. The estimate assumes the code lies
+     flat; the further it is tipped, the further the pattern has wandered, and
+     a picture taken over a table is always tipped a little. Widening only on
+     failure keeps the usual case cheap and the far case possible. */
   function findAlignment(bits, width, height, atX, atY, unit){
-    const reach = Math.ceil(unit*4);
+    for(const modules of [5, 9, 14]){
+      const hit = alignmentWithin(bits, width, height, atX, atY, unit, modules);
+      if(hit) return hit;
+    }
+    return null;
+  }
+
+  function alignmentWithin(bits, width, height, atX, atY, unit, modules){
+    const reach = Math.ceil(unit*modules);
     const x0 = Math.max(0, Math.round(atX-reach)), x1 = Math.min(width, Math.round(atX+reach));
     const y0 = Math.max(0, Math.round(atY-reach)), y1 = Math.min(height, Math.round(atY+reach));
-    if(x1-x0 < 3 || y1-y0 < 3) return null;
+    if(x1-x0 < 5 || y1-y0 < 5) return null;
     let best = null;
     for(let y=y0; y<y1; y++){
       const row = y*width;
       const list = runs(i => bits[row + x0 + i], x1-x0);
-      for(let i=0;i+2<list.length;i++){
-        if(!list[i].colour) continue;
-        const [p,q,r] = list.slice(i,i+3);
-        const total = p.len+q.len+r.len;
-        const u = total/3;
-        if(Math.abs(u-unit) > unit/2) continue;
-        if(Math.abs(p.len-u) > u/2 || Math.abs(q.len-u) > u/2 || Math.abs(r.len-u) > u/2) continue;
-        const cx = x0 + q.start + q.len/2;
-        const down = crossCheck(v => bits[v*width + Math.round(cx)], height, y, u);
+      for(let i=0;i+4<list.length;i++){
+        const u = alignAt(list, i, unit);
+        if(!u) continue;
+        // The dark middle is the third run. Taking the light ring instead put
+        // the column one module off, and the check below then never matched.
+        const cx = x0 + list[i+2].start + list[i+2].len/2;
+        const down = alignCheck(v => bits[v*width + Math.round(cx)], height, y, unit);
         if(!down) continue;
         const cy = down.middle;
         const off = Math.hypot(cx-atX, cy-atY);
@@ -1623,7 +1664,12 @@ const QR = (function(){
   }
 
   /* Samples the grid for one assumed size and tries to make sense of it. */
-  function attempt(bits, width, height, marks, dim, alignment){
+  /* How far a single attempt got. The scan window shows the furthest stage
+     any attempt reached, which is the difference between "the code is not in
+     the picture" and "the picture is too poor to get the data out of it". */
+  const STAGE = {sampled:2, format:3, level:4, words:5, text:6};
+
+  function attempt(bits, width, height, marks, dim, alignment, reach){
     if(dim < 21 || dim > 117 || (dim-17) % 4 !== 0) return null;
     const version = (dim-17)/4;
     const {topLeft, topRight, bottomLeft} = marks;
@@ -1648,12 +1694,19 @@ const QR = (function(){
       grid[r][c] = bits[yi*width+xi];
     }
 
+    reach(STAGE.sampled);
+
     const format = readFormat(grid, dim);
     if(!format) return null;
+    reach(STAGE.format);
     if(format.level !== 1) return null;             // level L is what the register writes
+    reach(STAGE.level);
     const words = readWords(grid, version, format.mask);
     if(!words) return null;
-    return wordsToText(words, version);
+    reach(STAGE.words);
+    const text = wordsToText(words, version);
+    if(text !== null) reach(STAGE.text);
+    return text;
   }
 
   /* The whole way, from a grey picture to the text inside it.
@@ -1662,7 +1715,9 @@ const QR = (function(){
     const note = (k,v) => { if(notes) notes[k] = v; };
     // Every entry is written on every call. A stale true from some earlier
     // frame would tell the operator the code is in view when it is not.
-    note("corners", 0); note("square", false); note("unit", 0);
+    note("corners", 0); note("square", false); note("unit", 0); note("stage", 0);
+    let far = 0;
+    const reach = level => { if(level > far){ far = level; note("stage", far); } };
     if(!grey || width < 21 || height < 21) return null;
     const bits = binarize(grey, width, height);
     const candidates = findFinders(bits, width, height);
@@ -1670,6 +1725,7 @@ const QR = (function(){
     const three = pickTriple(candidates);
     if(!three) return null;
     note("square", true);
+    reach(1);
     const marks = orient(three);
     const {topLeft, topRight, bottomLeft} = marks;
 
@@ -1692,10 +1748,10 @@ const QR = (function(){
         const estY = topLeft.y + pull*(topRight.y - topLeft.y + bottomLeft.y - topLeft.y);
         alignment = findAlignment(bits, width, height, estX, estY, unit);
       }
-      const text = attempt(bits, width, height, marks, dim, alignment);
+      const text = attempt(bits, width, height, marks, dim, alignment, reach);
       if(text !== null) return text;
       if(alignment){
-        const plain = attempt(bits, width, height, marks, dim, null);
+        const plain = attempt(bits, width, height, marks, dim, null, reach);
         if(plain !== null) return plain;
       }
     }
@@ -2995,6 +3051,28 @@ function frameAsGrey(video){
 
 function setScanDetail(text){ const t = $("#scan-detail"); if(t) t.textContent = text; }
 
+/* Sagt in einem Satz, wo der Leser stehen bleibt. Ohne diese Auskunft sieht
+   ein Code, den die Kamera zu grob abbildet, genauso aus wie gar kein Code.
+   Die Stufen kommen aus QR.read, die Zahlen sind dort vergeben. */
+function scanHint(notes){
+  if(!notes.square){
+    return notes.corners
+      ? "Erst " + notes.corners + " von 3 Ecken zu sehen: näher heran."
+      : "Noch kein Code im Bild.";
+  }
+  // Unter etwa 3,5 Pixeln je Modul heben sich die Ecken noch ab, die Daten
+  // dazwischen nicht mehr. Das ist der haeufigste Grund und geht vor.
+  if(notes.unit < 3.5) return "Code ist zu klein im Bild: näher heran"
+    + " (" + notes.unit.toFixed(1) + " Pixel je Kästchen).";
+  const wo = ["Ecken stehen, Raster liegt daneben: Code ganz ins Bild.",
+              "Raster liegt, Formatzeile unlesbar: ruhig halten.",
+              "Das ist ein fremder Code, nicht von dieser Kasse.",
+              "Bild zu grob für die Daten: näher heran und scharf stellen.",
+              "Daten gelesen, Inhalt ergibt keinen Text."];
+  return (wo[notes.stage - 1] || "Code erkannt, aber noch nicht lesbar.")
+    + " (Stufe " + notes.stage + ", " + notes.unit.toFixed(1) + " px je Kästchen)";
+}
+
 async function startScan(){
   // The reading is ours. Relying on the browser's own reader meant the camera
   // stayed dark on anything that is not Chromium, iPhone included.
@@ -3053,15 +3131,8 @@ async function startScan(){
         const text = QR.read(frame.grey, frame.width, frame.height, notes);
         if(text !== null){ setScanDetail(""); onScanResult(text); return; }
         if(waited > 1500){
-          // Unter etwa 3,5 Pixeln je Modul findet der Leser die Ecken noch,
-          // bekommt die Daten dazwischen aber nicht mehr sicher auseinander.
-          // Das ist der haeufigste Fall und braucht eine eigene Ansage.
-          const eng = notes.square && notes.unit < 3.5;
-          setScanDetail(frame.width + "x" + frame.height + ", " + frames + " Bilder geprüft. "
-            + (eng ? "Code ist zu klein im Bild: näher heran."
-               : notes.square ? "Code erkannt, aber noch nicht lesbar: ruhig halten."
-               : notes.corners ? "Erst " + notes.corners + " von 3 Ecken zu sehen: näher heran."
-               : "Noch kein Code im Bild."));
+          setScanDetail(frame.width + "x" + frame.height + ", " + frames
+            + " Bilder geprüft. " + scanHint(notes));
         }
       }
     }catch(e){
