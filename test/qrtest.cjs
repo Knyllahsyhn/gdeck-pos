@@ -118,6 +118,76 @@ const bedingungen = [
   pruefe("alle Bedingungen", ok, bedingungen.length);
 }
 
+console.log("\n== Ein voller Teil vom Schirm abgefilmt ==");
+/* Der Abschnitt darueber arbeitet mit einer kurzen Nutzlast, also einem
+   kleinen Code. Die Kasse verschickt aber Teile zu PART_BYTES Zeichen, und
+   die brauchen 73 Module. Genau daran scheiterte der Leser am Handy: die
+   Ecken fand er, die Daten dazwischen nicht mehr. Deshalb wird hier ein
+   ganzer Teil geprueft, in der Bildgroesse, die der Leser wirklich bekommt. */
+{
+  const lang = "Helles 0,5 l|450|Bier|0\n";
+  let inhalt = "";
+  while(inhalt.length + lang.length <= H.konstante("PART_BYTES")) inhalt += lang;
+  const teil = "QK1/3\n" + inhalt;
+  const q = QR.matrix(teil);
+  const rand = 4, gesamt = q.size + 2*rand;
+
+  // Hochformat, lange Seite so gross wie der Leser sie stehen laesst.
+  const hoehe = H.konstante("SCAN_MAX_SIDE");
+  const breite = Math.round(hoehe * 9/16);
+  const imBild = Math.round(breite * 0.7);       // Code fuellt 70 % der Breite
+
+  function abgefilmt(extra){
+    const pbm = H.temp("teil.pbm");
+    H.schreibePBM(q.matrix, q.size, pbm, rand, Math.max(1, Math.round(1200/gesamt)));
+    const ziel = H.temp("teil.png");
+    // Sensorrauschen gehoert dazu, in der Huette wird bei Kunstlicht gefilmt.
+    // Fester Startwert, sonst faellt der Test mal so und mal so aus.
+    H.magick(["-seed","4711", pbm, ...extra, "-resize", `${imBild}x${imBild}!`,
+              "-background","gray50","-gravity","center","-extent",`${breite}x${hoehe}`,
+              "-attenuate","0.5","+noise","Gaussian",
+              "-colorspace","gray", ziel]);
+    const bild = H.alsGraubild(ziel);
+    return QR.read(bild.data, bild.width, bild.height);
+  }
+
+  pruefe("Module gross genug", (imBild/gesamt) > 3.5, true);
+
+  const lagen = [
+    ["scharf gehalten",   []],
+    ["leicht unscharf",   ["-blur","0x1.5"]],
+    ["schief gehalten",   ["-background","white","-rotate","12","-blur","0x1.5"]],
+    ["Schirm statt Papier",["-level","12%,88%","-blur","0x1.5"]]
+  ];
+  let ok = 0;
+  for(const [name, extra] of lagen){
+    if(abgefilmt(extra) === teil) ok++;
+    else console.log(`          nicht gelesen: ${name}`);
+  }
+  pruefe("voller Teil in allen Lagen", ok, lagen.length);
+}
+
+console.log("\n== Auskunft an die Bedienung ==");
+/* Die Meldung im Scanfenster stammt aus diesem Objekt. Bliebe ein Wert von
+   einem frueheren Bild stehen, meldete das Fenster einen Code im Sucher,
+   wo laengst keiner mehr ist. */
+{
+  const merk = {};
+  const gut = H.temp("gut.png");
+  H.qrencode(PROBE, gut, ["-s","8"]);
+  const b1 = H.alsGraubild(gut);
+  QR.read(b1.data, b1.width, b1.height, merk);
+  pruefe("Code im Bild wird gemeldet", merk.square, true);
+  pruefe("Modulgröße wird gemeldet", merk.unit > 1, true);
+
+  const leer = H.temp("nix.png");
+  H.magick(["-size","400x400","xc:white", leer]);
+  const b2 = H.alsGraubild(leer);
+  QR.read(b2.data, b2.width, b2.height, merk);
+  pruefe("leeres Bild setzt die Meldung zurück", merk.square, false);
+  pruefe("keine Ecken mehr gemeldet", merk.corners, 0);
+}
+
 console.log("\n== Fehlerkorrektur ==");
 // Ein Fleck auf dem Code muss durch die Prüfzeichen herauszurechnen sein.
 pruefe("Klecks auf dem Code",

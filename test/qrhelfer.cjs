@@ -16,6 +16,15 @@ function ladeQR(){
   return fabrik(TextEncoder, TextDecoder);
 }
 
+/* Holt eine Konstante aus der App, damit der Test nicht seinen eigenen
+   Zahlenwert pflegt und dann eine Aenderung der App verpasst. */
+function konstante(name){
+  const html = fs.readFileSync(path.join(__dirname, "..", "kasse.html"), "utf8");
+  const treffer = new RegExp("const\\s+" + name + "\\s*=\\s*(-?\\d+(?:\\.\\d+)?)").exec(html);
+  if(!treffer) throw new Error(name + " nicht in kasse.html gefunden");
+  return Number(treffer[1]);
+}
+
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "qrtest-"));
 const temp = name => path.join(tempDir, name);
 function aufraeumen(){ fs.rmSync(tempDir, {recursive:true, force:true}); }
@@ -71,4 +80,4 @@ function qrencode(text, datei, extra = []){
   return datei;
 }
 
-module.exports = { ladeQR, temp, aufraeumen, schreibePBM, alsGraubild, magick, zbar, qrencode, BILDWERKZEUG };
+module.exports = { ladeQR, konstante, temp, aufraeumen, schreibePBM, alsGraubild, magick, zbar, qrencode, BILDWERKZEUG };

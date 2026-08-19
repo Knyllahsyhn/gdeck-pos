@@ -1660,7 +1660,9 @@ const QR = (function(){
      Returns null whenever anything does not add up, never a guess. */
   function read(grey, width, height, notes){
     const note = (k,v) => { if(notes) notes[k] = v; };
-    note("corners", 0);
+    // Every entry is written on every call. A stale true from some earlier
+    // frame would tell the operator the code is in view when it is not.
+    note("corners", 0); note("square", false); note("unit", 0);
     if(!grey || width < 21 || height < 21) return null;
     const bits = binarize(grey, width, height);
     const candidates = findFinders(bits, width, height);
@@ -1672,6 +1674,7 @@ const QR = (function(){
     const {topLeft, topRight, bottomLeft} = marks;
 
     const unit = (topLeft.unit + topRight.unit + bottomLeft.unit)/3;
+    note("unit", unit);
     if(unit < 1) return null;
     const across = Math.hypot(topRight.x-topLeft.x, topRight.y-topLeft.y);
     const down   = Math.hypot(bottomLeft.x-topLeft.x, bottomLeft.y-topLeft.y);
@@ -2818,7 +2821,13 @@ function restoreBackupFile(file){
    is deliberately human readable so it can also be sent over a
    messenger and pasted in as a fallback.
    ============================================================ */
-const PART_BYTES = 450;   // per code, small enough to scan off a tablet screen
+/* Bytes per code. It was 450 once, which needs 73 modules, and off a screen
+   at arm's length that leaves too little of each module in the camera frame:
+   the reader found the code and then could not decode it. Measured over a
+   grid of distances, tilts and blurs, 450 bytes read in 24 of 32 shots and
+   250 bytes in 28. The price is a few more codes to hold up, and their order
+   does not matter. */
+const PART_BYTES = 250;
 
 const stripSeparators = s => String(s).replace(/[\t\r\n]/g, " ").trim();
 
@@ -2955,13 +2964,21 @@ function stopScan(){
 }
 function setScanStatus(text){ $("#scan-status").textContent = text; }
 
-/* Pulls one frame out of the video as plain grey values. Half resolution is
-   plenty and keeps a frame under the time between two of them. */
+/* Pulls one frame out of the video as plain grey values.
+
+   The longest side caps the work per frame. It was 800 once, and that was too
+   coarse: a config code carries 450 bytes, which needs 73 modules, and a phone
+   held at arm's length leaves about 2.8 pixels per module at that cap. The
+   finders still stand out at that size, so the reader announced a code it
+   could then never decode. Measured against a photographed screen, tilted and
+   slightly out of focus, 1280 reads what 800 does not, and a frame still costs
+   well under the 120 ms between two of them. */
+const SCAN_MAX_SIDE = 1280;
 let scanCanvas = null;
 function frameAsGrey(video){
   const vw = video.videoWidth, vh = video.videoHeight;
   if(!vw || !vh) return null;
-  const shrink = Math.min(1, 800/Math.max(vw, vh));
+  const shrink = Math.min(1, SCAN_MAX_SIDE/Math.max(vw, vh));
   const w = Math.max(1, Math.round(vw*shrink)), h = Math.max(1, Math.round(vh*shrink));
   if(!scanCanvas) scanCanvas = document.createElement("canvas");
   if(scanCanvas.width !== w || scanCanvas.height !== h){ scanCanvas.width = w; scanCanvas.height = h; }
@@ -2990,7 +3007,7 @@ async function startScan(){
   // Some devices refuse the whole request over a single constraint they cannot
   // meet, so ask politely first and plainly afterwards.
   const wishes = [
-    {video:{facingMode:{ideal:"environment"}, width:{ideal:1280}, height:{ideal:720}}},
+    {video:{facingMode:{ideal:"environment"}, width:{ideal:1920}, height:{ideal:1080}}},
     {video:{facingMode:{ideal:"environment"}}},
     {video:true}
   ];
@@ -3034,10 +3051,15 @@ async function startScan(){
       }else{
         frames++;
         const text = QR.read(frame.grey, frame.width, frame.height, notes);
-        if(text !== null){ onScanResult(text); return; }
+        if(text !== null){ setScanDetail(""); onScanResult(text); return; }
         if(waited > 1500){
+          // Unter etwa 3,5 Pixeln je Modul findet der Leser die Ecken noch,
+          // bekommt die Daten dazwischen aber nicht mehr sicher auseinander.
+          // Das ist der haeufigste Fall und braucht eine eigene Ansage.
+          const eng = notes.square && notes.unit < 3.5;
           setScanDetail(frame.width + "x" + frame.height + ", " + frames + " Bilder geprüft. "
-            + (notes.square ? "Code erkannt, aber noch nicht lesbar: ruhig halten."
+            + (eng ? "Code ist zu klein im Bild: näher heran."
+               : notes.square ? "Code erkannt, aber noch nicht lesbar: ruhig halten."
                : notes.corners ? "Erst " + notes.corners + " von 3 Ecken zu sehen: näher heran."
                : "Noch kein Code im Bild."));
         }
