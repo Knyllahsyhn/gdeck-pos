@@ -166,9 +166,44 @@ setTimeout(() => {
       anlegen("Im festen Raster", "3,30");
       pruefe("Anlegen funktioniert auch hier", zustand().products.length, vorAnlegen + 1);
 
-      pruefe("keine Konsolenfehler", konsole, []);
-      console.log(`\n===== ${geprueft - fehler}/${geprueft} Prüfungen bestanden =====`);
-      process.exit(fehler ? 1 : 0);
+      /* Sicherung einspielen, waehrend ein Artikel bearbeitet wird. Das
+         Formular blieb danach offen und zeigte auf eine Kennung, die die
+         eingespielte Datei nicht kennt. Der Klick auf „Änderung speichern“
+         lief dann in einen TypeError, weil find() nichts liefert. */
+      console.log("\n== Sicherung einspielen waehrend einer Bearbeitung ==");
+      klick(zeilen()[0].querySelector('[data-act="edit"]'));
+      pruefe("Bearbeitung ist offen", $("#product-form").dataset.editing, "yes");
+      $("#in-name").value = "Getippter Name"; $("#in-price").value = "2,50";
+
+      const sicherung = JSON.stringify({
+        businessName:"Nachbarhütte", theme:"night", openingFloat:{}, lastBackup:0,
+        grid:{columns:0, rows:4}, sales:[],
+        products:[{id:"fremd1", name:"Limo", priceCents:200, category:"Getränke",
+                   color:"#8e2bff", sort:0, slot:0}]
+      });
+      w.eval("restoreBackupFile")(new w.File([sicherung], "sicherung.json", {type:"application/json"}));
+
+      setTimeout(()=>{
+        pruefe("Rueckfrage zur Sicherung", $("#dlg-confirm").dataset.open, "yes");
+        klick($("#confirm-yes"));
+        setTimeout(()=>{
+          pruefe("Sicherung eingespielt", zustand().products.map(p=>p.id), ["fremd1"]);
+          pruefe("Bearbeitung endet mit dem Sortiment", w.eval("ui.editingId"), null);
+          pruefe("Formular zurueckgesetzt", $("#product-form").dataset.editing, undefined);
+          pruefe("Warenkorb geleert", w.eval("ui.cart.length"), 0);
+          pruefe("Tastenfeld auf Seite eins",
+            w.eval("[ui.page, ui.arrangePage, ui.arrangeSlot]"), [0, 0, null]);
+
+          klick($("#save-product"));
+          pruefe("Speichern faellt nicht auf die alte Kennung zurueck", konsole, []);
+          pruefe("und legt den getippten Artikel nicht heimlich an",
+            zustand().products.length, 1);
+
+          pruefe("keine Konsolenfehler", konsole, []);
+          console.log(`\n===== ${geprueft - fehler}/${geprueft} Prüfungen bestanden =====`);
+          process.exit(fehler ? 1 : 0);
+        }, 20);
+      }, 20);
     }, 20);
   }, 20);
 }, 80);

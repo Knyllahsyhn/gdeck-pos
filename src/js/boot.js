@@ -165,7 +165,7 @@ $("#reset-all").addEventListener("click", async ()=>{
     "Artikel und Buchungen werden gelöscht, die Kasse startet mit dem Standardsortiment neu.","Zurücksetzen");
   if(!ok) return;
   data = defaults();
-  ui.cart = [];
+  resetUi();
   saveState(); renderAll();
   toastMsg("Kasse zurückgesetzt");
 });

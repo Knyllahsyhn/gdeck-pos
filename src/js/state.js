@@ -20,6 +20,24 @@ const ui = {
   scanParts: new Map(), scanTotal: 0, scanStream: null, scanRunning: false
 };
 
+/* Everything on screen that points at the product range, back to its
+   starting point. Called wherever the range is replaced wholesale, so
+   that no keypad page, no picked slot and no half-finished edit outlives
+   the products it referred to. An open edit is the one that matters: it
+   holds a product id, and after a restore that id belongs to a product
+   the file never had.
+
+   The scanner fields stay untouched. While a scan is running they belong
+   to closeScan(), which also has to stop the camera. */
+function resetUi(){
+  ui.cart = [];
+  ui.categoryFilter = "all";
+  ui.page = 0;
+  ui.arrangePage = 0;
+  ui.arrangeSlot = null;
+  clearProductForm();
+}
+
 function defaults(){
   return {
     businessName:"Berghütte",

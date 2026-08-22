@@ -32,7 +32,7 @@ Namensraum. Es gibt kein `import`/`export` und keine Bündelbibliothek.
 
 ```bash
 npm install
-npm test      # 266 Prüfungen über acht Suiten
+npm test      # 275 Prüfungen über acht Suiten
 npm run dev   # lokal unter http://localhost:8787
 npm run deploy
 ```

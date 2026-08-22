@@ -207,8 +207,7 @@ async function applyConfig(text){
   }));
   if(config.businessName) data.businessName = config.businessName;
   if(config.grid)  data.grid  = config.grid;
-  ui.cart = [];
-  ui.page = 0; ui.arrangePage = 0; ui.arrangeSlot = null;
+  resetUi();
   saveState();
   closeScan();
   renderAll();
