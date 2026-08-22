@@ -1,19 +1,41 @@
-/* Builds the hosted version from the single-file source.
-   kasse.html stays the one place where the app is edited; everything
-   under public/ is generated and must not be edited by hand. */
+/* Builds the app in two steps.
+
+   First kasse.html is assembled from the parts under src/. That single
+   file is what the register actually runs: opened from a USB stick over
+   file://, a browser refuses to pull in separate stylesheets and modules,
+   so everything has to arrive in one document.
+
+   Then public/ is built from it, adding what makes the hosted copy
+   installable. Both kasse.html and public/ are generated and must not be
+   edited by hand; src/ is where the app is edited. */
 import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { join } from "node:path";
 
-const SRC = "kasse.html";
+const SRC = "src";
+const SINGLE = "kasse.html";
 const OUT = "public";
 
-const source = readFileSync(SRC, "utf8");
+/* A line that is nothing but a comment holding "@include <path>" is
+   replaced by that file, verbatim. Written as a comment in each language
+   so the skeleton stays valid HTML, CSS and JavaScript on its own. */
+const INCLUDE = /^[ \t]*(?:\/\*|\/\/|<!--)\s*@include\s+(\S+).*\r?\n/gm;
+
+let included = 0;
+const source = readFileSync(join(SRC, "index.html"), "utf8")
+  .replace(INCLUDE, (_, file) => {
+    included++;
+    return readFileSync(join(SRC, file), "utf8");
+  });
+if (!included) throw new Error("no @include markers in " + SRC + "/index.html");
+writeFileSync(SINGLE, source);
+
 const version = source.match(/const VERSION\s*=\s*"([^"]+)"/)?.[1] ?? "0";
 
 /* The mark already sits in the source as a data URI. Pull it back out so the
    manifest can point at a real file instead of duplicating the bytes. */
 const favicon = source.match(/<link rel="icon" type="image\/svg\+xml" href="(data:image\/svg\+xml,[^"]+)">/);
-if (!favicon) throw new Error("svg favicon not found in " + SRC);
+if (!favicon) throw new Error("svg favicon not found in " + SINGLE);
 const iconSvg = decodeURIComponent(favicon[1].slice("data:image/svg+xml,".length));
 
 const icon192 = readFileSync("assets/icon-192.png");
@@ -132,4 +154,4 @@ copyFileSync("assets/icon-192.png", `${OUT}/icon-192.png`);
 copyFileSync("assets/icon-512.png", `${OUT}/icon-512.png`);
 writeFileSync(`${OUT}/icon-mark.svg`, iconSvg);
 
-console.log(`built ${OUT}/ from ${SRC}  (app ${version}, cache ${stamp})`);
+console.log(`built ${SINGLE} from ${SRC}/ (${included} parts) and ${OUT}/  (app ${version}, cache ${stamp})`);

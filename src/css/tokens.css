@@ -1,0 +1,65 @@
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --enamel-amber:#b8761f;
+  --enamel-red:#b2361f;
+  --enamel-cobalt:#2c5d86;
+  --enamel-green:#2e6b46;
+  --enamel-copper:#8a4a2b;
+  --enamel-plum:#6a3a63;
+  --enamel-slate:#4a5259;
+  --enamel-brass:#9a7b1e;
+
+  --accent:#e2531f;
+  --confirm:#3d8f57;
+  --danger:#c0392b;
+  --brass:#c9a227;
+
+  --font-display:"Avenir Next Condensed","Roboto Condensed","Arial Narrow",
+                 "Segoe UI Semibold",system-ui,sans-serif;
+  --font-ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-num:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
+
+  --r:6px;
+  --tap:64px;
+}
+
+/* Night: warm wood charcoal, for dusk and marquee lighting */
+[data-theme="night"]{
+  --bg:#1b1714;
+  --surface:#26201b;
+  --surface-high:#322a23;
+  --line:#453a30;
+  --text:#f0e6da;
+  --text-muted:#a2917f;
+  --paper:#2a231d;
+}
+/* Day: muted paper, for sunshine on the terrace */
+[data-theme="day"]{
+  --bg:#e8dfcf;
+  --surface:#f5efe3;
+  --surface-high:#fffaf0;
+  --line:#c9bda6;
+  --text:#241d16;
+  --text-muted:#6d6153;
+  --paper:#fffaf0;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+/* dvh follows the address bar on phones. Without it the browser sizes the
+   page to the taller viewport and the bottom strip, receipt total included,
+   sits off screen with no way to scroll to it. */
+html,body{height:100%;height:100dvh;overflow:hidden}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-ui);font-size:16px;
+  -webkit-user-select:none;user-select:none;
+  touch-action:manipulation;
+  overscroll-behavior:none;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;touch-action:manipulation}
+input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.mono{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+

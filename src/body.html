@@ -1,0 +1,330 @@
+
+<!-- Logo mark defined once, reused everywhere via <use>.
+     Only the gradient path: the source wordmark is a <text> element
+     set in DejaVu Sans, a font no tablet is going to have. -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <linearGradient id="knyl-gradient"
+        x1="569.36572" y1="438.0968" x2="851.64734" y2="718.24396"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="matrix(1.3806336,0,0,1.3806336,452.13468,-116.26665)">
+      <stop offset="0"      stop-color="#3e5aff" stop-opacity=".798"/>
+      <stop offset=".47046" stop-color="#4b4d6f"/>
+      <stop offset="1"      stop-color="#8e2bff" stop-opacity=".803"/>
+    </linearGradient>
+    <symbol id="knyl-mark" viewBox="0 0 610.00818 554.7558">
+      <g transform="translate(-1048.881,-333.87114)">
+        <path fill="url(#knyl-gradient)" d="m 1444.5027,333.87114 -254.1688,259.3272 -13.2616,-34.62369 -128.1913,268.90264 349.9448,-380.88497 -2.9473,119.34929 37.5737,-38.30987 z m 102.4042,194.49675 -203.336,243.85441 1.4749,-160.60382 -53.7827,57.46348 v 218.06999 l 41.2572,-1.47232 111.2462,-145.1364 135.5583,148.08373 79.5644,-2.21116 -177.5489,-190.81058 54.5161,-67.04432 z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 610.00818 554.7558" aria-hidden="true" focusable="false"><use href="#knyl-mark"/></svg>
+      <div class="brand-text">
+        <b id="brand-name">Hüttenkasse</b>
+        <small id="brand-clock">--:--</small>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-target="register" aria-selected="true">Kasse</button>
+      <button role="tab" data-target="products" aria-selected="false">Artikel</button>
+      <button role="tab" data-target="report" aria-selected="false">Bericht</button>
+      <button role="tab" data-target="settings" aria-selected="false">Einstellungen</button>
+    </nav>
+    <div class="topbar-tools">
+      <button class="tool-button" id="theme-toggle" title="Zwischen Tag- und Nachtansicht wechseln">Hell</button>
+      <button class="tool-button" id="fullscreen-toggle" title="Vollbild ein- und ausschalten">Vollbild</button>
+    </div>
+  </header>
+
+  <!-- ============ REGISTER ============ -->
+  <section class="view" id="view-register" data-active="yes">
+    <div class="products-pane">
+      <div class="filter-bar" id="filter-bar"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <aside class="receipt">
+      <div class="receipt-head">
+        <h2>Bon</h2>
+        <span id="receipt-count">0 Artikel</span>
+      </div>
+      <div class="receipt-lines" id="receipt-lines"></div>
+      <div class="receipt-foot">
+        <div class="total-row">
+          <span class="label">Summe</span>
+          <span class="value" id="receipt-total">0,00 €</span>
+        </div>
+        <div class="receipt-buttons">
+          <button class="button" id="clear-cart" disabled>Leeren</button>
+          <button class="button button-primary" id="checkout" disabled>Kassieren</button>
+        </div>
+      </div>
+      <div class="tear-edge"></div>
+    </aside>
+  </section>
+
+  <!-- ============ PRODUCTS ============ -->
+  <section class="view" id="view-products">
+    <div class="page"><div class="page-inner">
+      <h2 id="form-heading">Neuer Artikel</h2>
+      <p class="note" id="form-note">Der Artikel erscheint sofort als Taste auf der Kasse. Für Pfandrückgabe einen Artikel mit negativem Preis anlegen, zum Beispiel „Pfand zurück“ mit -2,00.</p>
+      <div id="product-form">
+      <div class="row">
+        <div class="field" style="flex:2">
+          <label for="in-name">Bezeichnung</label>
+          <input id="in-name" type="text" placeholder="Helles 0,5 l" autocomplete="off">
+        </div>
+        <div class="field">
+          <!-- Deliberately not type="number": browsers discard any value with
+               a comma, and that is exactly how German prices are typed. -->
+          <label for="in-price">Preis in Euro</label>
+          <input id="in-price" type="text" inputmode="decimal" placeholder="4,50" autocomplete="off">
+        </div>
+        <div class="field">
+          <!-- A real select, not an input with a datalist: on Android the
+               datalist offers no dropdown at all, so the field looked and
+               behaved like a plain text box. -->
+          <label for="in-category-pick">Gruppe</label>
+          <select id="in-category-pick"></select>
+          <input id="in-category" type="text" placeholder="Name der neuen Gruppe" autocomplete="off" hidden>
+        </div>
+      </div>
+      <div class="field">
+        <label>Farbe der Taste</label>
+        <div class="color-picker" id="color-picker"></div>
+      </div>
+      <div class="row">
+        <button class="button button-primary" id="save-product" style="flex:1">Artikel anlegen</button>
+        <button class="button" id="cancel-edit" style="flex:none;display:none">Bearbeiten abbrechen</button>
+      </div>
+      </div>
+
+      <section id="arrange-section" hidden>
+        <h2>Tastenfeld anordnen</h2>
+        <p class="note">Ein Feld antippen, dann das Ziel antippen: die beiden tauschen den Platz. Ein leeres Feld als Ziel verschiebt die Taste dorthin und lässt an der alten Stelle eine Lücke.</p>
+        <div class="page-picker" id="arrange-pages"></div>
+        <div class="arrange-grid" id="arrange-grid"></div>
+      </section>
+
+      <h2>Sortiment <span id="product-count" class="mono" style="text-transform:none;letter-spacing:0"></span></h2>
+      <div class="list" id="product-list"></div>
+    </div></div>
+  </section>
+
+  <!-- ============ REPORTS ============ -->
+  <section class="view" id="view-report">
+    <div class="page"><div class="page-inner">
+      <h2>Tagesabschluss</h2>
+      <div class="row">
+        <div class="field" style="max-width:220px">
+          <label for="in-date">Tag</label>
+          <input id="in-date" type="date">
+        </div>
+        <div class="field" style="max-width:220px">
+          <label for="in-float">Wechselgeld zu Beginn (€)</label>
+          <input id="in-float" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <h2>Verkauf nach Artikel</h2>
+      <div class="table-wrap"><table id="table-products"></table></div>
+
+      <h2>Bons</h2>
+      <div class="table-wrap"><table id="table-sales"></table></div>
+
+      <h2>Export</h2>
+      <p class="note">Beide Dateien öffnen sich per Doppelklick direkt in Excel oder LibreOffice: Semikolon als Trenner, Komma als Dezimalzeichen, deutsche Umlaute inklusive.</p>
+      <div class="row">
+        <button class="button button-confirm" id="export-report" style="flex:1">Tagesbericht als CSV</button>
+        <button class="button" id="export-items" style="flex:1">Alle Einzelposten als CSV</button>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section class="view" id="view-settings">
+    <div class="page"><div class="page-inner">
+      <h2>Kasse</h2>
+      <div class="field" style="max-width:360px">
+        <label for="in-business">Name auf Bericht und Export</label>
+        <input id="in-business" type="text" placeholder="Berghütte" autocomplete="off">
+      </div>
+
+      <h2>Tastenfeld</h2>
+      <p class="note">Mitwachsend füllt die Tasten einfach der Reihe nach auf. Bei fester Aufteilung behält jeder Artikel seinen Platz, auch wenn daneben ein Feld frei bleibt. Passen nicht alle Artikel auf eine Seite, entstehen weitere Seiten.</p>
+      <div class="row">
+        <div class="field" style="max-width:220px">
+          <label for="in-columns">Aufteilung</label>
+          <select id="in-columns">
+            <option value="0">Mitwachsend</option>
+            <option value="2">2 Spalten</option>
+            <option value="3">3 Spalten</option>
+            <option value="4">4 Spalten</option>
+            <option value="5">5 Spalten</option>
+            <option value="6">6 Spalten</option>
+            <option value="7">7 Spalten</option>
+            <option value="8">8 Spalten</option>
+          </select>
+        </div>
+        <div class="field" style="max-width:220px">
+          <label for="in-rows">Zeilen</label>
+          <select id="in-rows">
+            <option value="2">2 Zeilen</option>
+            <option value="3">3 Zeilen</option>
+            <option value="4">4 Zeilen</option>
+            <option value="5">5 Zeilen</option>
+            <option value="6">6 Zeilen</option>
+          </select>
+        </div>
+        <div class="field" style="justify-content:flex-end">
+          <span class="note" id="grid-info" style="margin:0"></span>
+        </div>
+      </div>
+
+      <h2>Sortiment auf ein zweites Tablet</h2>
+      <p class="note">Ein Gerät einrichten, die anderen scannen das Sortiment ab. Übertragen werden Artikel und Kassenname, die Buchungen bleiben auf jedem Gerät für sich.</p>
+      <div class="row">
+        <button class="button button-primary" id="open-share" style="flex:1">Als QR-Code zeigen</button>
+        <button class="button" id="open-scan" style="flex:1">QR-Code scannen</button>
+      </div>
+
+      <h2>Datensicherung</h2>
+      <div class="storage-status" id="storage-status"></div>
+      <p class="note">Alle Buchungen liegen ausschließlich in diesem Browser auf diesem Gerät. Lösche während des Fests keine Browserdaten und nutze keinen privaten Modus. Für ein Backup zwischendurch: Sicherung herunterladen und die Datei woanders ablegen.</p>
+      <div class="row">
+        <button class="button" id="download-backup" style="flex:1">Sicherung herunterladen</button>
+        <button class="button" id="restore-backup" style="flex:1">Sicherung einspielen</button>
+        <input type="file" id="backup-file" accept="application/json,.json" hidden>
+      </div>
+
+      <h2>Zurücksetzen</h2>
+      <p class="note">Nach dem Fest: Buchungen löschen, das Sortiment bleibt erhalten.</p>
+      <div class="row">
+        <button class="button" id="clear-sales" style="flex:1">Alle Buchungen löschen</button>
+        <button class="button button-danger" id="reset-all" style="flex:1">Kasse komplett zurücksetzen</button>
+      </div>
+
+      <h2>Bedienung</h2>
+      <p class="note">
+        Artikel antippen legt ihn auf den Bon, nochmal antippen erhöht die Menge.<br>
+        Beim Kassieren den erhaltenen Betrag über die Zifferntasten eingeben. Getippt wird in Cent, „1000“ ergibt also 10,00 €.<br>
+        Unter dem Rückgeldbetrag steht, welche Scheine und Münzen du herausgeben kannst.<br>
+        Falsch gebuchte Bons lassen sich im Bericht stornieren; sie bleiben zur Nachvollziehbarkeit in der Liste stehen.
+      </p>
+
+      <div class="credit">
+        <svg class="credit-mark" viewBox="0 0 610.00818 554.7558" aria-hidden="true" focusable="false"><use href="#knyl-mark"/></svg>
+        <div>
+          <b>KNYL</b> Hüttenkasse
+          <small id="version-line"></small>
+        </div>
+      </div>
+    </div></div>
+  </section>
+</div>
+
+<!-- ============ CHECKOUT ============ -->
+<div class="overlay" id="dlg-checkout">
+  <div class="dialog" role="dialog" aria-modal="true" aria-label="Kassieren">
+    <div class="dialog-head">
+      <h3>Kassieren</h3>
+      <button class="button-small" id="close-checkout">Zurück</button>
+    </div>
+    <div class="dialog-body">
+      <div class="checkout-layout">
+      <div>
+      <div class="checkout-amounts">
+        <div class="amount-box">
+          <div class="amount-label">Zu zahlen</div>
+          <div class="amount-value" id="due-amount">0,00 €</div>
+        </div>
+        <div class="amount-box" data-role="tendered">
+          <div class="amount-label">Gegeben</div>
+          <div class="amount-value" id="tendered-amount">0,00 €</div>
+        </div>
+      </div>
+
+      <div class="change-box" id="change-panel">
+        <div class="change-label" id="change-caption">Rückgeld</div>
+        <div class="change-value" id="change-amount">0,00 €</div>
+        <div class="breakdown" id="change-breakdown"></div>
+      </div>
+
+      <button class="tip-toggle" id="tip-toggle" aria-pressed="false">Rest als Trinkgeld</button>
+      </div>
+      <div>
+        <div class="quick-amounts" id="quick-amounts"></div>
+        <div class="keypad" id="keypad"></div>
+      </div>
+      </div>
+    </div>
+    <div class="dialog-foot">
+      <button class="button" id="pay-card">Mit Karte</button>
+      <button class="button button-confirm" id="pay-cash" style="flex:2">Bar abschließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SHARE CONFIG ============ -->
+<div class="overlay" id="dlg-share">
+  <div class="dialog" role="dialog" aria-modal="true" aria-label="Konfiguration übertragen" style="max-width:480px">
+    <div class="dialog-head">
+      <h3>Sortiment übertragen</h3>
+      <button class="button-small" id="close-share">Zurück</button>
+    </div>
+    <div class="dialog-body">
+      <p class="note" id="share-note"></p>
+      <div class="qr-stage"><canvas id="qr-canvas"></canvas></div>
+      <div class="qr-step">
+        <button class="button-small" id="part-prev">Vorheriger</button>
+        <span class="step-count" id="part-status">Code 1 von 1</span>
+        <button class="button-small" id="part-next">Nächster</button>
+      </div>
+      <button class="button" id="copy-config" style="width:100%">Stattdessen als Text kopieren</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RECEIVE CONFIG ============ -->
+<div class="overlay" id="dlg-scan">
+  <div class="dialog" role="dialog" aria-modal="true" aria-label="Konfiguration einlesen" style="max-width:480px">
+    <div class="dialog-head">
+      <h3>Sortiment einlesen</h3>
+      <button class="button-small" id="close-scan">Zurück</button>
+    </div>
+    <div class="dialog-body">
+      <div class="scan-stage" id="scan-stage">
+        <video id="scan-video" playsinline muted></video>
+        <div class="scan-status" id="scan-status">Kamera wird gestartet …</div>
+      </div>
+      <p class="note" id="scan-detail"></p>
+      <div class="part-dots" id="part-dots"></div>
+      <p class="note">Kein Kamerazugriff? Den kopierten Text vom anderen Tablet hier einfügen:</p>
+      <textarea class="paste-field" id="paste-config" placeholder="HK1&#10;Berghütte&#10;Helles 0,5 l&#9;450&#9;Bier&#9;0" spellcheck="false"></textarea>
+      <button class="button" id="apply-pasted" style="width:100%;margin-top:10px">Eingefügten Text übernehmen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONFIRM ============ -->
+<div class="overlay" id="dlg-confirm">
+  <div class="dialog" role="dialog" aria-modal="true" style="max-width:440px">
+    <div class="dialog-head"><h3 id="confirm-title">Sicher?</h3></div>
+    <div class="dialog-body"><p id="confirm-text" style="line-height:1.65;font-size:16px"></p></div>
+    <div class="dialog-foot">
+      <button class="button" id="confirm-no">Abbrechen</button>
+      <button class="button button-danger" id="confirm-yes">Ja</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
