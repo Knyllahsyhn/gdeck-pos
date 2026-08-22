@@ -1,28 +1,30 @@
-/* Holt das QR-Modul aus kasse.html heraus und macht es in Node benutzbar,
-   dazu die Bildwerkzeuge fuer die Lesetests. Die Datei bleibt damit die
-   einzige Quelle, es gibt keine zweite Kopie des Codes zum Testen. */
+/* Macht das QR-Modul in Node benutzbar, dazu die Bildwerkzeuge fuer die
+   Lesetests. Geladen wird die Quelldatei selbst, es gibt keine zweite
+   Kopie des Codes zum Testen. */
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const { execFileSync } = require("child_process");
 
+const src = (...teile) => path.join(__dirname, "..", "src", ...teile);
+
 function ladeQR(){
-  const html = fs.readFileSync(path.join(__dirname, "..", "kasse.html"), "utf8");
-  const start = html.indexOf("const QR = (function(){");
-  if(start < 0) throw new Error("QR-Modul nicht gefunden");
-  const ende = html.indexOf("</script>", start);
-  const quelle = html.slice(start, ende);
+  const quelle = fs.readFileSync(src("js", "qr.js"), "utf8");
   const fabrik = new Function("TextEncoder", "TextDecoder", quelle + "\nreturn QR;");
   return fabrik(TextEncoder, TextDecoder);
 }
 
 /* Holt eine Konstante aus der App, damit der Test nicht seinen eigenen
-   Zahlenwert pflegt und dann eine Aenderung der App verpasst. */
+   Zahlenwert pflegt und dann eine Aenderung der App verpasst. Gesucht
+   wird ueber alle Teile, damit ein Verschieben zwischen ihnen nichts
+   ausmacht. */
 function konstante(name){
-  const html = fs.readFileSync(path.join(__dirname, "..", "kasse.html"), "utf8");
-  const treffer = new RegExp("const\\s+" + name + "\\s*=\\s*(-?\\d+(?:\\.\\d+)?)").exec(html);
-  if(!treffer) throw new Error(name + " nicht in kasse.html gefunden");
-  return Number(treffer[1]);
+  const muster = new RegExp("const\\s+" + name + "\\s*=\\s*(-?\\d+(?:\\.\\d+)?)");
+  for(const datei of fs.readdirSync(src("js"))){
+    const treffer = muster.exec(fs.readFileSync(src("js", datei), "utf8"));
+    if(treffer) return Number(treffer[1]);
+  }
+  throw new Error(name + " nicht in src/js gefunden");
 }
 
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "qrtest-"));

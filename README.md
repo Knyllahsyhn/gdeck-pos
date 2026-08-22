@@ -4,19 +4,35 @@ Kassensystem für ein Hüttenfest. Läuft auf einem Tablet im Browser, rechnet
 Wechselgeld aus, zeichnet Umsätze auf und gibt am Abend eine CSV für Excel aus.
 Kein Internet nötig, keine fremden Bibliotheken.
 
-## Die Datei ist das Programm
+## Aufbau
 
-`kasse.html` ist die einzige Quelle. Sie enthält alles: Stile, Logik, den
-QR-Encoder, Bildmarke und Icons. Die Datei lässt sich direkt im Browser öffnen
-und funktioniert dann bereits vollständig.
+Der Quelltext liegt in `src/`. `src/index.html` ist das Gerüst und nennt auf
+44 Zeilen die Reihenfolge der Teile. Jede Zeile, die nur aus einem Kommentar
+mit `@include` besteht, wird beim Bauen durch die genannte Datei ersetzt.
 
-`public/` wird daraus gebaut und ist nicht von Hand zu bearbeiten.
+    src/index.html   Kopf, Gerüst, Reihenfolge der Teile
+    src/body.html    Markup
+    src/css/         Farben, Rahmen, Kasse, Verwaltung, Kassieren, Umbruch
+    src/js/qr.js     QR-Encoder und QR-Leser
+    src/js/*.js      Anwendung, ein Teil je Aufgabe
+
+`npm run build` setzt daraus `kasse.html` zusammen und baut `public/`. Beide
+sind erzeugt und nicht von Hand zu bearbeiten; `kasse.html` liegt deshalb auch
+nicht im Repository.
+
+Das gebaute `kasse.html` enthält alles: Stile, Logik, den QR-Encoder, Bildmarke
+und Icons. Es lässt sich direkt im Browser öffnen und funktioniert dann bereits
+vollständig. Über `file://` holt ein Browser keine getrennten Stylesheets und
+Module nach, die ausgelieferte Fassung muss also eine einzige Datei bleiben.
+
+Alle Teile landen in einem einzigen `<script>`-Block und damit im selben
+Namensraum. Es gibt kein `import`/`export` und keine Bündelbibliothek.
 
 ## Befehle
 
 ```bash
 npm install
-npm test      # 150 Prüfungen über drei Suiten
+npm test      # 266 Prüfungen über acht Suiten
 npm run dev   # lokal unter http://localhost:8787
 npm run deploy
 ```
