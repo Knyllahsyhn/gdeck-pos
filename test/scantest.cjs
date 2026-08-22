@@ -102,7 +102,7 @@ async function lauf(){
 
   for(let i=0;i<teile.length;i++){
     stelleCode(matrizen[i].matrix, matrizen[i].size, 8);
-    const da = await bis(() => w.eval("scanParts.size") > i);
+    const da = await bis(() => w.eval("ui.scanParts.size") > i);
     pruefe(`Code ${i+1} von ${teile.length} gelesen`, da, true);
     if(!da) break;
     // Wie in echt: der Sender schaltet um, dazwischen ist kurz nichts da.
@@ -117,7 +117,7 @@ async function lauf(){
   pruefe("Sortiment uebernommen", w.eval("data.products.length"), 34);
   pruefe("Name uebernommen", w.eval("data.businessName"), "Nachbarhütte");
   pruefe("Scanfenster wieder zu", $("#dlg-scan").dataset.open, "no");
-  pruefe("Kamera angehalten", w.eval("scanRunning"), false);
+  pruefe("Kamera angehalten", w.eval("ui.scanRunning"), false);
 }
 
 function ende(){

@@ -37,10 +37,10 @@ function askConfirm(title, text, yesLabel){
   $("#confirm-text").textContent  = text;
   $("#confirm-yes").textContent    = yesLabel || "Ja";
   $("#dlg-confirm").dataset.open = "yes";
-  return new Promise(res => { confirmResolve = res; });
+  return new Promise(res => { ui.confirmResolve = res; });
 }
 function closeConfirm(answer){
   $("#dlg-confirm").dataset.open = "no";
-  if(confirmResolve){ confirmResolve(answer); confirmResolve = null; }
+  if(ui.confirmResolve){ ui.confirmResolve(answer); ui.confirmResolve = null; }
 }
 

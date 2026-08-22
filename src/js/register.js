@@ -19,12 +19,12 @@ function renderFilterBar(){
     const pages = pageCount();
     if(pages <= 1){ target.dataset.empty = "yes"; return; }
     delete target.dataset.empty;
-    if(currentPage >= pages) currentPage = pages - 1;
+    if(ui.page >= pages) ui.page = pages - 1;
     for(let s=0; s<pages; s++){
       const b = document.createElement("button");
       b.textContent = "Seite " + (s+1);
-      b.setAttribute("aria-pressed", currentPage===s ? "true":"false");
-      b.addEventListener("click", ()=>{ currentPage = s; renderFilterBar(); renderGrid(); });
+      b.setAttribute("aria-pressed", ui.page===s ? "true":"false");
+      b.addEventListener("click", ()=>{ ui.page = s; renderFilterBar(); renderGrid(); });
       target.appendChild(b);
     }
     return;
@@ -32,12 +32,12 @@ function renderFilterBar(){
 
   delete target.dataset.empty;
   const all = categoryNames();
-  if(!all.includes(categoryFilter)) categoryFilter = "all";
+  if(!all.includes(ui.categoryFilter)) ui.categoryFilter = "all";
   const makeTab = (val, text) => {
     const b = document.createElement("button");
     b.textContent = text;
-    b.setAttribute("aria-pressed", categoryFilter===val ? "true":"false");
-    b.addEventListener("click", ()=>{ categoryFilter = val; renderFilterBar(); renderGrid(); });
+    b.setAttribute("aria-pressed", ui.categoryFilter===val ? "true":"false");
+    b.addEventListener("click", ()=>{ ui.categoryFilter = val; renderFilterBar(); renderGrid(); });
     target.appendChild(b);
   };
   makeTab("all","Alle");
@@ -45,7 +45,7 @@ function renderFilterBar(){
 }
 
 function productTile(p){
-  const inCart = cart.find(z=>z.productId===p.id);
+  const inCart = ui.cart.find(z=>z.productId===p.id);
   const b = document.createElement("button");
   b.className = "tile";
   b.style.setProperty("--k", p.color);
@@ -73,7 +73,7 @@ function renderGrid(){
     // sight. The row minimum comes from CSS, see --slot-min.
     target.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
     target.style.gridTemplateRows    = `repeat(${rows}, minmax(var(--slot-min), 1fr))`;
-    const start = currentPage * slotsPerPage();
+    const start = ui.page * slotsPerPage();
     for(let i=0; i<slotsPerPage(); i++){
       const p = productAtSlot(start + i);
       if(p) target.appendChild(productTile(p));
@@ -93,7 +93,7 @@ function renderGrid(){
   const list = data.products
     .slice()
     .sort((a,b)=>a.sort-b.sort)
-    .filter(p => categoryFilter==="all" || (p.category||"Sonstiges").trim()===categoryFilter);
+    .filter(p => ui.categoryFilter==="all" || (p.category||"Sonstiges").trim()===ui.categoryFilter);
 
   if(!list.length){
     const p = document.createElement("p");
@@ -108,25 +108,25 @@ function renderGrid(){
 }
 
 function cartAdd(product){
-  const rowEl = cart.find(z=>z.productId===product.id);
+  const rowEl = ui.cart.find(z=>z.productId===product.id);
   if(rowEl) rowEl.qty++;
-  else cart.push({productId:product.id, name:product.name, priceCents:product.priceCents, qty:1});
+  else ui.cart.push({productId:product.id, name:product.name, priceCents:product.priceCents, qty:1});
   renderCart(); renderGrid();
 }
 function cartChange(productId, delta){
-  const i = cart.findIndex(z=>z.productId===productId);
+  const i = ui.cart.findIndex(z=>z.productId===productId);
   if(i<0) return;
-  cart[i].qty += delta;
-  if(cart[i].qty<=0) cart.splice(i,1);
+  ui.cart[i].qty += delta;
+  if(ui.cart[i].qty<=0) ui.cart.splice(i,1);
   renderCart(); renderGrid();
 }
-const cartTotal = () => cart.reduce((s,z)=>s + z.priceCents*z.qty, 0);
-const cartCount = () => cart.reduce((s,z)=>s + z.qty, 0);
+const cartTotal = () => ui.cart.reduce((s,z)=>s + z.priceCents*z.qty, 0);
+const cartCount = () => ui.cart.reduce((s,z)=>s + z.qty, 0);
 
 function renderCart(){
   const target = $("#receipt-lines");
   target.innerHTML = "";
-  cart.forEach(z=>{
+  ui.cart.forEach(z=>{
     const rowEl = document.createElement("div");
     rowEl.className = "receipt-line";
     rowEl.innerHTML =

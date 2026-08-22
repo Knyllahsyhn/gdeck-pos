@@ -106,23 +106,23 @@ function drawQr(canvas, text){
 
 function openShare(){
   const text = configText();
-  try{ qrParts = splitParts(text); }
+  try{ ui.qrParts = splitParts(text); }
   catch(e){ toastMsg("Sortiment lässt sich nicht übertragen"); return; }
-  qrIndex = 0;
+  ui.qrIndex = 0;
   $("#dlg-share").dataset.open = "yes";
   renderShare();
 }
 function renderShare(){
-  const multiple = qrParts.length > 1;
-  $("#part-status").textContent = "Code " + (qrIndex+1) + " von " + qrParts.length;
-  $("#part-prev").disabled = qrIndex === 0;
-  $("#part-next").disabled     = qrIndex >= qrParts.length - 1;
+  const multiple = ui.qrParts.length > 1;
+  $("#part-status").textContent = "Code " + (ui.qrIndex+1) + " von " + ui.qrParts.length;
+  $("#part-prev").disabled = ui.qrIndex === 0;
+  $("#part-next").disabled     = ui.qrIndex >= ui.qrParts.length - 1;
   $("#part-prev").style.visibility = multiple ? "visible" : "hidden";
   $("#part-next").style.visibility     = multiple ? "visible" : "hidden";
   $("#share-note").textContent = multiple
-    ? "Am anderen Tablet „QR-Code scannen“ öffnen und alle " + qrParts.length + " Codes nacheinander abfilmen. Die Reihenfolge ist egal."
+    ? "Am anderen Tablet „QR-Code scannen“ öffnen und alle " + ui.qrParts.length + " Codes nacheinander abfilmen. Die Reihenfolge ist egal."
     : "Am anderen Tablet „QR-Code scannen“ öffnen und diesen Code abfilmen.";
-  try{ drawQr($("#qr-canvas"), qrParts[qrIndex]); }
+  try{ drawQr($("#qr-canvas"), ui.qrParts[ui.qrIndex]); }
   catch(e){ toastMsg("QR-Code lässt sich nicht erzeugen"); console.error(e); }
 }
 

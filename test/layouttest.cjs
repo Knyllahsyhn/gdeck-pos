@@ -104,7 +104,7 @@ function lauf(){
   console.log("\n== Leeres Feld lässt sich nicht auswählen ==");
   klick(d.querySelectorAll("#arrange-pages button")[1]);
   w.eval("arrangeTap(16)");                               // ist jetzt leer
-  pruefe("keine Auswahl entstanden", w.eval("arrangeSelected"), null);
+  pruefe("keine Auswahl entstanden", w.eval("ui.arrangeSlot"), null);
 
   console.log("\n== Neuer Artikel bekommt die erste Lücke ==");
   w.switchTab("products");

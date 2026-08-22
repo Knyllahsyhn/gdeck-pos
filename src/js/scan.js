@@ -1,5 +1,5 @@
 async function openScan(){
-  scanParts = new Map(); scanTotal = 0;
+  ui.scanParts = new Map(); ui.scanTotal = 0;
   $("#paste-config").value = "";
   setScanStatus("Kamera wird gestartet …");
   setScanDetail("");
@@ -12,8 +12,8 @@ function closeScan(){
   $("#dlg-scan").dataset.open = "no";
 }
 function stopScan(){
-  scanRunning = false;
-  if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream = null; }
+  ui.scanRunning = false;
+  if(ui.scanStream){ ui.scanStream.getTracks().forEach(t=>t.stop()); ui.scanStream = null; }
   const v = $("#scan-video");
   if(v) v.srcObject = null;
 }
@@ -91,10 +91,10 @@ async function startScan(){
   setScanDetail("Kamera wird angefragt. Die Nachfrage des Browsers bitte erlauben.");
   let last = null;
   for(const wish of wishes){
-    try{ scanStream = await navigator.mediaDevices.getUserMedia(wish); last = null; break; }
-    catch(e){ last = e; scanStream = null; }
+    try{ ui.scanStream = await navigator.mediaDevices.getUserMedia(wish); last = null; break; }
+    catch(e){ last = e; ui.scanStream = null; }
   }
-  if(!scanStream){
+  if(!ui.scanStream){
     const name = (last && last.name) || "unbekannt";
     setScanStatus(name === "NotAllowedError"
       ? "Kamera nicht erlaubt. Text unten einfügen."
@@ -106,9 +106,9 @@ async function startScan(){
   }
 
   const video = $("#scan-video");
-  video.srcObject = scanStream;
+  video.srcObject = ui.scanStream;
   try{ await video.play(); }catch(e){ /* iOS starts it from the attribute */ }
-  scanRunning = true;
+  ui.scanRunning = true;
   setScanStatus("Code ins Bild halten …");
 
   // What the reader sees, in plain words. Without this a scan that finds
@@ -117,7 +117,7 @@ async function startScan(){
   let frames = 0, blind = 0;
   const notes = {};
   const loop = () => {
-    if(!scanRunning) return;
+    if(!ui.scanRunning) return;
     let waited = Date.now() - begonnen;
     try{
       const frame = frameAsGrey(video);
@@ -134,7 +134,7 @@ async function startScan(){
           // aufzuhoeren hiess: umschalten auf den naechsten, und nichts
           // passiert mehr. applyConfig haelt den Leser selbst an, sobald
           // alle Teile da sind, daran ist der Abbruch hier gebunden.
-          if(!scanRunning) return;
+          if(!ui.scanRunning) return;
           setScanDetail("Gelesen. Jetzt am anderen Gerät auf den nächsten Code umschalten.");
           // Kurze Pause, sonst liest er denselben Code sofort wieder.
           setTimeout(loop, 700);
@@ -148,7 +148,7 @@ async function startScan(){
     }catch(e){
       setScanDetail("Der Leser ist ausgestiegen: " + (e && e.message ? e.message : e));
     }
-    if(scanRunning) setTimeout(loop, 120);
+    if(ui.scanRunning) setTimeout(loop, 120);
   };
   loop();
 }
@@ -161,21 +161,21 @@ function onScanResult(rawText){
     else setScanStatus("Das ist kein Kassen-Code.");
     return;
   }
-  if(scanTotal && part.total !== scanTotal){
-    scanParts = new Map();                       // different transfer, start over
+  if(ui.scanTotal && part.total !== ui.scanTotal){
+    ui.scanParts = new Map();                       // different transfer, start over
   }
-  scanTotal = part.total;
-  const fresh = !scanParts.has(part.num);
-  scanParts.set(part.num, part.content);
+  ui.scanTotal = part.total;
+  const fresh = !ui.scanParts.has(part.num);
+  ui.scanParts.set(part.num, part.content);
   renderPartDots();
   if(fresh) toastMsg("Code " + part.num + " von " + part.total + " gelesen");
 
-  if(scanParts.size === scanTotal){
-    const joined = Array.from({length:scanTotal}, (_,i)=>scanParts.get(i+1)).join("\n");
+  if(ui.scanParts.size === ui.scanTotal){
+    const joined = Array.from({length:ui.scanTotal}, (_,i)=>ui.scanParts.get(i+1)).join("\n");
     applyConfig(joined);
   }else{
     const missing = [];
-    for(let i=1;i<=scanTotal;i++) if(!scanParts.has(i)) missing.push(i);
+    for(let i=1;i<=ui.scanTotal;i++) if(!ui.scanParts.has(i)) missing.push(i);
     setScanStatus("Es fehlt noch: Code " + missing.join(", "));
   }
 }
@@ -183,11 +183,11 @@ function onScanResult(rawText){
 function renderPartDots(){
   const target = $("#part-dots");
   target.innerHTML = "";
-  if(!scanTotal) return;
-  for(let i=1;i<=scanTotal;i++){
+  if(!ui.scanTotal) return;
+  for(let i=1;i<=ui.scanTotal;i++){
     const s = document.createElement("span");
     s.textContent = i;
-    if(scanParts.has(i)) s.dataset.have = "yes";
+    if(ui.scanParts.has(i)) s.dataset.have = "yes";
     target.appendChild(s);
   }
 }
@@ -207,8 +207,8 @@ async function applyConfig(text){
   }));
   if(config.businessName) data.businessName = config.businessName;
   if(config.grid)  data.grid  = config.grid;
-  cart = [];
-  currentPage = 0; arrangePage = 0; arrangeSelected = null;
+  ui.cart = [];
+  ui.page = 0; ui.arrangePage = 0; ui.arrangeSlot = null;
   saveState();
   closeScan();
   renderAll();

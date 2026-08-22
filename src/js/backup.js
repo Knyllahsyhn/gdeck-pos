@@ -29,7 +29,7 @@ function restoreBackupFile(file){
       fresh.products.length+" Artikel, "+fresh.sales.length+" Bons).","Einspielen");
     if(!ok) return;
     data = Object.assign(defaults(), fresh);
-    cart = [];
+    ui.cart = [];
     saveState(); renderAll();
     toastMsg("Sicherung eingespielt");
   };

@@ -9,8 +9,8 @@ function renderColorPicker(){
     b.style.background = val;
     b.title = name;
     b.setAttribute("aria-label", "Farbe " + name);
-    b.setAttribute("aria-pressed", newColor===val ? "true":"false");
-    b.addEventListener("click", ()=>{ newColor = val; renderColorPicker(); });
+    b.setAttribute("aria-pressed", ui.newColor===val ? "true":"false");
+    b.addEventListener("click", ()=>{ ui.newColor = val; renderColorPicker(); });
     target.appendChild(b);
   });
 }
@@ -80,11 +80,11 @@ function renderProductList(){
 /* ---------- Arrange the keypad ---------- */
 function renderArrangeGrid(){
   const section = $("#arrange-section");
-  if(!hasFixedGrid()){ section.hidden = true; arrangeSelected = null; return; }
+  if(!hasFixedGrid()){ section.hidden = true; ui.arrangeSlot = null; return; }
   section.hidden = false;
 
   const pages = pageCount();
-  if(arrangePage >= pages) arrangePage = pages - 1;
+  if(ui.arrangePage >= pages) ui.arrangePage = pages - 1;
 
   const pagesEl = $("#arrange-pages");
   pagesEl.innerHTML = "";
@@ -92,8 +92,8 @@ function renderArrangeGrid(){
     for(let s=0;s<pages;s++){
       const b = document.createElement("button");
       b.textContent = "Seite " + (s+1);
-      b.setAttribute("aria-pressed", arrangePage===s ? "true":"false");
-      b.addEventListener("click", ()=>{ arrangePage = s; renderArrangeGrid(); });
+      b.setAttribute("aria-pressed", ui.arrangePage===s ? "true":"false");
+      b.addEventListener("click", ()=>{ ui.arrangePage = s; renderArrangeGrid(); });
       pagesEl.appendChild(b);
     }
   }
@@ -102,14 +102,14 @@ function renderArrangeGrid(){
   const target = $("#arrange-grid");
   target.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
   target.innerHTML = "";
-  const start = arrangePage * slotsPerPage();
+  const start = ui.arrangePage * slotsPerPage();
 
   for(let i=0;i<slotsPerPage();i++){
     const slot = start + i;
     const p = productAtSlot(slot);
     const f = document.createElement("button");
     f.className = "arrange-slot";
-    f.setAttribute("aria-pressed", arrangeSelected === slot ? "true":"false");
+    f.setAttribute("aria-pressed", ui.arrangeSlot === slot ? "true":"false");
     if(p){
       f.style.setProperty("--k", p.color);
       f.innerHTML = '<span class="slot-name"></span><span class="slot-price"></span>';
@@ -127,22 +127,22 @@ function renderArrangeGrid(){
 }
 
 function arrangeTap(slot){
-  if(arrangeSelected === null){
+  if(ui.arrangeSlot === null){
     if(!productAtSlot(slot)) return;        // an empty slot has nothing to move
-    arrangeSelected = slot;
+    ui.arrangeSlot = slot;
     renderArrangeGrid();
     return;
   }
-  if(arrangeSelected === slot){              // tapping the same slot clears the selection
-    arrangeSelected = null;
+  if(ui.arrangeSlot === slot){              // tapping the same slot clears the selection
+    ui.arrangeSlot = null;
     renderArrangeGrid();
     return;
   }
-  const a = productAtSlot(arrangeSelected);
+  const a = productAtSlot(ui.arrangeSlot);
   const b = productAtSlot(slot);
   if(a) a.slot = slot;
-  if(b) b.slot = arrangeSelected;
-  arrangeSelected = null;
+  if(b) b.slot = ui.arrangeSlot;
+  ui.arrangeSlot = null;
   saveState();
   renderArrangeGrid();
   renderFilterBar();
@@ -203,8 +203,8 @@ function chosenCategory(){
 function editProduct(id){
   const p = data.products.find(x=>x.id===id);
   if(!p) return;
-  editingId = id;
-  newColor = p.color;
+  ui.editingId = id;
+  ui.newColor = p.color;
   $("#in-name").value     = p.name;
   $("#in-price").value    = csvNum(p.priceCents);       // deutsche Schreibweise
   renderCategoryPicker((p.category || "Sonstiges").trim());
@@ -220,7 +220,7 @@ function editProduct(id){
 }
 
 function clearProductForm(){
-  editingId = null;
+  ui.editingId = null;
   $("#in-name").value = "";
   $("#in-price").value = "";
   $("#save-product").textContent = "Artikel anlegen";
@@ -239,15 +239,15 @@ function saveProduct(){
   const priceCents = parseCents($("#in-price").value);
   if(priceCents === null){ toastMsg("Preis fehlt oder ist keine Zahl"); $("#in-price").focus(); return; }
 
-  if(editingId){
-    const p = data.products.find(x=>x.id===editingId);
-    Object.assign(p, {name, priceCents, category, color:newColor});
+  if(ui.editingId){
+    const p = data.products.find(x=>x.id===ui.editingId);
+    Object.assign(p, {name, priceCents, category, color:ui.newColor});
     toastMsg("Artikel geändert");
   }else{
     const maxSort = data.products.reduce((m,p)=>Math.max(m,p.sort), -1);
     data.products.push({
       id:"p"+Date.now()+Math.random().toString(36).slice(2,5),
-      name, priceCents, category, color:newColor, sort:maxSort+1
+      name, priceCents, category, color:ui.newColor, sort:maxSort+1
     });
     toastMsg("Artikel angelegt");
   }

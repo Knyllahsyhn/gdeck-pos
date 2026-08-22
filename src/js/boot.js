@@ -60,10 +60,10 @@ document.addEventListener("visibilitychange", ()=>{
 });
 
 $("#clear-cart").addEventListener("click", async ()=>{
-  if(!cart.length) return;
+  if(!ui.cart.length) return;
   const ok = await askConfirm("Bon leeren?", "Alle "+cartCount()+" Artikel werden vom Bon genommen.","Leeren");
   if(!ok) return;
-  cart = [];
+  ui.cart = [];
   renderCart(); renderGrid();
 });
 $("#checkout").addEventListener("click", openCheckout);
@@ -105,7 +105,7 @@ function onGridChange(){
   const columns = parseInt($("#in-columns").value, 10) || 0;
   const rows  = parseInt($("#in-rows").value, 10) || 4;
   data.grid = {columns, rows};
-  currentPage = 0; arrangePage = 0; arrangeSelected = null;
+  ui.page = 0; ui.arrangePage = 0; ui.arrangeSlot = null;
   saveState();
   renderAll();
   toastMsg(columns ? columns + " x " + rows + " Tastenfeld" : "Mitwachsendes Raster");
@@ -114,15 +114,15 @@ $("#in-columns").addEventListener("change", onGridChange);
 $("#in-rows").addEventListener("change", onGridChange);
 
 $("#tip-toggle").addEventListener("click", ()=>{
-  tipOn = !tipOn;
+  ui.tipOn = !ui.tipOn;
   renderCheckout();
 });
 
 $("#open-share").addEventListener("click", openShare);
 $("#close-share").addEventListener("click", ()=>{ $("#dlg-share").dataset.open = "no"; });
 $("#dlg-share").addEventListener("click", e=>{ if(e.target.id==="dlg-share") $("#dlg-share").dataset.open="no"; });
-$("#part-prev").addEventListener("click", ()=>{ if(qrIndex>0){ qrIndex--; renderShare(); } });
-$("#part-next").addEventListener("click",     ()=>{ if(qrIndex<qrParts.length-1){ qrIndex++; renderShare(); } });
+$("#part-prev").addEventListener("click", ()=>{ if(ui.qrIndex>0){ ui.qrIndex--; renderShare(); } });
+$("#part-next").addEventListener("click",     ()=>{ if(ui.qrIndex<ui.qrParts.length-1){ ui.qrIndex++; renderShare(); } });
 $("#copy-config").addEventListener("click", async ()=>{
   const text = configText();
   try{
@@ -165,14 +165,14 @@ $("#reset-all").addEventListener("click", async ()=>{
     "Artikel und Buchungen werden gelöscht, die Kasse startet mit dem Standardsortiment neu.","Zurücksetzen");
   if(!ok) return;
   data = defaults();
-  cart = [];
+  ui.cart = [];
   saveState(); renderAll();
   toastMsg("Kasse zurückgesetzt");
 });
 
 // catch an accidental reload while a sale is open
 window.addEventListener("beforeunload", e=>{
-  if(cart.length){ e.preventDefault(); e.returnValue = ""; }
+  if(ui.cart.length){ e.preventDefault(); e.returnValue = ""; }
 });
 
 /* ---------- Startup ---------- */

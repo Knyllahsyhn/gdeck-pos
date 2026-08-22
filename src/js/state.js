@@ -1,16 +1,24 @@
-/* ---------- State ---------- */
+/* ---------- State ----------
+   Two kinds, kept apart on purpose. "data" is what survives a reload:
+   it is written to storage and restored from it. "ui" is what the
+   screen is currently showing and is gone when the tab closes. Every
+   read of ui.something says at a glance that nothing is being saved. */
 let data = loadState();
-let cart = [];                 // [{productId, name, priceCents, qty}]
-let categoryFilter = "all";
-let currentPage = 0;
-let arrangePage = 0, arrangeSelected = null;
-let editingId = null;
-let newColor = COLORS[0][1];
-let tenderedRaw = "";          // digits typed at checkout
-let tipOn = false;
-let confirmResolve = null;
-let qrParts = [], qrIndex = 0;          // config sharing
-let scanParts = new Map(), scanTotal = 0, scanStream = null, scanRunning = false;
+
+const ui = {
+  cart: [],                    // [{productId, name, priceCents, qty}]
+  categoryFilter: "all",
+  page: 0,                     // keypad page on the register
+  arrangePage: 0,
+  arrangeSlot: null,           // slot picked first while rearranging keys
+  editingId: null,
+  newColor: COLORS[0][1],
+  tenderedRaw: "",             // digits typed at checkout
+  tipOn: false,
+  confirmResolve: null,
+  qrParts: [], qrIndex: 0,     // config sharing
+  scanParts: new Map(), scanTotal: 0, scanStream: null, scanRunning: false
+};
 
 function defaults(){
   return {

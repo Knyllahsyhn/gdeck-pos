@@ -2,9 +2,9 @@
    CHECKOUT
    ============================================================ */
 function openCheckout(){
-  if(!cart.length) return;
-  tenderedRaw = "";
-  tipOn = false;
+  if(!ui.cart.length) return;
+  ui.tenderedRaw = "";
+  ui.tipOn = false;
   $("#dlg-checkout").dataset.open = "yes";
   renderKeypad();
   renderCheckout();
@@ -19,8 +19,8 @@ function renderKeypad(){
     const b = document.createElement("button");
     b.textContent = t;
     b.addEventListener("click", ()=>{
-      if(t==="Korr") tenderedRaw = tenderedRaw.slice(0,-1);
-      else if(tenderedRaw.length < 7) tenderedRaw += t;
+      if(t==="Korr") ui.tenderedRaw = ui.tenderedRaw.slice(0,-1);
+      else if(ui.tenderedRaw.length < 7) ui.tenderedRaw += t;
       renderCheckout();
     });
     target.appendChild(b);
@@ -44,11 +44,11 @@ function breakDown(change){
 }
 function renderCheckout(){
   const total   = cartTotal();
-  const tendered = tenderedRaw ? parseInt(tenderedRaw,10) : 0;
+  const tendered = ui.tenderedRaw ? parseInt(ui.tenderedRaw,10) : 0;
   const change    = tendered - total;
 
   $("#due-amount").textContent   = money(total);
-  $("#tendered-amount").textContent = tenderedRaw ? money(tendered) : "-";
+  $("#tendered-amount").textContent = ui.tenderedRaw ? money(tendered) : "-";
 
   const block   = $("#change-panel");
   const toggle = $("#tip-toggle");
@@ -57,15 +57,15 @@ function renderCheckout(){
   block.dataset.tip = "no";
 
   // only offer a tip when something is actually left over
-  const changeAvailable = tenderedRaw !== "" && change > 0;
+  const changeAvailable = ui.tenderedRaw !== "" && change > 0;
   toggle.dataset.show = changeAvailable ? "yes":"no";
-  if(!changeAvailable) tipOn = false;
-  toggle.setAttribute("aria-pressed", tipOn ? "true" : "false");
-  toggle.textContent = tipOn
+  if(!changeAvailable) ui.tipOn = false;
+  toggle.setAttribute("aria-pressed", ui.tipOn ? "true" : "false");
+  toggle.textContent = ui.tipOn
     ? "Trinkgeld " + money(change) + ", antippen zum Aufheben"
     : "Rest als Trinkgeld";
 
-  if(!tenderedRaw){
+  if(!ui.tenderedRaw){
     block.dataset.short = "yes";
     $("#change-caption").textContent   = "Rückgeld";
     $("#change-amount").textContent  = "-";
@@ -73,7 +73,7 @@ function renderCheckout(){
     block.dataset.short = "yes";
     $("#change-caption").textContent   = "Es fehlen noch";
     $("#change-amount").textContent  = money(-change);
-  }else if(tipOn){
+  }else if(ui.tipOn){
     block.dataset.short = "no";
     block.dataset.tip = "yes";
     $("#change-caption").textContent   = "Trinkgeld, nichts zurück";
@@ -95,26 +95,26 @@ function renderCheckout(){
     const b = document.createElement("button");
     b.textContent = w===total ? "Passend" : money(w);
     if(w===total) b.dataset.exact = "yes";
-    b.addEventListener("click", ()=>{ tenderedRaw = String(w); renderCheckout(); });
+    b.addEventListener("click", ()=>{ ui.tenderedRaw = String(w); renderCheckout(); });
     quickBox.appendChild(b);
   });
 
-  $("#pay-cash").disabled = tenderedRaw !== "" && change < 0;
+  $("#pay-cash").disabled = ui.tenderedRaw !== "" && change < 0;
 }
 
 function recordSale(payment){
   const total   = cartTotal();
-  const tendered = tenderedRaw ? parseInt(tenderedRaw,10) : total;
+  const tendered = ui.tenderedRaw ? parseInt(ui.tenderedRaw,10) : total;
   if(tendered < total){ toastMsg("Der gegebene Betrag reicht nicht"); return; }
 
   const surplus = tendered - total;
-  const tips   = tipOn ? surplus : 0;
+  const tips   = ui.tipOn ? surplus : 0;
   const change   = surplus - tips;
 
   data.sales.push({
     id: "b" + Date.now() + Math.random().toString(36).slice(2,6),
     ts: Date.now(),
-    items: cart.map(z=>({productId:z.productId, name:z.name, priceCents:z.priceCents, qty:z.qty})),
+    items: ui.cart.map(z=>({productId:z.productId, name:z.name, priceCents:z.priceCents, qty:z.qty})),
     totalCents: total,
     payment,
     tenderedCents: tendered,
@@ -124,9 +124,9 @@ function recordSale(payment){
   });
   saveState();
 
-  cart = [];
-  tenderedRaw = "";
-  tipOn = false;
+  ui.cart = [];
+  ui.tenderedRaw = "";
+  ui.tipOn = false;
   closeCheckout();
   renderCart(); renderGrid();
 
