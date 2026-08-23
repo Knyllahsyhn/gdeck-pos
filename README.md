@@ -3,6 +3,7 @@
 Kassensystem für Feste, läuft im Browser, rechnet
 Wechselgeld aus, zeichnet Umsätze auf und gibt am Abend eine CSV für Excel aus.
 Kein Internet nötig, auf fremde Bibliotheken wurde weitestgehend verzichtet.
+Aktuell auch gehostet unter https://gpos.knyl.de
 
 ## Aufbau
 
