@@ -1,6 +1,6 @@
 # Hüttenkasse
 
-Kassensystem für Festel äuft im Browser, rechnet
+Kassensystem für Feste, läuft im Browser, rechnet
 Wechselgeld aus, zeichnet Umsätze auf und gibt am Abend eine CSV für Excel aus.
 Kein Internet nötig, auf fremde Bibliotheken wurde weitestgehend verzichtet.
 
@@ -30,7 +30,7 @@ Module nach, die ausgelieferte Fassung muss also eine einzige Datei bleiben.
 Alle Teile landen in einem einzigen `<script>`-Block und damit im selben
 Namensraum. 
 
-## Befehle
+## Build
 
 ```bash
 npm install
@@ -84,7 +84,7 @@ werden auf mehrere Codes verteilt, die Reihenfolge beim Scannen ist egal.
 ## Der QR-Baustein
 
 Encoder und Leser sind Eigenbau, weil eine fremde Bibliothek die Einzeldatei zu
-groß gemacht hätte (noch aus der ursprünglichne One-File Idee). Die Suite `qrtest` schreibt jede der 25 Versionen und liest
+groß gemacht hätte (noch aus der ursprünglichen One-File Idee). Die Suite `qrtest` schreibt jede der 25 Versionen und liest
 sie über ein Bild zurück, liest Codes, die `qrencode` erzeugt hat, und lässt
 `zbarimg` unsere eigenen gegenlesen. Dazu zwölf Zustände, wie eine Kamera sie potenziell
 liefert: gedreht, auf dem Kopf, unscharf, verrauscht, halb im Schatten, schräg
