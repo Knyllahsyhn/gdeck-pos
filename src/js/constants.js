@@ -3,7 +3,7 @@
    rounding errors that do not add up at the end of the night.
    ============================================================ */
 
-const VERSION  = "1.4.0";
+const VERSION  = "1.5.0";
 const STORE_KEY  = "knyl.pos.v1";
 const MIRROR_KEY = "knyl.pos.v1.mirror";
 // Keys used before the rename; still read so no data is lost on upgrade.
@@ -14,6 +14,9 @@ const COLORS = [
   ["Kupfer","var(--enamel-copper)"],       ["Pflaume","var(--enamel-plum)"],
   ["Schiefer","var(--enamel-slate)"],   ["Messing","var(--enamel-brass)"]
 ];
+// Fixed keys in the late-tip dialog. Coins and small notes, because that
+// is what lands on the counter after the sale is already booked.
+const TIP_STEPS = [50, 100, 200, 500, 1000];
 const DENOMINATIONS = [
   [10000,"100 €"],[5000,"50 €"],[2000,"20 €"],[1000,"10 €"],[500,"5 €"],
   [200,"2 €"],[100,"1 €"],[50,"50 ct"],[20,"20 ct"],[10,"10 ct"],[5,"5 ct"],[2,"2 ct"],[1,"1 ct"]

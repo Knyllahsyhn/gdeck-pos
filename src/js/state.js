@@ -15,6 +15,7 @@ const ui = {
   newColor: COLORS[0][1],
   tenderedRaw: "",             // digits typed at checkout
   tipOn: false,
+  tipRaw: "",                  // digits typed in the late-tip dialog
   confirmResolve: null,
   qrParts: [], qrIndex: 0,     // config sharing
   scanParts: new Map(), scanTotal: 0, scanStream: null, scanRunning: false

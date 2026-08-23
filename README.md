@@ -35,7 +35,7 @@ Namensraum.
 
 ```bash
 npm install
-npm test      # 275 Prüfungen über acht Suiten
+npm test      # 302 Prüfungen über acht Suiten
 npm run dev   # lokal unter http://localhost:8787
 npm run deploy
 ```
@@ -75,6 +75,18 @@ Registrierkasse will, stellt unter Einstellungen eine feste Aufteilung ein,
 etwa 4 mal 4. Dann behält jeder Artikel seinen Platz und freie Plätze bleiben
 frei, sodass sich die Anordnung einprägen lässt. Angeordnet wird im Reiter
 „Artikel“.
+
+## Trinkgeld
+
+Zwei Wege. Beim Kassieren lässt „Rest als Trinkgeld“ das Rückgeld stehen, der
+Betrag hängt dann als `tipCents` am Bon. Kommt das Trinkgeld erst, nachdem
+schon boniert wurde, buchst du es über die Taste „Trinkgeld“ neben dem Bon.
+
+Ein so nachgetragenes Trinkgeld bekommt einen eigenen Eintrag ohne Posten und
+ohne Warenwert. Umsatz, Bonanzahl und Durchschnitt je Bon bleiben deshalb
+unberührt, der Soll-Bestand der Kasse steigt. Weil es ein eigener Eintrag ist,
+lässt sich ein vertippter Betrag im Bericht stornieren wie jeder Bon. Im
+Tagesabschluss steht der Anteil als „davon nachgetragen“.
 
 ## Sortiment auf weitere Tablets
 

@@ -62,6 +62,7 @@
         </div>
         <div class="receipt-buttons">
           <button class="button" id="clear-cart" disabled>Leeren</button>
+          <button class="button" id="add-tip">Trinkgeld</button>
           <button class="button button-primary" id="checkout" disabled>Kassieren</button>
         </div>
       </div>
@@ -217,6 +218,7 @@
         Artikel antippen legt ihn auf den Bon, nochmal antippen erhöht die Menge.<br>
         Beim Kassieren den erhaltenen Betrag über die Zifferntasten eingeben. Getippt wird in Cent, „1000“ ergibt also 10,00 €.<br>
         Unter dem Rückgeldbetrag steht, welche Scheine und Münzen du herausgeben kannst.<br>
+        Beim Kassieren lässt sich das Rückgeld über „Rest als Trinkgeld“ stehen lassen. Kommt das Trinkgeld erst hinterher, buchst du es über die Taste „Trinkgeld“ neben dem Bon.<br>
         Falsch gebuchte Bons lassen sich im Bericht stornieren; sie bleiben zur Nachvollziehbarkeit in der Liste stehen.
       </p>
 
@@ -269,6 +271,28 @@
     <div class="dialog-foot">
       <button class="button" id="pay-card">Mit Karte</button>
       <button class="button button-confirm" id="pay-cash" style="flex:2">Bar abschließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TRINKGELD ============ -->
+<div class="overlay" id="dlg-tip">
+  <div class="dialog" role="dialog" aria-modal="true" aria-label="Trinkgeld" style="max-width:420px">
+    <div class="dialog-head">
+      <h3>Trinkgeld</h3>
+      <button class="button-small" id="close-tip">Zurück</button>
+    </div>
+    <div class="dialog-body">
+      <p class="note">Für Bargeld, das erst nach dem Buchen dazukommt. Der Betrag zählt nicht zum Umsatz und legt keinen neuen Bon an, erhöht aber den Soll-Bestand der Kasse.</p>
+      <div class="change-box" id="tip-panel" data-short="yes">
+        <div class="change-label">Trinkgeld</div>
+        <div class="change-value" id="tip-amount">-</div>
+      </div>
+      <div class="quick-amounts" id="tip-quick"></div>
+      <div class="keypad" id="tip-keypad"></div>
+    </div>
+    <div class="dialog-foot">
+      <button class="button button-confirm" id="save-tip" disabled>Trinkgeld buchen</button>
     </div>
   </div>
 </div>

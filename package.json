@@ -1,6 +1,6 @@
 {
   "name": "gdeck-pos",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "description": "Hüttenkasse: offline point of sale in a single HTML file",
   "type": "module",
