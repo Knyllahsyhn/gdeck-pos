@@ -120,6 +120,8 @@ Der Betreff sagt, was geändert wurde. Warum es nötig war, steht im Rumpf.
     Der Leser suchte die Marke nur entlang der ungedrehten Achse und gab
     Codes ab etwa 15 Grad Neigung auf.
 
+Wie immer hab ich mich während der Entwicklung selber nicht dran gehalten aber in Zukunft soll das so aussehen.
+
 ## Abhängigkeiten
 
 Die Kasse selbst bringt nichts mit. `wrangler` und `jsdom` werden nur zum
