@@ -1,4 +1,4 @@
-# Hüttenkasse
+# Hüttenkasse   [![Test und Deploy](https://github.com/Knyllahsyhn/gdeck-pos/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/Knyllahsyhn/gdeck-pos/actions/workflows/deploy.yml)
 
 Kassensystem für Feste, läuft im Browser, rechnet
 Wechselgeld aus, zeichnet Umsätze auf und gibt am Abend eine CSV für Excel aus.
