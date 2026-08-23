@@ -1,0 +1,57 @@
+# Halt die Abhaengigkeiten aktuell, ohne dass jemand danach schauen muss.
+# Dependabot oeffnet die Pull Requests, die CI faehrt alle Suiten dagegen,
+# und erst danach wird gemergt.
+version: 2
+updates:
+  # Die Kasse selbst hat keine Laufzeitabhaengigkeiten. Betroffen sind nur
+  # das Build- und Testwerkzeug, wrangler und jsdom.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
+    # Ein frisch veroeffentlichtes Paket wird einen Tag liegen gelassen.
+    # Zurueckgezogene oder kompromittierte Fassungen sind meist innerhalb
+    # der ersten Stunden aus der Registry verschwunden, und die npm-Policy
+    # laesst die CI an solchen Fassungen auflaufen.
+    cooldown:
+      default-days: 1
+    # Major-Spruenge bleiben Handarbeit. Bei jsdom haengt die halbe
+    # Testsuite an seinem DOM-Verhalten, bei wrangler die Deploy-Kette.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    # Alles Kleine in einen Pull Request, sonst steht fuer zwei Pakete
+    # zweimal derselbe CI-Lauf an.
+    groups:
+      npm:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
+    labels: ["dependencies"]
+
+  # Die Actions in deploy.yml. Hier sind Major-Spruenge der Regelfall,
+  # weil die Tags der Actions ohnehin nur die Major-Linie benennen.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
+    cooldown:
+      default-days: 1
+    groups:
+      actions:
+        patterns: ["*"]
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: ci
+      include: scope
+    labels: ["dependencies"]

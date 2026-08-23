@@ -94,3 +94,40 @@ von der Seite, klein im Bild.
 
 Bezeichner und Kommentare im Quelltext sind englisch, alles Sichtbare ist
 deutsch. Das gilt auch für Werte, die in der CSV landen.
+
+## Versionen
+
+Die Fassung steht in `src/js/constants.js` als `VERSION`. Sie wird in den
+Einstellungen angezeigt und unter jeden Bericht gedruckt, muss also auch ohne
+Netz im Dokument stehen. `package.json` führt dieselbe Nummer; weichen beide
+voneinander ab, bricht `npm run build` ab.
+
+Gezählt wird nach SemVer. Die zweite Stelle steigt, wenn die Kasse etwas kann,
+was sie vorher nicht konnte. Die erste Stelle steigt, wenn ein Speicherstand
+aus einer älteren Fassung nicht mehr ohne Zutun eingelesen werden kann.
+
+## Commits
+
+Betreff nach Conventional Commits, in deutscher Sprache und im Imperativ:
+`typ(bereich): was geändert wurde`. Als Typ dienen `feat`, `fix`, `refactor`,
+`perf`, `test`, `docs`, `ci` und `chore`. Der Bereich benennt den betroffenen
+Teil, etwa `qr`, `scan`, `register`, `storage`, `build` oder `deploy`.
+
+Der Betreff sagt, was geändert wurde. Warum es nötig war, steht im Rumpf.
+
+    fix(qr): Ausrichtungsmarke im gedrehten Bild finden
+
+    Der Leser suchte die Marke nur entlang der ungedrehten Achse und gab
+    Codes ab etwa 15 Grad Neigung auf.
+
+## Abhängigkeiten
+
+Die Kasse selbst bringt nichts mit. `wrangler` und `jsdom` werden nur zum
+Bauen und Prüfen gebraucht.
+
+Dependabot öffnet die Aktualisierungen wöchentlich als Pull Request, jeweils
+gebündelt. Eine neu veröffentlichte Fassung wird einen Tag lang liegen
+gelassen. Major-Sprünge bei den npm-Paketen sind ausgenommen und bleiben
+Handarbeit, weil an `jsdom` die Testsuite und an `wrangler` die Deploy-Kette
+hängt. Die Actions in `.github/workflows/deploy.yml` sind auf Commit-Hashes
+festgenagelt, der Kommentar dahinter nennt die zugehörige Fassung.

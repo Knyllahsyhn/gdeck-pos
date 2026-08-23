@@ -37,7 +37,17 @@ if (!included) throw new Error("no @include markers in " + SRC + "/index.html");
 if (!source.includes(NOTICE)) throw new Error("could not place the generated-file notice");
 writeFileSync(SINGLE, source);
 
-const version = source.match(/const VERSION\s*=\s*"([^"]+)"/)?.[1] ?? "0";
+/* The app carries its own version: it is shown in the settings and printed
+   under every report, and it has to be readable offline, so it lives in the
+   source rather than being injected at build time. package.json has to agree
+   with it, otherwise a release would be tagged with a number the register
+   never shows. */
+const version = source.match(/const VERSION\s*=\s*"([^"]+)"/)?.[1];
+if (!version) throw new Error("no VERSION constant in " + SRC + "/js/constants.js");
+const declared = JSON.parse(readFileSync("package.json", "utf8")).version;
+if (declared !== version) {
+  throw new Error(`version mismatch: package.json says ${declared}, the app says ${version}`);
+}
 
 /* The mark already sits in the source as a data URI. Pull it back out so the
    manifest can point at a real file instead of duplicating the bytes. */

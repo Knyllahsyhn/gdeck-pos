@@ -3,7 +3,7 @@
    rounding errors that do not add up at the end of the night.
    ============================================================ */
 
-const VERSION  = "1.0";
+const VERSION  = "1.4.0";
 const STORE_KEY  = "knyl.pos.v1";
 const MIRROR_KEY = "knyl.pos.v1.mirror";
 // Keys used before the rename; still read so no data is lost on upgrade.
