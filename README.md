@@ -1,8 +1,8 @@
 # Hüttenkasse
 
-Kassensystem für ein Hüttenfest. Läuft auf einem Tablet im Browser, rechnet
+Kassensystem für Festel äuft im Browser, rechnet
 Wechselgeld aus, zeichnet Umsätze auf und gibt am Abend eine CSV für Excel aus.
-Kein Internet nötig, keine fremden Bibliotheken.
+Kein Internet nötig, auf fremde Bibliotheken wurde weitestgehend verzichtet.
 
 ## Aufbau
 
@@ -28,7 +28,7 @@ vollständig. Über `file://` holt ein Browser keine getrennten Stylesheets und
 Module nach, die ausgelieferte Fassung muss also eine einzige Datei bleiben.
 
 Alle Teile landen in einem einzigen `<script>`-Block und damit im selben
-Namensraum. Es gibt kein `import`/`export` und keine Bündelbibliothek.
+Namensraum. 
 
 ## Befehle
 
@@ -39,14 +39,14 @@ npm run dev   # lokal unter http://localhost:8787
 npm run deploy
 ```
 
-## Warum gehostet
+## Warum am Besten hosten
 
 Als lokale Datei fehlen drei Dinge, die auf dem Tablet zählen:
 
 - Kiosk- und Vollbild-Browser öffnen keine `file://`-Adressen.
 - `navigator.storage.persist()` greift nur auf einer echten Herkunft. Ohne das
   darf der Browser die Buchungen bei Platzmangel verwerfen.
-- Der Kamerazugriff für den QR-Scan ist über HTTPS zuverlässig.
+- Der Kamerazugriff für den QR-Scan ist über HTTPS zuverlässiger.
 
 Über HTTPS kommt zusätzlich „Zum Startbildschirm hinzufügen“ dazu. Die App
 startet dann ohne Browserleiste im Vollbild.
@@ -84,9 +84,9 @@ werden auf mehrere Codes verteilt, die Reihenfolge beim Scannen ist egal.
 ## Der QR-Baustein
 
 Encoder und Leser sind Eigenbau, weil eine fremde Bibliothek die Einzeldatei zu
-groß gemacht hätte. Die Suite `qrtest` schreibt jede der 25 Versionen und liest
+groß gemacht hätte (noch aus der ursprünglichne One-File Idee). Die Suite `qrtest` schreibt jede der 25 Versionen und liest
 sie über ein Bild zurück, liest Codes, die `qrencode` erzeugt hat, und lässt
-`zbarimg` unsere eigenen gegenlesen. Dazu zwölf Zustände, wie eine Kamera sie
+`zbarimg` unsere eigenen gegenlesen. Dazu zwölf Zustände, wie eine Kamera sie potenziell
 liefert: gedreht, auf dem Kopf, unscharf, verrauscht, halb im Schatten, schräg
 von der Seite, klein im Bild.
 
@@ -131,3 +131,5 @@ gelassen. Major-Sprünge bei den npm-Paketen sind ausgenommen und bleiben
 Handarbeit, weil an `jsdom` die Testsuite und an `wrangler` die Deploy-Kette
 hängt. Die Actions in `.github/workflows/deploy.yml` sind auf Commit-Hashes
 festgenagelt, der Kommentar dahinter nennt die zugehörige Fassung.
+
+##lizenz: MIT
