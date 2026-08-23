@@ -12,19 +12,23 @@ function openCheckout(){
 function closeCheckout(){
   $("#dlg-checkout").dataset.open = "no";
 }
-function renderKeypad(){
-  const target = $("#keypad");
+/* Digits go into the named ui field, so the same pad serves the checkout
+   and the late-tip dialog. Both type whole cents. */
+function buildKeypad(target, field, redraw){
   if(target.childElementCount) return;                       // build once
   ["1","2","3","4","5","6","7","8","9","00","0","Korr"].forEach(t=>{
     const b = document.createElement("button");
     b.textContent = t;
     b.addEventListener("click", ()=>{
-      if(t==="Korr") ui.tenderedRaw = ui.tenderedRaw.slice(0,-1);
-      else if(ui.tenderedRaw.length < 7) ui.tenderedRaw += t;
-      renderCheckout();
+      if(t==="Korr") ui[field] = ui[field].slice(0,-1);
+      else if(ui[field].length < 7) ui[field] += t;
+      redraw();
     });
     target.appendChild(b);
   });
+}
+function renderKeypad(){
+  buildKeypad($("#keypad"), "tenderedRaw", renderCheckout);
 }
 function quickValues(total){
   const values = new Set([total]);
@@ -102,6 +106,8 @@ function renderCheckout(){
   $("#pay-cash").disabled = ui.tenderedRaw !== "" && change < 0;
 }
 
+const saleId = () => "b" + Date.now() + Math.random().toString(36).slice(2,6);
+
 function recordSale(payment){
   const total   = cartTotal();
   const tendered = ui.tenderedRaw ? parseInt(ui.tenderedRaw,10) : total;
@@ -112,7 +118,7 @@ function recordSale(payment){
   const change   = surplus - tips;
 
   data.sales.push({
-    id: "b" + Date.now() + Math.random().toString(36).slice(2,6),
+    id: saleId(),
     ts: Date.now(),
     items: ui.cart.map(z=>({productId:z.productId, name:z.name, priceCents:z.priceCents, qty:z.qty})),
     totalCents: total,
@@ -138,3 +144,67 @@ function recordSale(payment){
   toastMsg(parts.join(", "));
 }
 
+/* ============================================================
+   LATE TIP
+   Cash handed over after the sale is already booked. Rather than
+   changing the sale it gets an entry of its own, with no items and
+   no goods value. The takings and the number of receipts stay as
+   they were, the cash drawer target rises, and a mistyped amount
+   can be voided like any other entry.
+   ============================================================ */
+function openTip(){
+  ui.tipRaw = "";
+  $("#dlg-tip").dataset.open = "yes";
+  buildTipSteps();
+  buildKeypad($("#tip-keypad"), "tipRaw", renderTip);
+  renderTip();
+}
+function closeTip(){
+  $("#dlg-tip").dataset.open = "no";
+}
+function buildTipSteps(){
+  const target = $("#tip-quick");
+  if(target.childElementCount) return;                       // build once
+  TIP_STEPS.forEach(cents=>{
+    const b = document.createElement("button");
+    b.textContent = money(cents);
+    b.dataset.cents = String(cents);
+    b.addEventListener("click", ()=>{ ui.tipRaw = String(cents); renderTip(); });
+    target.appendChild(b);
+  });
+}
+function tipEntered(){
+  return ui.tipRaw ? parseInt(ui.tipRaw,10) : 0;
+}
+function renderTip(){
+  const amount = tipEntered();
+  const block = $("#tip-panel");
+  block.dataset.tip   = amount > 0 ? "yes" : "no";
+  block.dataset.short = amount > 0 ? "no"  : "yes";
+  $("#tip-amount").textContent = ui.tipRaw ? money(amount) : "-";
+  $$("#tip-quick button").forEach(b=>{
+    b.dataset.exact = parseInt(b.dataset.cents,10) === amount ? "yes" : "no";
+  });
+  $("#save-tip").disabled = amount <= 0;
+}
+function recordTip(){
+  const amount = tipEntered();
+  if(amount <= 0){ toastMsg("Kein Betrag eingegeben"); return; }
+
+  data.sales.push({
+    id: saleId(),
+    ts: Date.now(),
+    items: [],
+    totalCents: 0,
+    payment: "cash",
+    tenderedCents: 0,
+    tipCents: amount,
+    changeCents: 0,
+    voided: false
+  });
+  saveState();
+
+  ui.tipRaw = "";
+  closeTip();
+  toastMsg(money(amount) + " Trinkgeld gebucht");
+}

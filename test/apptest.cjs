@@ -51,9 +51,14 @@ function artikelKnopf(name){
   return Array.from(d.querySelectorAll("#grid .tile"))
     .find(b => b.querySelector(".tile-name").textContent === name);
 }
-function ziffern(text){
-  const knoepfe = Array.from(d.querySelectorAll("#keypad button"));
+function ziffernIn(feld, text){
+  const knoepfe = Array.from(d.querySelectorAll(feld + " button"));
   for(const z of text) klick(knoepfe.find(b => b.textContent === z));
+}
+const ziffern = text => ziffernIn("#keypad", text);
+function loeschen(feld){
+  const korr = Array.from(d.querySelectorAll(feld + " button")).find(b => b.textContent === "Korr");
+  for(let i=0;i<8;i++) klick(korr);
 }
 
 function lauf(){
@@ -113,7 +118,7 @@ function lauf(){
   pruefe("nicht gebucht", zustand().sales.length, 1);
 
   console.log("\n== Trinkgeld ==");
-  for(let i=0;i<3;i++) klick([...d.querySelectorAll("#keypad button")].find(b=>b.textContent==="Korr"));  // löschen
+  loeschen("#keypad");
   ziffern("500");
   pruefe("Rückgeld vor Trinkgeld", $("#change-amount").textContent, "0,20 €");
   klick($("#tip-toggle"));
@@ -184,13 +189,63 @@ function lauf(){
     pruefe("Bons nach Storno", kz3["Bons"], "3");
     pruefe("Buchung als storniert markiert", zustand().sales[3].voided, true);
 
+    console.log("\n== Trinkgeld nachtragen ==");
+    w.switchTab("register");
+    klick($("#add-tip"));
+    pruefe("Dialog offen", $("#dlg-tip").dataset.open, "yes");
+    pruefe("Buchen zunächst gesperrt", $("#save-tip").disabled, true);
+    const feste = [...d.querySelectorAll("#tip-quick button")];
+    pruefe("feste Beträge", feste.map(b=>b.dataset.cents), ["50","100","200","500","1000"]);
+    klick(feste.find(b=>b.dataset.cents==="100"));
+    pruefe("Betrag übernommen", $("#tip-amount").textContent, "1,00 €");
+    pruefe("feste Taste markiert", feste.find(b=>b.dataset.cents==="100").dataset.exact, "yes");
+    pruefe("Buchen freigegeben", $("#save-tip").disabled, false);
+    // über das Ziffernfeld auf 1,50 ändern
+    loeschen("#tip-keypad");
+    ziffernIn("#tip-keypad", "150");
+    pruefe("frei getippt", $("#tip-amount").textContent, "1,50 €");
+    pruefe("feste Taste nicht mehr markiert", feste.find(b=>b.dataset.cents==="100").dataset.exact, "no");
+    klick($("#save-tip"));
+    pruefe("Dialog zu", $("#dlg-tip").dataset.open, "no");
+    const tg = zustand().sales[4];
+    pruefe("Eintrag ohne Artikel", tg.items.length, 0);
+    pruefe("kein Warenwert", tg.totalCents, 0);
+    pruefe("Trinkgeld gebucht", tg.tipCents, 150);
+    pruefe("als Bargeld verbucht", tg.payment, "cash");
+    pruefe("Bon unberührt", $("#receipt-total").textContent, "0,00 €");
+
+    w.switchTab("report");
+    const kz4 = {};
+    d.querySelectorAll("#stats .stat").forEach(k=>{
+      kz4[k.querySelector(".stat-label").textContent] = norm(k.querySelector(".stat-value").textContent);
+    });
+    pruefe("Umsatz unberührt", kz4["Umsatz"], "19,30 €");
+    pruefe("Bonanzahl unberührt", kz4["Bons"], "3");
+    pruefe("Ø je Bon unberührt", kz4["Ø je Bon"], "6,43 €");
+    pruefe("Bar unberührt", kz4["Bar"], "16,80 €");
+    pruefe("Trinkgeld erhöht", kz4["Trinkgeld"], "1,70 €");
+    pruefe("Soll in der Kasse erhöht", kz4["Soll in der Kasse"], "168,50 €");
+
+    const zeilen = [...d.querySelectorAll("#table-sales tbody tr")];
+    pruefe("Trinkgeld oben in der Bonliste", zeilen[0].children[1].textContent, "Trinkgeld");
+    pruefe("ohne Warenwert in der Liste", zeilen[0].children[3].textContent, "-");
+    pruefe("Betrag in der Trinkgeldspalte", zeilen[0].children[4].textContent, "1,50 €");
+
+    // Storno fragt beim Trinkgeld anders nach; hier nur die Rückfrage prüfen
+    klick(zeilen[0].querySelector("button"));
+    pruefe("eigene Rückfrage fürs Trinkgeld", $("#confirm-title").textContent, "Trinkgeld stornieren?");
+    klick($("#confirm-no"));
+
     console.log("\n== CSV-Export ==");
     klick($("#export-report"));
     const csv = letzterBlob;
     pruefe("BOM für Excel", csv.charCodeAt(0), 0xFEFF);
     pruefe("Semikolon als Trenner", csv.includes("Umsatz gesamt;19,30"), true);
-    pruefe("Trinkgeld in der CSV", csv.includes("Trinkgeld gesamt;0,20"), true);
-    pruefe("Soll-Bestand in der CSV (nach Storno)", csv.includes("Soll-Bestand Kasse;167,00"), true);
+    pruefe("Trinkgeld in der CSV", csv.includes("Trinkgeld gesamt;1,70"), true);
+    pruefe("nachgetragenes Trinkgeld ausgewiesen", csv.includes("davon nachgetragen;1,50"), true);
+    pruefe("Trinkgeldeintrag zählt nicht als Bon", csv.includes("Anzahl Bons;3"), true);
+    pruefe("Trinkgeldzeile benannt", csv.includes(";Trinkgeld nachgetragen"), true);
+    pruefe("Soll-Bestand in der CSV (nach Storno)", csv.includes("Soll-Bestand Kasse;168,50"), true);
     pruefe("Storno vermerkt", csv.includes(";ja;"), true);
     pruefe("Umlaut erhalten", csv.includes("Weißbier"), true);
 
@@ -207,7 +262,7 @@ function lauf(){
     pruefe("beide gleich", haupt === spiegel, true);
     const huelle = JSON.parse(haupt);
     pruefe("Prüfsumme vorhanden", typeof huelle.checksum, "number");
-    pruefe("Buchungen gespeichert", huelle.state.sales.length, 4);
+    pruefe("Buchungen gespeichert", huelle.state.sales.length, 5);
 
     console.log("\n== Konfigurationsübertragung ==");
     const text = w.configText();

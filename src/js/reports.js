@@ -15,12 +15,15 @@ function renderReport(){
   const karte  = valid.filter(b=>b.payment==="card").reduce((s,b)=>s+b.totalCents,0);
   const tips    = valid.reduce((s,b)=>s+(b.tipCents||0),0);
   const cashTips = valid.filter(b=>b.payment==="cash").reduce((s,b)=>s+(b.tipCents||0),0);
-  const average = valid.length ? Math.round(revenue/valid.length) : 0;
+  // A late tip is an entry without items. It carries no goods value, so it
+  // must not raise the number of receipts nor lower the average.
+  const receipts = valid.filter(b=>b.items.length);
+  const average = receipts.length ? Math.round(revenue/receipts.length) : 0;
   const float = data.openingFloat[day] || 0;
 
   const statRows = [
     ["Umsatz", money(revenue), "aktion"],
-    ["Bons", String(valid.length), ""],
+    ["Bons", String(receipts.length), ""],
     ["Bar", money(bar), ""],
     ["Karte", money(karte), ""],
     ["Trinkgeld", money(tips), ""],
@@ -73,12 +76,13 @@ function renderReport(){
     all.slice().reverse().forEach(b=>{
       const tr = document.createElement("tr");
       if(b.voided) tr.dataset.void = "yes";
-      const content = b.items.map(p=>p.qty+"x "+p.name).join(", ");
+      const tipOnly = !b.items.length;
+      const content = tipOnly ? "Trinkgeld" : b.items.map(p=>p.qty+"x "+p.name).join(", ");
       tr.innerHTML =
         '<td class="num">'+timeOf(b.ts)+'</td>' +
         '<td>'+escapeHtml(content)+'</td>' +
         '<td>'+(b.payment==="card"?"Karte":"Bar")+'</td>' +
-        '<td class="num">'+money(b.totalCents)+'</td>' +
+        '<td class="num">'+(tipOnly ? "-" : money(b.totalCents))+'</td>' +
         '<td class="num">'+(b.tipCents ? money(b.tipCents) : "-")+'</td>' +
         '<td></td>';
       if(!b.voided){
@@ -86,13 +90,17 @@ function renderReport(){
         btn.className = "button-small";
         btn.textContent = "Stornieren";
         btn.addEventListener("click", async ()=>{
-          const ok = await askConfirm("Bon stornieren?",
-            "Der Bon über "+money(b.totalCents)+" von "+timeOf(b.ts)+
-            " zählt dann nicht mehr zum Umsatz, bleibt aber in der Liste stehen.","Stornieren");
+          const ok = tipOnly
+            ? await askConfirm("Trinkgeld stornieren?",
+                "Das Trinkgeld über "+money(b.tipCents)+" von "+timeOf(b.ts)+
+                " wird dann nicht mehr mitgezählt, bleibt aber in der Liste stehen.","Stornieren")
+            : await askConfirm("Bon stornieren?",
+                "Der Bon über "+money(b.totalCents)+" von "+timeOf(b.ts)+
+                " zählt dann nicht mehr zum Umsatz, bleibt aber in der Liste stehen.","Stornieren");
           if(!ok) return;
           b.voided = true;
           saveState(); renderReport();
-          toastMsg("Bon storniert");
+          toastMsg(tipOnly ? "Trinkgeld storniert" : "Bon storniert");
         });
         tr.lastElementChild.appendChild(btn);
       }
@@ -137,6 +145,9 @@ function exportReport(){
   const karte  = valid.filter(b=>b.payment==="card").reduce((s,b)=>s+b.totalCents,0);
   const tips    = valid.reduce((s,b)=>s+(b.tipCents||0),0);
   const cashTips = valid.filter(b=>b.payment==="cash").reduce((s,b)=>s+(b.tipCents||0),0);
+  const lateTips = valid.filter(b=>!b.items.length).reduce((s,b)=>s+(b.tipCents||0),0);
+  const receipts = valid.filter(b=>b.items.length);
+  const voidedReceipts = all.filter(b=>b.items.length && b.voided);
   const float = data.openingFloat[day] || 0;
 
   const z = [];
@@ -149,8 +160,9 @@ function exportReport(){
   z.push(["davon Karte", csvNum(karte)]);
   z.push(["Trinkgeld gesamt", csvNum(tips)]);
   z.push(["davon bar", csvNum(cashTips)]);
-  z.push(["Anzahl Bons", valid.length]);
-  z.push(["Stornierte Bons", all.length - valid.length]);
+  z.push(["davon nachgetragen", csvNum(lateTips)]);
+  z.push(["Anzahl Bons", receipts.length]);
+  z.push(["Stornierte Bons", voidedReceipts.length]);
   z.push(["Wechselgeld zu Beginn", csvNum(float)]);
   z.push(["Soll-Bestand Kasse", csvNum(float + bar + cashTips)]);
   z.push([]);
@@ -174,7 +186,7 @@ function exportReport(){
     b.payment==="card" ? "Karte" : "Bar",
     csvNum(b.totalCents), csvNum(b.tipCents||0), csvNum(b.tenderedCents), csvNum(b.changeCents),
     b.voided ? "ja" : "nein",
-    b.items.map(p=>p.qty+"x "+p.name).join(", ")
+    b.items.length ? b.items.map(p=>p.qty+"x "+p.name).join(", ") : "Trinkgeld nachgetragen"
   ]));
 
   csvDownload(z, "Tagesabschluss_"+day+".csv");
@@ -182,7 +194,7 @@ function exportReport(){
 
 function exportLineItems(){
   const day  = $("#in-date").value || dayOf(Date.now());
-  const all = salesOnDay(day);
+  const all = salesOnDay(day).filter(b=>b.items.length);
   const z = [["Datum","Zeit","Bon-Nr","Artikel","Anzahl","Einzelpreis","Zeilensumme","Zahlart","Storniert"]];
   all.forEach((b,i) => b.items.forEach(p => z.push([
     day, timeOf(b.ts), i+1, p.name, p.qty,

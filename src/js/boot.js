@@ -118,6 +118,11 @@ $("#tip-toggle").addEventListener("click", ()=>{
   renderCheckout();
 });
 
+$("#add-tip").addEventListener("click", openTip);
+$("#close-tip").addEventListener("click", closeTip);
+$("#save-tip").addEventListener("click", recordTip);
+$("#dlg-tip").addEventListener("click", e=>{ if(e.target.id==="dlg-tip") closeTip(); });
+
 $("#open-share").addEventListener("click", openShare);
 $("#close-share").addEventListener("click", ()=>{ $("#dlg-share").dataset.open = "no"; });
 $("#dlg-share").addEventListener("click", e=>{ if(e.target.id==="dlg-share") $("#dlg-share").dataset.open="no"; });
