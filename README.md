@@ -10,17 +10,19 @@ Der Quelltext liegt in `src/`. `src/index.html` ist das Gerüst und nennt auf
 44 Zeilen die Reihenfolge der Teile. Jede Zeile, die nur aus einem Kommentar
 mit `@include` besteht, wird beim Bauen durch die genannte Datei ersetzt.
 
-    src/index.html   Kopf, Gerüst, Reihenfolge der Teile
-    src/body.html    Markup
-    src/css/         Farben, Rahmen, Kasse, Verwaltung, Kassieren, Umbruch
-    src/js/qr.js     QR-Encoder und QR-Leser
-    src/js/*.js      Anwendung, ein Teil je Aufgabe
+    src/index.html      Kopf, Gerüst, Reihenfolge der Teile
+    src/body.html       Markup
+    src/css/            tokens (Farben und Maße), shell (Rahmen und Reiter),
+                        register (Kasse), manage (Artikel, Berichte,
+                        Einstellungen), checkout (Kassieren), responsive
+    src/js/qr.js        QR-Encoder und QR-Leser
+    src/js/*.js         Anwendung, ein Teil je Aufgabe
 
 `npm run build` setzt daraus `kasse.html` zusammen und baut `public/`. Beide
 sind erzeugt und nicht von Hand zu bearbeiten; `kasse.html` liegt deshalb auch
 nicht im Repository.
 
-Das gebaute `kasse.html` enthält alles: Stile, Logik, den QR-Encoder, Bildmarke
+Das gebaute `kasse.html` enthält alles: Stile, Logik, den QR-Baustein, Bildmarke
 und Icons. Es lässt sich direkt im Browser öffnen und funktioniert dann bereits
 vollständig. Über `file://` holt ein Browser keine getrennten Stylesheets und
 Module nach, die ausgelieferte Fassung muss also eine einzige Datei bleiben.
@@ -46,7 +48,7 @@ Als lokale Datei fehlen drei Dinge, die auf dem Tablet zählen:
   darf der Browser die Buchungen bei Platzmangel verwerfen.
 - Der Kamerazugriff für den QR-Scan ist über HTTPS zuverlässig.
 
-Über HTTPS kommt zusätzlich „Zum Startbildschirm hinzufügen" dazu. Die App
+Über HTTPS kommt zusätzlich „Zum Startbildschirm hinzufügen“ dazu. Die App
 startet dann ohne Browserleiste im Vollbild.
 
 Der Service Worker legt alles lokal ab. Nach dem ersten Aufruf läuft die Kasse
@@ -69,8 +71,9 @@ gibt es zwei Wege in den Einstellungen: die Sicherungsdatei nimmt alles mit
 
 Voreingestellt füllen sich die Tasten der Reihe nach auf. Wer es wie an einer
 Registrierkasse will, stellt unter Einstellungen eine feste Aufteilung ein,
-etwa 4 mal 4. Dann behält jeder Artikel seinen Platz und Lücken bleiben Lücken,
-sodass sich die Anordnung einprägen kann. Angeordnet wird im Reiter „Artikel“.
+etwa 4 mal 4. Dann behält jeder Artikel seinen Platz und freie Plätze bleiben
+frei, sodass sich die Anordnung einprägen lässt. Angeordnet wird im Reiter
+„Artikel“.
 
 ## Sortiment auf weitere Tablets
 
@@ -78,11 +81,14 @@ Ein Gerät einrichten, die anderen scannen den QR-Code ab. Große Sortimente
 werden auf mehrere Codes verteilt, die Reihenfolge beim Scannen ist egal.
 Übertragen werden Artikel, Preise, Farben und die Tastenfeld-Aufteilung.
 
-## Der QR-Encoder
+## Der QR-Baustein
 
-Eigenbau, weil eine fremde Bibliothek die Einzeldatei gesprengt hätte. Geprüft
-gegen `qrencode` (modulgenau identisch) und `zbarimg` (143 von 143 Codes über
-Version 1 bis 23 fehlerfrei zurückgelesen).
+Encoder und Leser sind Eigenbau, weil eine fremde Bibliothek die Einzeldatei zu
+groß gemacht hätte. Die Suite `qrtest` schreibt jede der 25 Versionen und liest
+sie über ein Bild zurück, liest Codes, die `qrencode` erzeugt hat, und lässt
+`zbarimg` unsere eigenen gegenlesen. Dazu zwölf Zustände, wie eine Kamera sie
+liefert: gedreht, auf dem Kopf, unscharf, verrauscht, halb im Schatten, schräg
+von der Seite, klein im Bild.
 
 ## Sprache
 
