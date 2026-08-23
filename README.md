@@ -134,4 +134,4 @@ Handarbeit, weil an `jsdom` die Testsuite und an `wrangler` die Deploy-Kette
 hängt. Die Actions in `.github/workflows/deploy.yml` sind auf Commit-Hashes
 festgenagelt, der Kommentar dahinter nennt die zugehörige Fassung.
 
-##lizenz: MIT
+## Lizenz: MIT
