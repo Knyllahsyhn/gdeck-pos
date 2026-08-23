@@ -2,20 +2,29 @@ name: Test und Deploy
 
 on:
   push:
+    # Die Zweige von Dependabot laufen ueber ihren Pull Request. Ein Lauf
+    # aus dem Push heraus wuerde zusaetzlich die Vorschau hochladen, und
+    # dafuer gibt GitHub die Cloudflare-Secrets an Dependabot nicht heraus.
+    branches-ignore: ['dependabot/**']
   pull_request:
     branches: [main]
   workflow_dispatch:
+
+# Der Lauf liest nur den Quelltext und schreibt in die Zusammenfassung.
+# Veroeffentlicht wird ueber den Cloudflare-Token, nicht ueber GITHUB_TOKEN.
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - run: npm ci
@@ -36,13 +45,16 @@ jobs:
           hol(){ sudo apt-get $opt update -qq && sudo apt-get $opt install -y -qq --no-install-recommends qrencode zbar-tools imagemagick; }
           hol || (sleep 15 && hol) || (sleep 30 && hol)
 
-      # Baut public/ und fährt alle sieben Suiten.
+      # Baut public/ und fährt alle acht Suiten.
       - run: npm test
 
       # Nur von main aus veröffentlichen, Pull Requests bleiben ein Testlauf.
+      # Ohne wranglerVersion greift die Action auf das wrangler zurück, das
+      # npm ci schon installiert hat. Es gilt also die Fassung aus
+      # package-lock.json und nicht das, was gerade als latest gilt.
       - name: Deploy
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -59,7 +71,7 @@ jobs:
 
       - name: Vorschau hochladen
         if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
