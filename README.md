@@ -94,7 +94,7 @@ Ein Gerät einrichten, die anderen scannen den QR-Code ab. Große Sortimente
 werden auf mehrere Codes verteilt, die Reihenfolge beim Scannen ist egal.
 Übertragen werden Artikel, Preise, Farben und die Tastenfeld-Aufteilung.
 
-## Der QR-Baustein
+## QR En/Decoder
 
 Encoder und Leser sind Eigenbau, weil eine fremde Bibliothek die Einzeldatei zu
 groß gemacht hätte (noch aus der ursprünglichen One-File Idee). Die Suite `qrtest` schreibt jede der 25 Versionen und liest
@@ -103,10 +103,6 @@ sie über ein Bild zurück, liest Codes, die `qrencode` erzeugt hat, und lässt
 liefert: gedreht, auf dem Kopf, unscharf, verrauscht, halb im Schatten, schräg
 von der Seite, klein im Bild.
 
-## Sprache
-
-Bezeichner und Kommentare im Quelltext sind englisch, alles Sichtbare ist
-deutsch. Das gilt auch für Werte, die in der CSV landen.
 
 ## Versionen
 
